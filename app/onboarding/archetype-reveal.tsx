@@ -3,12 +3,12 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { ARCHETYPES } from '@/src/constants/archetypes';
-import type { ArchetypeId } from '@/src/types';
+import type { Archetype } from '@/src/types';
 
 export default function ArchetypeReveal() {
   const insets = useSafeAreaInsets();
-  const archetypeId = useSessionStore((s) => s.archetypeId) as ArchetypeId | null;
-  const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
+  const archetypeId = useSessionStore((s) => s.archetypeId);
+  const archetype: Archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>

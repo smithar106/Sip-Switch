@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, ActivityIndicator, Linking } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -64,7 +64,9 @@ export default function Paywall() {
       if (granted) {
         setIsPremium(true);
         setHasOnboarded(true);
-        setTrialStartDate(new Date().toISOString().slice(0, 10));
+        if (selected === 'annual') {
+          setTrialStartDate(new Date().toISOString().slice(0, 10));
+        }
         router.replace('/(tabs)/feed');
       }
     } catch (e: any) {

@@ -88,7 +88,7 @@ export default function Quiz() {
       setSelected(optionId);
 
       autoAdvanceRef.current = setTimeout(() => {
-        setAnswer(question.id as any, optionId);
+        setAnswer(question.id as keyof typeof answers, optionId);
         setSelected(null);
 
         if (currentStep + 1 >= totalSteps) {
@@ -127,7 +127,7 @@ export default function Quiz() {
           Step {currentStep + 1} of {totalSteps}
         </Text>
 
-        <Animated.View style={{ opacity: fadeAnim.interpolate({ inputRange: [0, 1], outputRange: [1, 1] }) }}>
+        <Animated.View style={{ opacity: fadeAnim }}>
           <Text style={styles.questionText}>{question.text}</Text>
 
           <View style={question.grid ? styles.grid : styles.list}>

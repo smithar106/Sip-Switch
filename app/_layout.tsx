@@ -5,17 +5,23 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
-import { configureRevenueCat } from '@/src/services/revenueCat';
+import { configureRevenueCat, getCustomerInfo } from '@/src/services/revenueCat';
 
 export default function RootLayout() {
   const loadSession = useSessionStore((s) => s.loadFromStorage);
   const loadTaste = useTasteStore((s) => s.loadFromStorage);
+  const setIsPremium = useSessionStore((s) => s.setIsPremium);
 
   useEffect(() => {
     loadSession();
     loadTaste();
     configureRevenueCat();
-  }, []);
+    getCustomerInfo().then((info) => {
+      if (info?.entitlements?.active) {
+        setIsPremium(true);
+      }
+    });
+  }, [loadSession, loadTaste, setIsPremium]);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>

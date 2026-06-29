@@ -1,3 +1,4 @@
+import { useMemo, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSessionStore } from '@/src/stores/sessionStore';
@@ -44,7 +45,7 @@ function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
       category,
       imageUrl: '',
       description: `A perfect NA match for your ${archetype.id} taste profile.`,
-      flavourTags: archetype.primaryFlavours.slice(0, 2) as any[],
+      flavourTags: archetype.primaryFlavours.slice(0, 2),
       alcoholic: false,
       gemScore: 80 + Math.floor(Math.random() * 20),
     });
@@ -59,7 +60,7 @@ function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
       category: categories[i % categories.length] ?? 'na_sparkling',
       imageUrl: '',
       description: 'A unique NA option crafted for discerning taste.',
-      flavourTags: archetype.primaryFlavours.slice(0, 2) as any[],
+      flavourTags: archetype.primaryFlavours.slice(0, 2),
       alcoholic: false,
       gemScore: 70 + Math.floor(Math.random() * 25),
     });
@@ -70,15 +71,15 @@ function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
 
 export default function Feed() {
   const insets = useSafeAreaInsets();
-  const archetypeId = useSessionStore((s) => s.archetypeId) as ArchetypeId | null;
+  const archetypeId = useSessionStore((s) => s.archetypeId);
   const addRating = useTasteStore((s) => s.addRating);
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
 
-  const drinks = generateMockDrinks(archetypeId);
+  const drinks = useMemo(() => generateMockDrinks(archetypeId), [archetypeId]);
 
-  const handleRate = (drinkId: string, rating: DrinkRating['rating']) => {
+  const handleRate = useCallback((drinkId: string, rating: DrinkRating['rating']) => {
     addRating({ drinkId, rating, timestamp: new Date().toISOString() });
-  };
+  }, [addRating]);
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>

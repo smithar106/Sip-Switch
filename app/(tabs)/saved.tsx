@@ -6,7 +6,7 @@ import { useTasteStore } from '@/src/stores/tasteStore';
 export default function Saved() {
   const insets = useSafeAreaInsets();
   const ratings = useTasteStore((s) => s.ratings);
-  const saved = ratings.filter((r) => r.rating === 'love' || r.rating === 'save');
+  const saved = ratings.filter((r) => r.rating === 'love' || r.rating === 'like');
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>

@@ -28,7 +28,9 @@ export default function Welcome() {
           <Text style={styles.ctaText}>Find my drink →</Text>
         </TouchableOpacity>
 
-        <Text style={styles.existing}>Already have an account?</Text>
+        <TouchableOpacity onPress={() => router.push('/paywall')}>
+          <Text style={styles.existing}>Already have an account?</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );

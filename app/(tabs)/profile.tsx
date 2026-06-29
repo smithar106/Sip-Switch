@@ -5,12 +5,12 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
 import { ARCHETYPES } from '@/src/constants/archetypes';
-import type { ArchetypeId } from '@/src/types';
+import type { Archetype } from '@/src/types';
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
   const isPremium = useSessionStore((s) => s.isPremium);
-  const archetypeId = useSessionStore((s) => s.archetypeId) as ArchetypeId | null;
+  const archetypeId = useSessionStore((s) => s.archetypeId);
   const profile = useTasteStore((s) => s.profile);
   const resetOnboarding = useOnboardingStore((s) => s.reset);
 

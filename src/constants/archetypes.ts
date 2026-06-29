@@ -1,6 +1,6 @@
 import type { Archetype, SwapEntry, OnboardingAnswers, ArchetypeId } from '../types';
 
-export const ARCHETYPES: Record<string, Archetype> = {
+export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
   bitter: {
     id: 'bitter',
     emoji: '🌿',
