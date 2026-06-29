@@ -41,11 +41,11 @@ function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
     drinks.push({
       id: `${archetype.id}-${i}`,
       name: brand,
-      brand: brand.split(' ')[0] ?? brand,
+      brand,
       category,
       imageUrl: '',
       description: `A perfect NA match for your ${archetype.id} taste profile.`,
-      flavourTags: archetype.primaryFlavours.slice(0, 2),
+      flavourTags: [archetype.primaryFlavours[i % archetype.primaryFlavours.length], archetype.primaryFlavours[(i + 1) % archetype.primaryFlavours.length]],
       alcoholic: false,
       gemScore: 80 + Math.floor(Math.random() * 20),
     });
@@ -60,7 +60,7 @@ function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
       category: categories[i % categories.length] ?? 'na_sparkling',
       imageUrl: '',
       description: 'A unique NA option crafted for discerning taste.',
-      flavourTags: archetype.primaryFlavours.slice(0, 2),
+      flavourTags: [archetype.primaryFlavours[i % archetype.primaryFlavours.length], archetype.primaryFlavours[(i + 1) % archetype.primaryFlavours.length]],
       alcoholic: false,
       gemScore: 70 + Math.floor(Math.random() * 25),
     });

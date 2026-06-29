@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { DrinkRating, TasteProfile, ArchetypeId } from '../types';
+import type { DrinkRating, TasteProfile, ArchetypeId, FlavourTag } from '../types';
+import { ARCHETYPES } from '../constants/archetypes';
 
 interface TasteState {
   profile: TasteProfile;
@@ -33,7 +34,9 @@ export const useTasteStore = create<TasteState>((set, get) => ({
     safeSet('@ss_profile', JSON.stringify(profile));
   },
   updateArchetype: (id) => {
-    const profile = { ...get().profile, archetypeId: id };
+    const archetype = ARCHETYPES[id];
+    const flavours: FlavourTag[] = archetype ? [...archetype.primaryFlavours] : [];
+    const profile = { ...get().profile, archetypeId: id, dominantFlavours: flavours };
     set({ profile });
     safeSet('@ss_profile', JSON.stringify(profile));
   },

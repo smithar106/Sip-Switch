@@ -41,15 +41,16 @@ export default function Profile() {
         <Text style={styles.sectionTitle}>Your Taste DNA</Text>
         <Text style={styles.ratingCount}>{profile.totalRatings} drinks rated</Text>
 
-        {profile.archetypeId && (
-          <View style={styles.flavourRow}>
-            {ARCHETYPES[profile.archetypeId].primaryFlavours.map((f) => (
-              <View key={f} style={styles.flavourPill}>
-                <Text style={styles.flavourPillText}>{f}</Text>
-              </View>
-            ))}
-          </View>
-        )}
+        <View style={styles.flavourRow}>
+          {(profile.dominantFlavours.length > 0
+            ? profile.dominantFlavours
+            : archetype?.primaryFlavours ?? []
+          ).map((f) => (
+            <View key={f} style={styles.flavourPill}>
+              <Text style={styles.flavourPillText}>{f}</Text>
+            </View>
+          ))}
+        </View>
 
         <View style={styles.divider} />
 
