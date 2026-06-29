@@ -1,0 +1,33 @@
+import { useEffect } from 'react';
+import { Stack } from 'expo-router';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
+import { useSessionStore } from '@/src/stores/sessionStore';
+import { useTasteStore } from '@/src/stores/tasteStore';
+import { configureRevenueCat } from '@/src/services/revenueCat';
+
+export default function RootLayout() {
+  const loadSession = useSessionStore((s) => s.loadFromStorage);
+  const loadTaste = useTasteStore((s) => s.loadFromStorage);
+
+  useEffect(() => {
+    loadSession();
+    loadTaste();
+    configureRevenueCat();
+  }, []);
+
+  return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <StatusBar style="light" />
+        <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: '#0A0A0A' } }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="onboarding" />
+          <Stack.Screen name="(tabs)" />
+          <Stack.Screen name="paywall" options={{ presentation: 'fullScreenModal' }} />
+        </Stack>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
+  );
+}
