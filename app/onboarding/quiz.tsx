@@ -76,7 +76,7 @@ export default function Quiz() {
   const setArchetypeId = useSessionStore((s) => s.setArchetypeId);
   const updateArchetype = useTasteStore((s) => s.updateArchetype);
   const [selected, setSelected] = useState<string | null>(null);
-  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const fadeAnim = useRef(new Animated.Value(1)).current;
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const question = QUESTIONS[currentStep];

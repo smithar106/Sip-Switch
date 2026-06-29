@@ -35,6 +35,7 @@ const BENEFITS = [
 export default function Paywall() {
   const [selected, setSelected] = useState('annual');
   const [loading, setLoading] = useState(false);
+  const [offeringsLoading, setOfferingsLoading] = useState(true);
   const [packages, setPackages] = useState<any[]>([]);
   const insets = useSafeAreaInsets();
   const setIsPremium = useSessionStore((s) => s.setIsPremium);
@@ -42,8 +43,11 @@ export default function Paywall() {
   const setHasOnboarded = useSessionStore((s) => s.setHasOnboarded);
 
   useEffect(() => {
+    setOfferingsLoading(true);
     getOfferings().then((o) => {
       setPackages(o?.current?.availablePackages ?? []);
+    }).finally(() => {
+      setOfferingsLoading(false);
     });
   }, []);
 
@@ -97,12 +101,11 @@ export default function Paywall() {
   };
 
   const ctaText = () => {
-    if (loading) return '';
     if (selected === 'annual') return 'Start My 14-Day Free Trial →';
     return 'Subscribe Now →';
   };
 
-  const plan = PLANS.find((p) => p.id === selected)!;
+  const plan = PLANS.find((p) => p.id === selected) ?? PLANS[0];
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
@@ -145,8 +148,8 @@ export default function Paywall() {
           <Text style={styles.billingNote}>{plan.billingNote}</Text>
         </View>
 
-        <TouchableOpacity style={styles.cta} onPress={handlePurchase} activeOpacity={0.9} disabled={loading}>
-          {loading
+        <TouchableOpacity style={styles.cta} onPress={handlePurchase} activeOpacity={0.9} disabled={loading || offeringsLoading}>
+          {loading || offeringsLoading
             ? <ActivityIndicator color="#0A0A0A" />
             : <Text style={styles.ctaTxt}>{ctaText()}</Text>}
         </TouchableOpacity>
@@ -155,7 +158,7 @@ export default function Paywall() {
           {selected === 'annual' ? 'Try free for 14 days · No charge until trial ends' : '$4.99/mo · Cancel anytime'}
         </Text>
 
-        <TouchableOpacity style={styles.restoreBtn} onPress={handleRestore} disabled={loading}>
+        <TouchableOpacity style={styles.restoreBtn} onPress={handleRestore} disabled={loading || offeringsLoading}>
           <Text style={styles.restoreTxt}>Restore Purchases</Text>
         </TouchableOpacity>
 
