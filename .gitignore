@@ -1,7 +1,7 @@
 node_modules/
-.next/
+.expo/
+ios/
+android/
 .env
-.env.local
-.env*.local
 *.tsbuildinfo
-.DS_Store
+dist/
