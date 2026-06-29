@@ -12,6 +12,13 @@ export default function ArchetypeReveal() {
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
+      <View style={styles.backRow}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.6}>
+          <Text style={styles.backArrow}>←</Text>
+          <Text style={styles.backLabel}>Back</Text>
+        </TouchableOpacity>
+      </View>
+
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.wrap}
@@ -71,6 +78,29 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#0A0A0A',
+  },
+  backRow: {
+    paddingHorizontal: 20,
+    paddingTop: 4,
+    paddingBottom: 4,
+  },
+  backBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    paddingVertical: 8,
+    paddingRight: 12,
+  },
+  backArrow: {
+    color: '#C8A96E',
+    fontSize: 20,
+    fontWeight: '600',
+    marginRight: 4,
+  },
+  backLabel: {
+    color: '#C8A96E',
+    fontSize: 14,
+    fontWeight: '600',
   },
   scroll: {
     flex: 1,
