@@ -13,7 +13,7 @@ interface ResultPageProps {
 export function ResultPage({ archetype, answers, onRetake }: ResultPageProps) {
   const [shared, setShared] = useState(false);
   const appStoreUrl =
-    process.env.NEXT_PUBLIC_APP_STORE_URL ?? "#";
+    process.env.NEXT_PUBLIC_APP_STORE_URL ?? "https://apps.apple.com/app/sip-switch";
 
   const handleShare = useCallback(async () => {
     trackEvent("share_profile", { archetype: archetype.id });
@@ -115,9 +115,10 @@ export function ResultPage({ archetype, answers, onRetake }: ResultPageProps) {
             >
               <span className="text-lg flex-shrink-0">{swap.from}</span>
               <span className="text-[#C8A96E] flex-shrink-0">→</span>
-              <span className="text-sm text-white font-medium text-right flex-1">
-                {swap.to}
-              </span>
+              <div className="flex flex-col items-end flex-1">
+                <span className="text-sm text-white font-medium">{swap.to}</span>
+                <span className="text-xs text-[#666666] mt-0.5">{swap.reason}</span>
+              </div>
             </div>
           ))}
         </div>
