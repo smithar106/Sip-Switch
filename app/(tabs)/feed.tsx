@@ -1,5 +1,6 @@
 import { useMemo, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
@@ -99,9 +100,14 @@ export default function Feed() {
 
         {drinks.map((drink) => (
           <View key={drink.id} style={styles.drinkCard}>
-            <View style={[styles.imagePlaceholder, { backgroundColor: (CATEGORY_GRADIENTS[drink.category] ?? ['#333', '#222'])[0] }]}>
+            <LinearGradient
+              colors={CATEGORY_GRADIENTS[drink.category] ?? ['#333333', '#222222']}
+              style={styles.imagePlaceholder}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            >
               <Text style={styles.imageEmoji}>🍋</Text>
-            </View>
+            </LinearGradient>
 
             <View style={styles.drinkInfo}>
               <Text style={styles.brand}>{drink.brand.toUpperCase()}</Text>
@@ -153,7 +159,7 @@ const styles = StyleSheet.create({
   pillText:      { color: '#C8A96E', fontSize: 12, fontWeight: '600' },
   divider:       { height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginBottom: 20 },
   drinkCard:     { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', marginBottom: 14, overflow: 'hidden' },
-  imagePlaceholder: { height: 140, alignItems: 'center', justifyContent: 'center' },
+  imagePlaceholder: { height: 140, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   imageEmoji:    { fontSize: 40, opacity: 0.6 },
   drinkInfo:     { padding: 16 },
   brand:         { color: '#999', fontSize: 11, fontWeight: '700', letterSpacing: 1.5, marginBottom: 4 },

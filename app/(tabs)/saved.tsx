@@ -30,7 +30,11 @@ export default function Saved() {
             <View key={r.drinkId + r.timestamp} style={styles.savedCard}>
               <Text style={styles.ratingIcon}>{r.rating === 'love' ? '♥' : '♡'}</Text>
               <View>
-                <Text style={styles.drinkId}>{r.drinkId}</Text>
+                <Text style={styles.drinkId}>
+                  {r.drinkId.startsWith('extra-')
+                    ? ['Atypique','De Soi','Rightside','Tenneyson','Dhos'][parseInt(r.drinkId.split('-')[1]) ?? 0] ?? r.drinkId
+                    : r.drinkId.split('-').slice(0, -1).join(' ')}
+                </Text>
                 <Text style={styles.timestamp}>{new Date(r.timestamp).toLocaleDateString()}</Text>
               </View>
             </View>
