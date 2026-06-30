@@ -58,6 +58,13 @@ export default function Paywall() {
   ) ?? packages[0];
 
   const handlePurchase = async () => {
+    if (__DEV__) {
+      setIsPremium(true);
+      setHasOnboarded(true);
+      setTrialStartDate(new Date().toISOString().slice(0, 10));
+      router.replace('/(tabs)/feed');
+      return;
+    }
     if (!selectedPkg) {
       Alert.alert('Connection Error', 'Unable to load subscription options. Please check your connection and try again.');
       return;
@@ -83,6 +90,12 @@ export default function Paywall() {
   };
 
   const handleRestore = async () => {
+    if (__DEV__) {
+      setIsPremium(true);
+      setHasOnboarded(true);
+      router.replace('/(tabs)/feed');
+      return;
+    }
     setLoading(true);
     try {
       const granted = await restorePurchases();
