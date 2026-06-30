@@ -145,6 +145,7 @@ export default function Live() {
               <TouchableOpacity
                 style={styles.customBtn}
                 onPress={() => setShowCustomInput(true)}
+                activeOpacity={0.7}
               >
                 <Text style={styles.customBtnTxt}>✏️  Describe your own moment</Text>
               </TouchableOpacity>

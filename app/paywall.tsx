@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, ActivityIndicator, Linking } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { getOfferings, purchasePackage, restorePurchases } from '@/src/services/revenueCat';
 
@@ -89,6 +90,7 @@ export default function Paywall() {
       if (granted) {
         setIsPremium(true);
         setHasOnboarded(true);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
         if (selected === 'annual') {
           setTrialStartDate(new Date().toISOString().slice(0, 10));
         }
@@ -96,7 +98,7 @@ export default function Paywall() {
       }
     } catch (e: any) {
       if (!e?.userCancelled) {
-        Alert.alert('Purchase Failed', 'Unable to complete your purchase. Please try again.');
+        Alert.alert('Purchase Failed', 'Your payment could not be processed. Check your payment method and try again.');
       }
     } finally {
       setLoading(false);
@@ -116,12 +118,13 @@ export default function Paywall() {
       if (granted) {
         setIsPremium(true);
         setHasOnboarded(true);
+        Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
         router.replace('/(tabs)/feed');
       } else {
         Alert.alert('Nothing to Restore', 'No active subscription found for this Apple ID.');
       }
     } catch {
-      Alert.alert('Restore Failed', 'Please try again.');
+      Alert.alert('Restore Failed', 'Could not connect to the App Store. Check your connection and try again.');
     } finally {
       setLoading(false);
     }

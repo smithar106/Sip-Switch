@@ -2,6 +2,7 @@ import { useState, useRef, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import * as Haptics from 'expo-haptics';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
@@ -98,6 +99,7 @@ export default function Quiz() {
           });
           setArchetypeId(result);
           updateArchetype(result);
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           reset();
           router.push('/onboarding/archetype-reveal');
         } else {
