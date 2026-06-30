@@ -183,7 +183,7 @@ export default function Feed() {
         ))}
 
         <View style={styles.loadingRow}>
-          <Text style={styles.loadingText}>More recommendations loading...</Text>
+          <Text style={styles.loadingText}>Rate drinks to refine your taste profile</Text>
         </View>
       </ScrollView>
     </View>
