@@ -1,4 +1,4 @@
-import { useMemo, useCallback, useState } from 'react';
+import { useMemo, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -97,17 +97,23 @@ export default function Feed() {
   const insets = useSafeAreaInsets();
   const archetypeId = useSessionStore((s) => s.archetypeId);
   const addRating = useTasteStore((s) => s.addRating);
+  const ratings = useTasteStore((s) => s.ratings);
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
 
   const drinks = useMemo(() => generateMockDrinks(archetypeId), [archetypeId]);
 
-  const [ratedDrinks, setRatedDrinks] = useState<Record<string, 'love' | 'skip'>>({});
+  const ratedDrinks = useMemo(() => {
+    const map: Record<string, 'love' | 'skip'> = {};
+    for (const r of ratings) {
+      if (r.rating === 'love' || r.rating === 'skip') {
+        map[r.drinkId] = r.rating;
+      }
+    }
+    return map;
+  }, [ratings]);
 
   const handleRate = useCallback((drinkId: string, rating: DrinkRating['rating']) => {
     addRating({ drinkId, rating, timestamp: new Date().toISOString() });
-    if (rating === 'love' || rating === 'skip') {
-      setRatedDrinks(prev => ({ ...prev, [drinkId]: rating }));
-    }
   }, [addRating]);
 
   return (

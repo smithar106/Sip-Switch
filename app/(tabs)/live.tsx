@@ -42,7 +42,9 @@ export default function Live() {
     setSelectedMoment(momentId);
     setCurrentEntry(entry);
     addEntry(entry);
-    setPhase('result');
+    setTimeout(() => {
+      setPhase('result');
+    }, 180);
   }, [archetypeId, addEntry]);
 
   const handleRate = useCallback((rating: LiveEntry['rating']) => {
@@ -109,7 +111,10 @@ export default function Live() {
               {MOMENTS.map((moment) => (
                 <TouchableOpacity
                   key={moment.id}
-                  style={styles.momentCard}
+                  style={[
+                    styles.momentCard,
+                    selectedMoment === moment.id && styles.momentCardSelected,
+                  ]}
                   onPress={() => handleMomentSelect(moment.id)}
                   activeOpacity={0.8}
                 >
@@ -266,6 +271,7 @@ const styles = StyleSheet.create({
   scrollContent:    { paddingHorizontal: 20, paddingBottom: 40 },
   momentGrid:       { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 16 },
   momentCard:       { width: '47%', backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', padding: 14, gap: 4 },
+  momentCardSelected:{ backgroundColor: 'rgba(200,169,110,0.15)', borderColor: '#C8A96E', borderWidth: 2 },
   momentEmoji:      { fontSize: 26, marginBottom: 4 },
   momentLabel:      { color: '#FFF', fontSize: 13, fontWeight: '700', lineHeight: 18 },
   momentDesc:       { color: '#AAAAAA', fontSize: 11, lineHeight: 15 },

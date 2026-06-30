@@ -154,6 +154,7 @@ export default function Quiz() {
                   style={[
                     question.grid ? styles.cardGrid : styles.cardFull,
                     isSelected && styles.cardSelected,
+                    selected !== null && !isSelected && styles.cardDisabled,
                   ]}
                   onPress={() => advance(opt.id)}
                   disabled={selected !== null}
@@ -257,6 +258,9 @@ const styles = StyleSheet.create({
   cardSelected: {
     backgroundColor: 'rgba(200,169,110,0.15)',
     borderColor: '#C8A96E',
+  },
+  cardDisabled: {
+    opacity: 0.35,
   },
   cardLabel: {
     color: '#FFFFFF',
