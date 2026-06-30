@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -78,8 +78,13 @@ export default function Feed() {
 
   const drinks = useMemo(() => generateMockDrinks(archetypeId), [archetypeId]);
 
+  const [ratedDrinks, setRatedDrinks] = useState<Record<string, 'love' | 'skip'>>({});
+
   const handleRate = useCallback((drinkId: string, rating: DrinkRating['rating']) => {
     addRating({ drinkId, rating, timestamp: new Date().toISOString() });
+    if (rating === 'love' || rating === 'skip') {
+      setRatedDrinks(prev => ({ ...prev, [drinkId]: rating }));
+    }
   }, [addRating]);
 
   return (
@@ -123,16 +128,29 @@ export default function Feed() {
 
               <View style={styles.actionRow}>
                 <TouchableOpacity
-                  style={styles.loveBtn}
+                  style={[
+                    styles.loveBtn,
+                    ratedDrinks[drink.id] === 'love' && styles.loveBtnActive
+                  ]}
                   onPress={() => handleRate(drink.id, 'love')}
                 >
-                  <Text style={styles.loveBtnText}>♥ This is me</Text>
+                  <Text style={styles.loveBtnText}>
+                    {ratedDrinks[drink.id] === 'love' ? '♥ Saved' : '♥ This is me'}
+                  </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={styles.skipBtn}
+                  style={[
+                    styles.skipBtn,
+                    ratedDrinks[drink.id] === 'skip' && styles.skipBtnActive
+                  ]}
                   onPress={() => handleRate(drink.id, 'skip')}
                 >
-                  <Text style={styles.skipBtnText}>✕ Not for me</Text>
+                  <Text style={[
+                    styles.skipBtnText,
+                    ratedDrinks[drink.id] === 'skip' && styles.skipBtnTextActive
+                  ]}>
+                    {ratedDrinks[drink.id] === 'skip' ? '✕ Skipped' : '✕ Not for me'}
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -169,9 +187,12 @@ const styles = StyleSheet.create({
   tagText:       { color: '#C8A96E', fontSize: 11, fontWeight: '600' },
   actionRow:     { flexDirection: 'row', gap: 10 },
   loveBtn:       { flex: 1, backgroundColor: '#C8A96E', borderRadius: 12, paddingVertical: 12, alignItems: 'center' },
+  loveBtnActive: { backgroundColor: '#8B6914' },
   loveBtnText:   { color: '#0A0A0A', fontSize: 14, fontWeight: '700' },
   skipBtn:       { flex: 1, backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 12, paddingVertical: 12, alignItems: 'center', borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)' },
+  skipBtnActive: { backgroundColor: 'rgba(255,255,255,0.12)', borderColor: 'rgba(255,255,255,0.2)' },
   skipBtnText:   { color: '#999', fontSize: 14, fontWeight: '600' },
+  skipBtnTextActive: { color: '#FFF' },
   loadingRow:    { alignItems: 'center', paddingVertical: 24 },
   loadingText:   { color: '#C8A96E', fontSize: 14, fontWeight: '500' },
 });
