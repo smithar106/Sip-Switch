@@ -15,12 +15,16 @@ export default function RootLayout() {
   useEffect(() => {
     loadSession();
     loadTaste();
-    configureRevenueCat();
-    getCustomerInfo().then((info) => {
-      if (info?.entitlements?.active) {
-        setIsPremium(true);
-      }
-    });
+    if (!__DEV__) {
+      configureRevenueCat();
+      getCustomerInfo().then((info) => {
+        if (info?.entitlements?.active) {
+          setIsPremium(true);
+        }
+      });
+    } else {
+      setIsPremium(true);
+    }
   }, [loadSession, loadTaste, setIsPremium]);
 
   return (

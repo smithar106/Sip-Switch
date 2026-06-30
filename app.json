@@ -24,7 +24,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0A1628"
-      }
+      },
+      "package": "app.sipswitch.ios"
     },
     "scheme": "sipswitch",
     "plugins": [

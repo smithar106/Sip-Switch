@@ -11,7 +11,7 @@ export default function Index() {
     const timer = setTimeout(() => {
       if (!hasOnboarded) {
         router.replace('/onboarding/welcome');
-      } else if (!isPremium) {
+      } else if (!isPremium && !__DEV__) {
         router.replace('/paywall');
       } else {
         router.replace('/(tabs)/feed');
