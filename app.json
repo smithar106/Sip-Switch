@@ -9,12 +9,22 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0A0A0A"
+      "backgroundColor": "#0A1628"
     },
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "app.sipswitch.ios",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "icon": "./assets/icon.png",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0A1628"
+      }
     },
     "scheme": "sipswitch",
     "plugins": [
@@ -29,8 +39,10 @@
     ],
     "extra": {
       "eas": {
-        "projectId": "YOUR_EAS_PROJECT_ID"
-      }
-    }
+        "projectId": "f1a92ba0-f639-4189-b20a-efeb426ba5f4"
+      },
+      "router": {}
+    },
+    "owner": "smithar106"
   }
 }
