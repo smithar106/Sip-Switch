@@ -2,11 +2,29 @@ import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from 'react-nati
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTasteStore } from '@/src/stores/tasteStore';
+import { useSessionStore } from '@/src/stores/sessionStore';
+import { ARCHETYPES } from '@/src/constants/archetypes';
 
 export default function Saved() {
   const insets = useSafeAreaInsets();
   const ratings = useTasteStore((s) => s.ratings);
   const saved = ratings.filter((r) => r.rating === 'love' || r.rating === 'like');
+  const archetypeId = useSessionStore((s) => s.archetypeId);
+
+  const DRINK_NAME_MAP: Record<string, string> = {};
+  if (archetypeId) {
+    const archetype = ARCHETYPES[archetypeId];
+    archetype.examples.forEach((name, i) => {
+      DRINK_NAME_MAP[`${archetypeId}-${i}`] = name;
+    });
+    ['Atypique', 'De Soi', 'Rightside', 'Tenneyson', 'Dhos'].forEach((name, i) => {
+      DRINK_NAME_MAP[`extra-${i}`] = name;
+    });
+  }
+
+  const getDrinkName = (drinkId: string): string => {
+    return DRINK_NAME_MAP[drinkId] ?? drinkId;
+  };
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
@@ -28,15 +46,20 @@ export default function Saved() {
           <View style={styles.divider} />
           {saved.map((r) => (
             <View key={r.drinkId + r.timestamp} style={styles.savedCard}>
-              <Text style={styles.ratingIcon}>{r.rating === 'love' ? '♥' : '♡'}</Text>
-              <View>
-                <Text style={styles.drinkId}>
-                  {r.drinkId.startsWith('extra-')
-                    ? ['Atypique','De Soi','Rightside','Tenneyson','Dhos'][parseInt(r.drinkId.split('-')[1]) ?? 0] ?? r.drinkId
-                    : r.drinkId.split('-').slice(0, -1).join(' ')}
+              <View style={styles.savedIconWrap}>
+                <Text style={styles.savedIcon}>
+                  {r.rating === 'love' ? '♥' : '♡'}
                 </Text>
-                <Text style={styles.timestamp}>{new Date(r.timestamp).toLocaleDateString()}</Text>
               </View>
+              <View style={styles.savedInfo}>
+                <Text style={styles.savedName}>{getDrinkName(r.drinkId)}</Text>
+                <Text style={styles.savedDate}>
+                  Saved {new Date(r.timestamp).toLocaleDateString('en-US', {
+                    month: 'short', day: 'numeric'
+                  })}
+                </Text>
+              </View>
+              <Text style={styles.savedArrow}>→</Text>
             </View>
           ))}
         </ScrollView>
@@ -46,19 +69,22 @@ export default function Saved() {
 }
 
 const styles = StyleSheet.create({
-  screen:       { flex: 1, backgroundColor: '#0A0A0A' },
-  scroll:       { flex: 1 },
-  wrap:         { paddingHorizontal: 20, paddingBottom: 40 },
-  headline:     { color: '#FFF', fontSize: 28, fontWeight: '800', marginTop: 12 },
-  divider:      { height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginVertical: 16 },
-  savedCard:    { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 10 },
-  ratingIcon:   { color: '#C8A96E', fontSize: 20, flexShrink: 0 },
-  drinkId:      { color: '#FFF', fontSize: 14, fontWeight: '600' },
-  timestamp:    { color: '#666', fontSize: 12, marginTop: 2 },
-  empty:        { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 },
-  emptyEmoji:   { fontSize: 72, marginBottom: 16 },
-  emptyTitle:   { color: '#FFF', fontSize: 22, fontWeight: '700', marginBottom: 8 },
-  emptySub:     { color: '#999', fontSize: 14, textAlign: 'center', marginBottom: 24 },
-  emptyBtn:     { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 14, paddingHorizontal: 32 },
-  emptyBtnText: { color: '#0A0A0A', fontSize: 15, fontWeight: '700' },
+  screen:        { flex: 1, backgroundColor: '#0A0A0A' },
+  scroll:        { flex: 1 },
+  wrap:          { paddingHorizontal: 20, paddingBottom: 40 },
+  headline:      { color: '#FFF', fontSize: 28, fontWeight: '800', marginTop: 12 },
+  divider:       { height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginVertical: 16 },
+  savedCard:     { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', padding: 16, flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 10 },
+  savedIconWrap: { width: 40, height: 40, borderRadius: 20, backgroundColor: 'rgba(200,169,110,0.15)', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  savedIcon:     { color: '#C8A96E', fontSize: 18 },
+  savedInfo:     { flex: 1 },
+  savedName:     { color: '#FFF', fontSize: 15, fontWeight: '700', marginBottom: 3 },
+  savedDate:     { color: '#666', fontSize: 12 },
+  savedArrow:    { color: '#555', fontSize: 16 },
+  empty:         { flex: 1, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 24 },
+  emptyEmoji:    { fontSize: 72, marginBottom: 16 },
+  emptyTitle:    { color: '#FFF', fontSize: 22, fontWeight: '700', marginBottom: 8 },
+  emptySub:      { color: '#999', fontSize: 14, textAlign: 'center', marginBottom: 24 },
+  emptyBtn:      { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 14, paddingHorizontal: 32 },
+  emptyBtnText:  { color: '#0A0A0A', fontSize: 15, fontWeight: '700' },
 });
