@@ -29,7 +29,10 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen name="feed" options={{ title: 'For You', tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>✦</Text> }} />
-      <Tabs.Screen name="swaps" options={{ title: 'Swaps', tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>⇄</Text> }} />
+      <Tabs.Screen name="live" options={{
+        title: 'Live',
+        tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>⚡</Text>
+      }} />
       <Tabs.Screen name="saved" options={{ title: 'Saved', tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>♡</Text> }} />
       <Tabs.Screen name="profile" options={{ title: 'Profile', tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>◉</Text> }} />
     </Tabs>

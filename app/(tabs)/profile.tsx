@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Linking } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
-import { ARCHETYPES } from '@/src/constants/archetypes';
+import { ARCHETYPES, SWAP_MAP } from '@/src/constants/archetypes';
 import type { Archetype } from '@/src/types';
 
 export default function Profile() {
@@ -13,6 +14,8 @@ export default function Profile() {
   const archetypeId = useSessionStore((s) => s.archetypeId);
   const profile = useTasteStore((s) => s.profile);
   const resetOnboarding = useOnboardingStore((s) => s.reset);
+
+  const [showSwaps, setShowSwaps] = useState(false);
 
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : null;
 
@@ -141,6 +144,30 @@ export default function Profile() {
           <Text style={styles.settingText}>Contact</Text>
           <Text style={styles.settingArrow}>→</Text>
         </TouchableOpacity>
+
+        <View style={styles.divider} />
+        <TouchableOpacity
+          style={styles.settingRow}
+          onPress={() => setShowSwaps(s => !s)}
+        >
+          <Text style={styles.settingText}>Your Switch Map</Text>
+          <Text style={styles.settingArrow}>{showSwaps ? '↑' : '↓'}</Text>
+        </TouchableOpacity>
+
+        {showSwaps && (
+          <View style={styles.swapList}>
+            {SWAP_MAP.map((swap) => (
+              <View key={swap.from} style={styles.swapRow}>
+                <Text style={styles.swapFrom}>{swap.from}</Text>
+                <Text style={styles.swapArrowIcon}>→</Text>
+                <View style={styles.swapRight}>
+                  <Text style={styles.swapTo}>{swap.to}</Text>
+                  <Text style={styles.swapReason}>{swap.reason}</Text>
+                </View>
+              </View>
+            ))}
+          </View>
+        )}
       </ScrollView>
     </View>
   );
@@ -171,4 +198,11 @@ const styles = StyleSheet.create({
   settingRow:      { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', paddingVertical: 14, borderBottomWidth: 1, borderBottomColor: 'rgba(255,255,255,0.06)' },
   settingText:     { color: '#FFF', fontSize: 15 },
   settingArrow:    { color: '#555', fontSize: 16 },
+  swapList:      { gap: 8, marginTop: 8, marginBottom: 8 },
+  swapRow:       { flexDirection: 'row', alignItems: 'center', gap: 8, backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: 10, padding: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)' },
+  swapFrom:      { color: '#999', fontSize: 12, width: 90, flexShrink: 0 },
+  swapArrowIcon: { color: '#C8A96E', fontSize: 14, fontWeight: '700' },
+  swapRight:     { flex: 1 },
+  swapTo:        { color: '#FFF', fontSize: 12, fontWeight: '700' },
+  swapReason:    { color: '#555', fontSize: 11, marginTop: 2 },
 });
