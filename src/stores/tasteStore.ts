@@ -27,8 +27,21 @@ export const useTasteStore = create<TasteState>((set, get) => ({
   profile: DEFAULT_PROFILE,
   ratings: [],
   addRating: (rating) => {
-    const ratings = [...get().ratings, rating];
-    const profile = { ...get().profile, totalRatings: ratings.length, lastUpdated: new Date().toISOString() };
+    const existing = get().ratings;
+    const alreadyRated = existing.findIndex(r => r.drinkId === rating.drinkId);
+
+    let ratings: DrinkRating[];
+    if (alreadyRated >= 0) {
+      ratings = existing.map((r, i) => i === alreadyRated ? rating : r);
+    } else {
+      ratings = [...existing, rating];
+    }
+
+    const profile = {
+      ...get().profile,
+      totalRatings: ratings.filter(r => r.rating === 'love' || r.rating === 'like').length,
+      lastUpdated: new Date().toISOString()
+    };
     set({ ratings, profile });
     safeSet('@ss_ratings', JSON.stringify(ratings));
     safeSet('@ss_profile', JSON.stringify(profile));
@@ -48,7 +61,7 @@ export const useTasteStore = create<TasteState>((set, get) => ({
       ]);
       const ratings: DrinkRating[] = ratingsRaw ? JSON.parse(ratingsRaw) : [];
       const profile: TasteProfile = profileRaw ? JSON.parse(profileRaw) : DEFAULT_PROFILE;
-      profile.totalRatings = ratings.length;
+      profile.totalRatings = ratings.filter(r => r.rating === 'love' || r.rating === 'like').length;
       set({ ratings, profile });
     } catch {
       // Corrupted storage — use defaults
