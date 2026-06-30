@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { View } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
 import { useSessionStore } from '@/src/stores/sessionStore';
 
@@ -20,5 +20,22 @@ export default function Index() {
     return () => clearTimeout(timer);
   }, [hasOnboarded, isPremium]);
 
-  return <View style={{ flex: 1, backgroundColor: '#0A0A0A' }} />;
+  return (
+    <View style={styles.screen}>
+      <Text style={styles.emoji}>🍋</Text>
+    </View>
+  );
 }
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: '#0A0A0A',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  emoji: {
+    fontSize: 48,
+    opacity: 0.5,
+  },
+});
