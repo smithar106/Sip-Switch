@@ -121,7 +121,7 @@ export default function Swaps() {
         {/* Footer nudge if nothing saved */}
         {savedCount === 0 && (
           <View style={styles.nudge}>
-            <Text style={styles.nudgeEmoji}>♥</Text>
+            <Text style={styles.nudgeEmoji} accessibilityLabel="No saved drinks yet">♥</Text>
             <Text style={styles.nudgeTxt}>
               Rate drinks in your feed to see your personal switch map fill up
             </Text>
@@ -130,7 +130,7 @@ export default function Swaps() {
 
         {savedCount === SWAP_MAP.length && (
           <View style={styles.nudge}>
-            <Text style={styles.nudgeEmoji}>🏆</Text>
+            <Text style={styles.nudgeEmoji} accessibilityLabel="All switches mapped">🏆</Text>
             <Text style={styles.nudgeTxt}>
               You've mapped every switch. You're a Sip Switch pro.
             </Text>

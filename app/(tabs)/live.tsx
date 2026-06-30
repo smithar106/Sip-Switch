@@ -168,7 +168,12 @@ export default function Live() {
                       </Text>
                     </View>
                     {entry.rating && (
-                      <Text style={styles.historyRating}>
+                      <Text
+                        style={styles.historyRating}
+                        accessibilityLabel={
+                          entry.rating === 'loved' ? 'Rated loved' : entry.rating === 'liked' ? 'Rated liked' : 'Rated skipped'
+                        }
+                      >
                         {entry.rating === 'loved' ? '♥' : entry.rating === 'liked' ? '👍' : '✕'}
                       </Text>
                     )}
