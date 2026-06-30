@@ -20,6 +20,19 @@ const CATEGORY_GRADIENTS: Record<string, readonly [string, string]> = {
   na_cider: ['#F0B27A', '#D4955B'],
 };
 
+const CATEGORY_EMOJIS: Record<string, string> = {
+  na_beer:        '🍺',
+  na_wine:        '🍷',
+  na_spirits:     '🥃',
+  na_sparkling:   '🥂',
+  na_aperitif:    '🍊',
+  na_cocktail_kit:'🍸',
+  na_kombucha:    '🫚',
+  na_adaptogen:   '🌿',
+  na_soda:        '🫧',
+  na_cider:       '🍏',
+};
+
 function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
   const categories = archetype.categories.map((c) => {
@@ -33,6 +46,9 @@ function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
     if (c.includes('Beer')) return 'na_beer' as const;
     if (c.includes('Cider')) return 'na_cider' as const;
     if (c.includes('Brew') || c.includes('Cold Brew')) return 'na_adaptogen' as const;
+    if (c.includes('Adaptogen')) return 'na_adaptogen' as const;
+    if (c.includes('Kombucha')) return 'na_kombucha' as const;
+    if (c.includes('Kefir')) return 'na_cider' as const;
     return 'na_soda' as const;
   });
 
@@ -52,13 +68,20 @@ function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
     });
   });
 
-  const extraNames = ['Atypique', 'De Soi', 'Rightside', 'Tenneyson', 'Dhos'];
-  extraNames.forEach((name, i) => {
+  const extraData = [
+    { name: 'Atypique', category: 'na_wine' as const },
+    { name: 'De Soi', category: 'na_adaptogen' as const },
+    { name: 'Rightside', category: 'na_spirits' as const },
+    { name: 'Tenneyson', category: 'na_spirits' as const },
+    { name: 'Dhos', category: 'na_aperitif' as const },
+  ];
+
+  extraData.forEach(({ name, category }, i) => {
     drinks.push({
       id: `extra-${i}`,
       name,
       brand: name,
-      category: categories[i % categories.length] ?? 'na_sparkling',
+      category,
       imageUrl: '',
       description: 'A unique NA option crafted for discerning taste.',
       flavourTags: [archetype.primaryFlavours[i % archetype.primaryFlavours.length], archetype.primaryFlavours[(i + 1) % archetype.primaryFlavours.length]],
@@ -111,7 +134,9 @@ export default function Feed() {
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
             >
-              <Text style={styles.imageEmoji}>🍋</Text>
+              <Text style={styles.imageEmoji}>
+                {CATEGORY_EMOJIS[drink.category] ?? '🍹'}
+              </Text>
             </LinearGradient>
 
             <View style={styles.drinkInfo}>
