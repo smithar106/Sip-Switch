@@ -37,7 +37,6 @@ export default function TabLayout() {
         title: 'Switch Map',
         tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>⇄</Text>
       }} />
-      <Tabs.Screen name="saved" options={{ title: 'Saved', tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>♡</Text> }} />
       <Tabs.Screen name="profile" options={{ title: 'Profile', tabBarIcon: ({ color }) => <Text style={{ fontSize: 20, color }}>◉</Text> }} />
     </Tabs>
   );
