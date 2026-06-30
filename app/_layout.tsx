@@ -38,7 +38,14 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="onboarding" />
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen name="paywall" options={{ presentation: 'fullScreenModal' }} />
+          <Stack.Screen 
+            name="paywall" 
+            options={{ 
+              presentation: 'fullScreenModal',
+              animation: 'slide_from_bottom',
+              gestureEnabled: false,
+            }} 
+          />
         </Stack>
       </SafeAreaProvider>
     </GestureHandlerRootView>
