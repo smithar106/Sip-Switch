@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
   },
   eyebrow: {
     color: '#C8A96E',
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '800',
     letterSpacing: 2,
     textTransform: 'uppercase',
@@ -132,14 +132,14 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   tagline: {
-    color: '#DDDDDD',
+    color: '#EEEEEE',
     fontSize: 17,
     textAlign: 'center',
     marginBottom: 12,
     lineHeight: 24,
   },
   description: {
-    color: '#999999',
+    color: '#CCCCCC',
     fontSize: 15,
     textAlign: 'center',
     lineHeight: 22,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   exampleCategory: {
-    color: '#666666',
+    color: '#AAAAAA',
     fontSize: 12,
     marginTop: 2,
   },
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   finePrint: {
-    color: '#666666',
+    color: '#AAAAAA',
     fontSize: 13,
     textAlign: 'center',
   },

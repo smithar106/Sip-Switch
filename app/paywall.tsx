@@ -7,29 +7,39 @@ import { getOfferings, purchasePackage, restorePurchases } from '@/src/services/
 
 const PLANS = [
   {
-    id: 'annual',
-    label: 'Annual · Best Value',
-    price: '$29.99/yr',
-    sub: '$2.49/mo · 14 days free',
-    billingNote: 'Free for 14 days, then $29.99/yr · Cancel anytime in Settings',
-    badge: 'BEST VALUE',
-    isTrial: true,
+    id: 'weekly',
+    label: 'Weekly',
+    price: '$1.99/wk',
+    sub: 'Try it this week',
+    billingNote: '$1.99/week billed weekly · Cancel anytime in Settings',
+    badge: null,
+    isTrial: false,
   },
   {
     id: 'monthly',
     label: 'Monthly',
     price: '$4.99/mo',
     sub: 'Cancel anytime',
-    billingNote: '$4.99/mo billed monthly · Cancel anytime in Settings',
+    billingNote: '$4.99/month billed monthly · Cancel anytime in Settings',
+    badge: null,
     isTrial: false,
+  },
+  {
+    id: 'annual',
+    label: 'Annual · Best Value',
+    price: '$29.99/yr',
+    sub: '$2.49/mo · 7 days free',
+    billingNote: 'Free for 7 days, then $29.99/yr · Cancel anytime in Settings',
+    badge: 'BEST VALUE',
+    isTrial: true,
   },
 ];
 
 const BENEFITS = [
   'Unlimited personalised NA drink recommendations',
-  'Full swap engine — every classic drink mapped to its NA match',
+  'Live tab — instant match for any occasion',
+  'Full swap engine — every classic drink mapped',
   'Taste profile that learns with every rating',
-  'New drops every week matched to your archetype',
 ];
 
 export default function Paywall() {
@@ -51,17 +61,21 @@ export default function Paywall() {
     });
   }, []);
 
-  const selectedPkg = packages.find((p) =>
-    selected === 'annual'
-      ? p.packageType === 'ANNUAL' || p.identifier.includes('annual')
-      : p.packageType === 'MONTHLY' || p.identifier.includes('monthly')
-  ) ?? packages[0];
+  const selectedPkg = packages.find((p) => {
+    if (selected === 'annual')
+      return p.packageType === 'ANNUAL' || p.identifier.includes('annual');
+    if (selected === 'weekly')
+      return p.packageType === 'WEEKLY' || p.identifier.includes('weekly');
+    return p.packageType === 'MONTHLY' || p.identifier.includes('monthly');
+  }) ?? packages[0];
 
   const handlePurchase = async () => {
     if (__DEV__) {
       setIsPremium(true);
       setHasOnboarded(true);
-      setTrialStartDate(new Date().toISOString().slice(0, 10));
+      if (selected === 'annual') {
+        setTrialStartDate(new Date().toISOString().slice(0, 10));
+      }
       router.replace('/(tabs)/feed');
       return;
     }
@@ -114,7 +128,8 @@ export default function Paywall() {
   };
 
   const ctaText = () => {
-    if (selected === 'annual') return 'Start My 14-Day Free Trial →';
+    if (selected === 'annual') return 'Start My 7-Day Free Trial →';
+    if (selected === 'weekly') return 'Start Weekly Plan →';
     return 'Subscribe Now →';
   };
 
@@ -168,7 +183,11 @@ export default function Paywall() {
         </TouchableOpacity>
 
         <Text style={styles.trialNote}>
-          {selected === 'annual' ? 'Try free for 14 days · No charge until trial ends' : '$4.99/mo · Cancel anytime'}
+          {selected === 'annual'
+            ? 'Try free for 7 days · No charge until trial ends'
+            : selected === 'weekly'
+            ? '$1.99/week · Cancel anytime in Settings'
+            : '$4.99/mo · Cancel anytime'}
         </Text>
 
         <TouchableOpacity style={styles.restoreBtn} onPress={handleRestore} disabled={loading || offeringsLoading}>
@@ -194,33 +213,33 @@ const styles = StyleSheet.create({
   screen:        { flex: 1, backgroundColor: '#0A0A0A' },
   scroll:        { flex: 1 },
   wrap:          { paddingHorizontal: 24, paddingTop: 48, paddingBottom: 52, gap: 20 },
-  eyebrow:       { color: '#C8A96E', fontSize: 11, fontWeight: '800', letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center' },
+  eyebrow:       { color: '#C8A96E', fontSize: 12, fontWeight: '800', letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center' },
   headline:      { color: '#FFF', fontSize: 38, fontWeight: '800', lineHeight: 44, letterSpacing: -1, textAlign: 'center' },
   benefits:      { gap: 12 },
   benefitRow:    { flexDirection: 'row', alignItems: 'center', gap: 12 },
   dot:           { width: 6, height: 6, borderRadius: 3, backgroundColor: '#C8A96E', flexShrink: 0 },
-  benefitTxt:    { color: '#DDD', fontSize: 15, fontWeight: '500', flex: 1 },
+  benefitTxt:    { color: '#EEEEEE', fontSize: 15, fontWeight: '500', flex: 1 },
   plans:         { gap: 10 },
   planCard:      { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 14, padding: 16, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.08)', flexDirection: 'row', alignItems: 'center', gap: 12, position: 'relative' },
   planCardActive:{ backgroundColor: 'rgba(200,169,110,0.1)', borderColor: '#C8A96E' },
   badge:         { position: 'absolute', top: -8, right: 10, backgroundColor: '#C8A96E', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
   badgeTxt:      { color: '#0A0A0A', fontSize: 9, fontWeight: '800', letterSpacing: 0.5 },
-  radio:         { width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: '#555', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  radio:         { width: 20, height: 20, borderRadius: 10, borderWidth: 2, borderColor: '#888888', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
   radioActive:   { borderColor: '#C8A96E' },
   radioDot:      { width: 10, height: 10, borderRadius: 5, backgroundColor: '#C8A96E' },
   planInfo:      { flex: 1, gap: 2 },
-  planLabel:     { color: '#CCC', fontSize: 14, fontWeight: '700' },
+  planLabel:     { color: '#E5E5E5', fontSize: 14, fontWeight: '700' },
   planLabelActive:{ color: '#FFF' },
-  planSub:       { color: '#666', fontSize: 12 },
-  planPrice:     { color: '#CCC', fontSize: 15, fontWeight: '800', flexShrink: 0 },
+  planSub:       { color: '#AAAAAA', fontSize: 12 },
+  planPrice:     { color: '#E5E5E5', fontSize: 15, fontWeight: '800', flexShrink: 0 },
   planPriceActive:{ color: '#C8A96E' },
-  billingNote:   { color: '#555', fontSize: 11, textAlign: 'center' },
+  billingNote:   { color: '#888888', fontSize: 11, textAlign: 'center' },
   cta:           { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 18, alignItems: 'center' },
   ctaTxt:        { color: '#0A0A0A', fontSize: 17, fontWeight: '800' },
   trialNote:     { color: '#C8A96E', fontSize: 13, fontWeight: '600', textAlign: 'center' },
   restoreBtn:    { alignItems: 'center', paddingVertical: 8 },
-  restoreTxt:    { color: '#555', fontSize: 14 },
+  restoreTxt:    { color: '#888888', fontSize: 14 },
   legalRow:      { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
-  legalLink:     { color: '#444', fontSize: 12, textDecorationLine: 'underline' },
-  legalSep:      { color: '#444', fontSize: 12 },
+  legalLink:     { color: '#888888', fontSize: 12, textDecorationLine: 'underline' },
+  legalSep:      { color: '#888888', fontSize: 12 },
 });

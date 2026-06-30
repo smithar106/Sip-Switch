@@ -89,7 +89,7 @@ export default function Live() {
             <Text style={styles.headline}>Live</Text>
             <Text style={styles.subheadline}>What's your moment right now?</Text>
           </View>
-          {streak > 0 && (
+          {streak >= 3 && (
             <View style={styles.streakBadge}>
               <Text style={styles.streakEmoji}>🔥</Text>
               <Text style={styles.streakCount}>{streak}</Text>
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   screen:           { flex: 1, backgroundColor: '#0A0A0A' },
   header:           { flexDirection: 'row', alignItems: 'flex-start', justifyContent: 'space-between', paddingHorizontal: 20, paddingTop: 12, paddingBottom: 16 },
   headline:         { color: '#FFF', fontSize: 28, fontWeight: '800' },
-  subheadline:      { color: '#666', fontSize: 14, marginTop: 4 },
+  subheadline:      { color: '#AAAAAA', fontSize: 14, marginTop: 4 },
   streakBadge:      { backgroundColor: 'rgba(200,169,110,0.1)', borderRadius: 12, borderWidth: 1, borderColor: 'rgba(200,169,110,0.2)', paddingHorizontal: 12, paddingVertical: 8, alignItems: 'center' },
   streakEmoji:      { fontSize: 20 },
   streakCount:      { color: '#C8A96E', fontSize: 22, fontWeight: '800', lineHeight: 26 },
@@ -262,24 +262,24 @@ const styles = StyleSheet.create({
   momentCard:       { width: '47%', backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', padding: 14, gap: 4 },
   momentEmoji:      { fontSize: 26, marginBottom: 4 },
   momentLabel:      { color: '#FFF', fontSize: 13, fontWeight: '700', lineHeight: 18 },
-  momentDesc:       { color: '#666', fontSize: 11, lineHeight: 15 },
+  momentDesc:       { color: '#AAAAAA', fontSize: 11, lineHeight: 15 },
   customBtn:        { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', borderStyle: 'dashed', paddingVertical: 14, alignItems: 'center', marginBottom: 24 },
-  customBtnTxt:     { color: '#666', fontSize: 14, fontWeight: '500' },
+  customBtnTxt:     { color: '#AAAAAA', fontSize: 14, fontWeight: '500' },
   customInputWrap:  { gap: 10, marginBottom: 24 },
   customInput:      { backgroundColor: 'rgba(255,255,255,0.06)', borderRadius: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.1)', paddingHorizontal: 16, paddingVertical: 14, color: '#FFF', fontSize: 15 },
   customSubmit:     { backgroundColor: '#C8A96E', borderRadius: 14, paddingVertical: 14, alignItems: 'center' },
   customSubmitOff:  { backgroundColor: 'rgba(200,169,110,0.3)' },
   customSubmitTxt:  { color: '#0A0A0A', fontSize: 15, fontWeight: '700' },
   historySection:   { gap: 8 },
-  historyLabel:     { color: '#C8A96E', fontSize: 11, fontWeight: '700', letterSpacing: 1.5, marginBottom: 4 },
+  historyLabel:     { color: '#C8A96E', fontSize: 12, fontWeight: '700', letterSpacing: 1.5, marginBottom: 4 },
   historyCard:      { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: 12, padding: 12, borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)' },
   historyEmoji:     { fontSize: 24, width: 32, textAlign: 'center' },
   historyInfo:      { flex: 1, gap: 2 },
-  historyMoment:    { color: '#999', fontSize: 11, fontWeight: '600' },
+  historyMoment:    { color: '#CCCCCC', fontSize: 11, fontWeight: '600' },
   historyDrink:     { color: '#FFF', fontSize: 13, fontWeight: '700' },
-  historyDate:      { color: '#555', fontSize: 11 },
+  historyDate:      { color: '#888888', fontSize: 11 },
   historyRating:    { color: '#C8A96E', fontSize: 18 },
-  historyMore:      { color: '#555', fontSize: 12, textAlign: 'center', marginTop: 4 },
+  historyMore:      { color: '#888888', fontSize: 12, textAlign: 'center', marginTop: 4 },
   resultContent:    { paddingHorizontal: 20, paddingTop: 20, paddingBottom: 40, gap: 20 },
   resultMoment:     { flexDirection: 'row', alignItems: 'center', gap: 10 },
   resultMomentEmoji:{ fontSize: 36 },
@@ -289,12 +289,12 @@ const styles = StyleSheet.create({
   recDrink:         { color: '#FFF', fontSize: 26, fontWeight: '800', lineHeight: 30 },
   recBrand:         { color: '#C8A96E', fontSize: 12, fontWeight: '700', letterSpacing: 1 },
   recDivider:       { height: 1, backgroundColor: 'rgba(200,169,110,0.15)', marginVertical: 8 },
-  recReason:        { color: '#CCC', fontSize: 15, lineHeight: 22, fontStyle: 'italic' },
-  ratingPrompt:     { color: '#999', fontSize: 15, fontWeight: '600', textAlign: 'center' },
+  recReason:        { color: '#E5E5E5', fontSize: 15, lineHeight: 22, fontStyle: 'italic' },
+  ratingPrompt:     { color: '#CCCCCC', fontSize: 15, fontWeight: '600', textAlign: 'center' },
   ratingRow:        { flexDirection: 'row', gap: 10 },
   ratingBtn:        { flex: 1, backgroundColor: 'rgba(255,255,255,0.05)', borderRadius: 14, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', paddingVertical: 14, alignItems: 'center', gap: 6 },
   ratingBtnEmoji:   { fontSize: 22 },
-  ratingBtnLabel:   { color: '#999', fontSize: 11, fontWeight: '600' },
+  ratingBtnLabel:   { color: '#CCCCCC', fontSize: 11, fontWeight: '600' },
   backBtn:          { alignItems: 'center', paddingVertical: 8 },
-  backBtnTxt:       { color: '#555', fontSize: 14 },
+  backBtnTxt:       { color: '#888888', fontSize: 14 },
 });

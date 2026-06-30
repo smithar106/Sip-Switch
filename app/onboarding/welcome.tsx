@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   subheadline: {
-    color: '#999999',
+    color: '#CCCCCC',
     fontSize: 16,
     textAlign: 'center',
     lineHeight: 24,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   existing: {
-    color: '#555555',
+    color: '#888888',
     fontSize: 14,
   },
 });
