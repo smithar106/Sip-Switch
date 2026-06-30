@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, LayoutAnimation } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSessionStore } from '@/src/stores/sessionStore';
@@ -113,6 +113,7 @@ export default function Feed() {
   }, [ratings]);
 
   const handleRate = useCallback((drinkId: string, rating: DrinkRating['rating']) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     addRating({ drinkId, rating, timestamp: new Date().toISOString() });
   }, [addRating]);
 
