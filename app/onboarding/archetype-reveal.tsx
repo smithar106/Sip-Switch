@@ -12,13 +12,6 @@ export default function ArchetypeReveal() {
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
-      <View style={styles.backRow}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.backBtn} activeOpacity={0.6}>
-          <Text style={styles.backArrow}>←</Text>
-          <Text style={styles.backLabel}>Back</Text>
-        </TouchableOpacity>
-      </View>
-
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.wrap}
@@ -44,19 +37,29 @@ export default function ArchetypeReveal() {
 
         <View style={styles.divider} />
 
-        <Text style={styles.sectionLabel}>Start here.</Text>
-
-        {archetype.examples.map((example, i) => (
-          <View key={example} style={styles.exampleCard}>
-            <Text style={styles.exampleIcon}>✦</Text>
-            <View style={styles.exampleInfo}>
-              <Text style={styles.exampleName}>{example}</Text>
-              <Text style={styles.exampleCategory}>
-                {archetype.categories[i] ?? ''}
-              </Text>
+        {/* Locked drink preview */}
+        <View style={styles.drinkSection}>
+          <Text style={styles.drinkSectionLabel}>YOUR FIRST MATCH</Text>
+          <View style={styles.drinkCardUnlocked}>
+            <Text style={styles.drinkEmoji}>{archetype.examples[0] ? '🍵' : '🥂'}</Text>
+            <View style={styles.drinkInfo}>
+              <Text style={styles.drinkName}>{archetype.examples[0] ?? 'Seedlip Spice 94'}</Text>
+              <Text style={styles.drinkSub}>Matched to your taste profile</Text>
             </View>
           </View>
-        ))}
+
+          <Text style={styles.lockLabel}>🔒 2 more matches — unlock with your trial</Text>
+          {[1, 2].map((i) => (
+            <View key={i} style={styles.drinkCardLocked}>
+              <Text style={styles.drinkEmoji}>🔒</Text>
+              <View style={styles.drinkInfo}>
+                <Text style={styles.drinkNameLocked}>
+                  {i === 1 ? 'Matched to your occasion' : 'Matched to your flavour profile'}
+                </Text>
+              </View>
+            </View>
+          ))}
+        </View>
 
         <View style={styles.divider} />
 
@@ -65,7 +68,7 @@ export default function ArchetypeReveal() {
           activeOpacity={0.9}
           onPress={() => router.push('/paywall')}
         >
-          <Text style={styles.ctaText}>Start my free trial →</Text>
+          <Text style={styles.ctaText}>Unlock my full match list →</Text>
         </TouchableOpacity>
 
         <Text style={styles.finePrint}>14-day free trial · Cancel anytime</Text>
@@ -78,29 +81,6 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: '#0A0A0A',
-  },
-  backRow: {
-    paddingHorizontal: 20,
-    paddingTop: 4,
-    paddingBottom: 4,
-  },
-  backBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    paddingVertical: 8,
-    paddingRight: 12,
-  },
-  backArrow: {
-    color: '#C8A96E',
-    fontSize: 20,
-    fontWeight: '600',
-    marginRight: 4,
-  },
-  backLabel: {
-    color: '#C8A96E',
-    fontSize: 14,
-    fontWeight: '600',
   },
   scroll: {
     flex: 1,
@@ -172,43 +152,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255,255,255,0.08)',
     marginBottom: 24,
   },
-  sectionLabel: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '700',
-    alignSelf: 'flex-start',
-    marginBottom: 16,
-  },
-  exampleCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 12,
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 16,
-    padding: 16,
-    width: '100%',
-    marginBottom: 10,
-  },
-  exampleIcon: {
-    color: '#C8A96E',
-    fontSize: 22,
-    flexShrink: 0,
-  },
-  exampleInfo: {
-    flex: 1,
-  },
-  exampleName: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-  exampleCategory: {
-    color: '#AAAAAA',
-    fontSize: 12,
-    marginTop: 2,
-  },
+  drinkSection: { marginTop: 24, gap: 10 },
+  drinkSectionLabel: { color: '#C8A96E', fontSize: 11,
+    fontWeight: '700', letterSpacing: 2,
+    textTransform: 'uppercase', marginBottom: 4 },
+  drinkCardUnlocked: { flexDirection: 'row', alignItems: 'center',
+    backgroundColor: 'rgba(200,169,110,0.08)',
+    borderRadius: 12, padding: 14, gap: 12,
+    borderWidth: 1, borderColor: 'rgba(200,169,110,0.2)' },
+  drinkCardLocked: { flexDirection: 'row', alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.03)',
+    borderRadius: 12, padding: 14, gap: 12,
+    borderWidth: 1, borderColor: 'rgba(255,255,255,0.06)',
+    opacity: 0.5 },
+  drinkEmoji: { fontSize: 28 },
+  drinkInfo: { flex: 1 },
+  drinkName: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
+  drinkNameLocked: { color: '#666666', fontSize: 15, fontWeight: '600' },
+  drinkSub: { color: '#888888', fontSize: 12, marginTop: 2 },
+  lockLabel: { color: '#C8A96E', fontSize: 13, fontWeight: '600',
+    textAlign: 'center', marginVertical: 4 },
   cta: {
     backgroundColor: '#C8A96E',
     borderRadius: 16,
