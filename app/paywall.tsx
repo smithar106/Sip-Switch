@@ -47,11 +47,17 @@ export default function Paywall() {
   const [selected, setSelected] = useState('annual');
   const [loading, setLoading] = useState(false);
   const [offeringsLoading, setOfferingsLoading] = useState(true);
+  const [rcTimedOut, setRcTimedOut] = useState(false);
   const [packages, setPackages] = useState<any[]>([]);
   const insets = useSafeAreaInsets();
   const setIsPremium = useSessionStore((s) => s.setIsPremium);
   const setTrialStartDate = useSessionStore((s) => s.setTrialStartDate);
   const setHasOnboarded = useSessionStore((s) => s.setHasOnboarded);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setRcTimedOut(true), 4000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     setOfferingsLoading(true);
@@ -130,12 +136,6 @@ export default function Paywall() {
     }
   };
 
-  const ctaText = () => {
-    if (selected === 'annual') return 'Start My 7-Day Free Trial →';
-    if (selected === 'weekly') return 'Start Weekly Plan →';
-    return 'Subscribe Now →';
-  };
-
   const plan = PLANS.find((p) => p.id === selected) ?? PLANS[0];
 
   return (
@@ -179,11 +179,19 @@ export default function Paywall() {
           <Text style={styles.billingNote}>{plan.billingNote}</Text>
         </View>
 
-        <TouchableOpacity style={styles.cta} onPress={handlePurchase} activeOpacity={0.9} disabled={loading || offeringsLoading}>
-          {loading || offeringsLoading
-            ? <ActivityIndicator color="#0A0A0A" />
-            : <Text style={styles.ctaTxt}>{ctaText()}</Text>}
+        <TouchableOpacity style={styles.cta} onPress={handlePurchase} activeOpacity={0.9} disabled={loading || (offeringsLoading && !rcTimedOut)}>
+          {loading ? (
+            <ActivityIndicator color="#0A0A0A" />
+          ) : (
+            <Text style={styles.ctaTxt}>
+              {selected === 'annual' ? 'Start my 14-day free trial →' : 'Subscribe →'}
+            </Text>
+          )}
         </TouchableOpacity>
+
+        <Text style={styles.reminder}>
+          🔔 We'll remind you 2 days before your trial ends.
+        </Text>
 
         <Text style={styles.trialNote}>
           {selected === 'annual'
@@ -193,7 +201,7 @@ export default function Paywall() {
             : '$4.99/mo · Cancel anytime'}
         </Text>
 
-        <TouchableOpacity style={styles.restoreBtn} onPress={handleRestore} disabled={loading || offeringsLoading}>
+        <TouchableOpacity style={styles.restoreBtn} onPress={handleRestore} disabled={loading || (offeringsLoading && !rcTimedOut)}>
           <Text style={styles.restoreTxt}>Restore Purchases</Text>
         </TouchableOpacity>
 
@@ -239,6 +247,7 @@ const styles = StyleSheet.create({
   billingNote:   { color: '#888888', fontSize: 11, textAlign: 'center' },
   cta:           { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 18, alignItems: 'center' },
   ctaTxt:        { color: '#0A0A0A', fontSize: 17, fontWeight: '800' },
+  reminder:      { color: '#888888', fontSize: 12, textAlign: 'center', marginTop: 8 },
   trialNote:     { color: '#C8A96E', fontSize: 13, fontWeight: '600', textAlign: 'center' },
   restoreBtn:    { alignItems: 'center', paddingVertical: 8 },
   restoreTxt:    { color: '#888888', fontSize: 14 },
