@@ -1,7 +1,8 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
 import { useSessionStore } from '@/src/stores/sessionStore';
@@ -79,6 +80,20 @@ export default function Quiz() {
   const [selected, setSelected] = useState<string | null>(null);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    AsyncStorage.getItem('@ss_quiz_result').then((raw) => {
+      if (!raw) return;
+      try {
+        const result = JSON.parse(raw);
+        if (result.archetypeId) {
+          setArchetypeId(result.archetypeId);
+          router.replace('/onboarding/archetype-reveal');
+        }
+        AsyncStorage.removeItem('@ss_quiz_result');
+      } catch {}
+    });
+  }, []);
 
   const question = QUESTIONS[currentStep];
   const totalSteps = QUESTIONS.length;

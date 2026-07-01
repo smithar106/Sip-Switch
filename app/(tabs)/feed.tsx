@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { ARCHETYPES } from '@/src/constants/archetypes';
+import { RADIUS } from '@/src/constants/theme';
 import type { ArchetypeId, DrinkProfile, DrinkRating } from '@/src/types';
 
 const CATEGORY_GRADIENTS: Record<string, readonly [string, string]> = {
@@ -208,7 +209,7 @@ const styles = StyleSheet.create({
   pill:          { backgroundColor: 'rgba(200,169,110,0.1)', borderRadius: 999, paddingHorizontal: 14, paddingVertical: 6, borderWidth: 1, borderColor: 'rgba(200,169,110,0.2)' },
   pillText:      { color: '#C8A96E', fontSize: 12, fontWeight: '600' },
   divider:       { height: 1, backgroundColor: 'rgba(255,255,255,0.08)', marginBottom: 20 },
-  drinkCard:     { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', marginBottom: 14, overflow: 'hidden' },
+  drinkCard:     { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: RADIUS.card, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', marginBottom: 14, overflow: 'hidden' },
   imagePlaceholder: { height: 140, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   imageEmoji:    { fontSize: 40, opacity: 0.6 },
   drinkInfo:     { padding: 16 },
