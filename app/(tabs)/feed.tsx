@@ -113,9 +113,9 @@ export default function Feed() {
     return map;
   }, [ratings]);
 
-  const handleRate = useCallback((drinkId: string, rating: DrinkRating['rating']) => {
+  const handleRate = useCallback((drinkId: string, rating: DrinkRating['rating'], flavourTags?: DrinkRating['flavourTags']) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    addRating({ drinkId, rating, timestamp: new Date().toISOString() });
+    addRating({ drinkId, rating, timestamp: new Date().toISOString(), flavourTags });
   }, [addRating]);
 
   return (
@@ -165,7 +165,7 @@ export default function Feed() {
                     styles.loveBtn,
                     ratedDrinks[drink.id] === 'love' && styles.loveBtnActive
                   ]}
-                  onPress={() => handleRate(drink.id, 'love')}
+                  onPress={() => handleRate(drink.id, 'love', drink.flavourTags)}
                 >
                   <Text style={styles.loveBtnText}>
                     {ratedDrinks[drink.id] === 'love' ? '♥ Saved' : '♥ This is me'}
@@ -176,7 +176,7 @@ export default function Feed() {
                     styles.skipBtn,
                     ratedDrinks[drink.id] === 'skip' && styles.skipBtnActive
                   ]}
-                  onPress={() => handleRate(drink.id, 'skip')}
+                  onPress={() => handleRate(drink.id, 'skip', drink.flavourTags)}
                 >
                   <Text style={[
                     styles.skipBtnText,

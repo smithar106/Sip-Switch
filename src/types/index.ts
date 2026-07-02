@@ -59,7 +59,7 @@ export interface Archetype {
 
 export interface TasteProfile {
   archetypeId: ArchetypeId | null;
-  scores: Record<ArchetypeId, number>;
+  scores: Record<FlavourTag, number>;
   dominantFlavours: FlavourTag[];
   totalRatings: number;
   lastUpdated: string | null;
@@ -69,6 +69,7 @@ export interface DrinkRating {
   drinkId: string;
   rating: 'love' | 'like' | 'skip' | 'save';
   timestamp: string;
+  flavourTags?: FlavourTag[];
 }
 
 export interface SwapEntry {

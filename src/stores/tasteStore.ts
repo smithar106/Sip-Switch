@@ -11,9 +11,20 @@ interface TasteState {
   loadFromStorage: () => Promise<void>;
 }
 
+const ALL_FLAVOURS: FlavourTag[] = [
+  'bitter', 'carbonated', 'complex', 'dry', 'bold', 'light',
+  'herbal', 'citrus', 'dark_fruit', 'clean',
+];
+
+function neutralScores(): Record<FlavourTag, number> {
+  const s: Partial<Record<FlavourTag, number>> = {};
+  for (const f of ALL_FLAVOURS) s[f] = 50;
+  return s as Record<FlavourTag, number>;
+}
+
 const DEFAULT_PROFILE: TasteProfile = {
   archetypeId: null,
-  scores: { bitter: 0, carbonated: 0, complex: 0, dry: 0, bold: 0, light: 0 },
+  scores: neutralScores(),
   dominantFlavours: [],
   totalRatings: 0,
   lastUpdated: null,
@@ -22,6 +33,16 @@ const DEFAULT_PROFILE: TasteProfile = {
 function safeSet(key: string, value: string) {
   AsyncStorage.setItem(key, value).catch(() => {});
 }
+
+function clamp(v: number): number {
+  return Math.max(0, Math.min(100, v));
+}
+
+const RATING_WEIGHTS: Record<string, number> = {
+  love: 4,
+  like: 2.4,
+  skip: -2.4,
+};
 
 export const useTasteStore = create<TasteState>((set, get) => ({
   profile: DEFAULT_PROFILE,
@@ -37,8 +58,19 @@ export const useTasteStore = create<TasteState>((set, get) => ({
       ratings = [...existing, rating];
     }
 
+    const scores = { ...get().profile.scores };
+    const weight = RATING_WEIGHTS[rating.rating] ?? 0;
+    if (rating.flavourTags && weight !== 0) {
+      for (const tag of rating.flavourTags) {
+        if (tag in scores) {
+          scores[tag] = clamp((scores[tag] ?? 50) + weight);
+        }
+      }
+    }
+
     const profile = {
       ...get().profile,
+      scores,
       totalRatings: ratings.filter(r => r.rating === 'love' || r.rating === 'like').length,
       lastUpdated: new Date().toISOString()
     };
@@ -49,7 +81,13 @@ export const useTasteStore = create<TasteState>((set, get) => ({
   updateArchetype: (id) => {
     const archetype = ARCHETYPES[id];
     const flavours: FlavourTag[] = archetype ? [...archetype.primaryFlavours] : [];
-    const profile = { ...get().profile, archetypeId: id, dominantFlavours: flavours };
+    const scores = neutralScores();
+    if (archetype) {
+      for (const f of archetype.primaryFlavours) {
+        scores[f] = clamp((scores[f] ?? 50) + 20);
+      }
+    }
+    const profile = { ...get().profile, archetypeId: id, dominantFlavours: flavours, scores };
     set({ profile });
     safeSet('@ss_profile', JSON.stringify(profile));
   },

@@ -21,6 +21,11 @@ export default function Profile() {
     router.push('/onboarding/quiz');
   };
 
+  const toGlass = (numerator: number, divisor: number) =>
+    Math.min(5, Math.max(1, Math.round((numerator / divisor) * 5)));
+
+  const s = profile.scores;
+
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.wrap} showsVerticalScrollIndicator={false}>
@@ -42,48 +47,39 @@ export default function Profile() {
 
         {[
           {
-            label: 'Social',
-            emoji: '🎉',
-            score: Math.min(5, Math.max(1,
-              (archetype?.primaryFlavours.includes('carbonated') ? 2 : 0) +
-              (archetype?.primaryFlavours.includes('bold') ? 2 : 0) +
-              (archetype?.primaryFlavours.includes('light') ? 1 : 0) + 1
-            ))
+            label: 'Social', emoji: '🎉',
+            score: toGlass(
+              (s.carbonated ?? 50) * 2 + (s.bold ?? 50) * 2 + (s.light ?? 50) * 1,
+              5 * 100
+            ),
           },
           {
-            label: 'Flavour',
-            emoji: '🌿',
-            score: Math.min(5, Math.max(1,
-              (archetype?.primaryFlavours.includes('complex') ? 2 : 0) +
-              (archetype?.primaryFlavours.includes('bitter') ? 2 : 0) +
-              (archetype?.primaryFlavours.includes('herbal') ? 1 : 0) + 1
-            ))
+            label: 'Flavour', emoji: '🌿',
+            score: toGlass(
+              (s.complex ?? 50) * 2 + (s.bitter ?? 50) * 2 + (s.herbal ?? 50) * 1,
+              5 * 100
+            ),
           },
           {
-            label: 'Bubbles',
-            emoji: '🫧',
-            score: Math.min(5, Math.max(1,
-              (archetype?.primaryFlavours.includes('carbonated') ? 4 : 0) +
-              (archetype?.primaryFlavours.includes('light') ? 1 : 0) + 1
-            ))
+            label: 'Bubbles', emoji: '🫧',
+            score: toGlass(
+              (s.carbonated ?? 50) * 4 + (s.light ?? 50) * 1,
+              5 * 100
+            ),
           },
           {
-            label: 'Boldness',
-            emoji: '🍸',
-            score: Math.min(5, Math.max(1,
-              (archetype?.primaryFlavours.includes('bold') ? 3 : 0) +
-              (archetype?.primaryFlavours.includes('bitter') ? 2 : 0) +
-              (archetype?.primaryFlavours.includes('complex') ? 1 : 0)
-            ))
+            label: 'Boldness', emoji: '🍸',
+            score: toGlass(
+              (s.bold ?? 50) * 3 + (s.bitter ?? 50) * 2 + (s.complex ?? 50) * 1,
+              6 * 100
+            ),
           },
           {
-            label: 'Freshness',
-            emoji: '☀️',
-            score: Math.min(5, Math.max(1,
-              (archetype?.primaryFlavours.includes('citrus') ? 3 : 0) +
-              (archetype?.primaryFlavours.includes('light') ? 2 : 0) +
-              (archetype?.primaryFlavours.includes('clean') ? 1 : 0)
-            ))
+            label: 'Freshness', emoji: '☀️',
+            score: toGlass(
+              (s.citrus ?? 50) * 3 + (s.light ?? 50) * 2 + (s.clean ?? 50) * 1,
+              6 * 100
+            ),
           },
         ].map(({ label, emoji, score }) => (
           <View key={label} style={styles.meterRow}>
