@@ -24,7 +24,7 @@ function neutralScores(): Record<FlavourTag, number> {
 
 const DEFAULT_PROFILE: TasteProfile = {
   archetypeId: null,
-  scores: neutralScores(),
+  scores: neutralScores(), // WIRING_TEST_MARKER
   dominantFlavours: [],
   totalRatings: 0,
   lastUpdated: null,
