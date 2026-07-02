@@ -21,8 +21,10 @@ export default function Profile() {
     router.push('/onboarding/quiz');
   };
 
-  const toGlass = (numerator: number, divisor: number) =>
-    Math.min(5, Math.max(1, Math.round((numerator / divisor) * 5)));
+  const toGlass = (numerator: number, divisor: number) => {
+    const raw = (numerator / divisor) * 5;
+    return Math.min(5, Math.max(0.5, Math.round(raw * 2) / 2));
+  };
 
   const s = profile.scores;
 
@@ -86,14 +88,18 @@ export default function Profile() {
             <Text style={styles.meterEmoji}>{emoji}</Text>
             <Text style={styles.meterLabel}>{label}</Text>
             <View style={styles.meterGlasses}>
-              {[1,2,3,4,5].map(i => (
-                <Text key={i} style={[
-                  styles.meterGlass,
-                  i <= score ? styles.meterGlassFilled : styles.meterGlassEmpty
-                ]}>
-                  🥂
-                </Text>
-              ))}
+              {[1,2,3,4,5].map(i => {
+                const filled = i <= Math.floor(score);
+                const half = !filled && i === Math.ceil(score) && score % 1 !== 0;
+                return (
+                  <Text key={i} style={[
+                    styles.meterGlass,
+                    filled ? styles.meterGlassFilled : half ? styles.meterGlassHalf : styles.meterGlassEmpty
+                  ]}>
+                    🥂
+                  </Text>
+                );
+              })}
             </View>
           </View>
         ))}
@@ -159,6 +165,7 @@ const styles = StyleSheet.create({
   meterGlasses:     { flexDirection: 'row', gap: 3, flex: 1 },
   meterGlass:       { fontSize: 18 },
   meterGlassFilled: { opacity: 1 },
+  meterGlassHalf:   { opacity: 0.5 },
   meterGlassEmpty:  { opacity: 0.2 },
   ratingCount:      { color: '#888888', fontSize: 12, marginTop: 4, marginBottom: 4 },
   subStatus:       { color: '#CCCCCC', fontSize: 15, fontWeight: '600', marginBottom: 10 },

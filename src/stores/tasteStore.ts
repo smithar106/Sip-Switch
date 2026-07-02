@@ -18,7 +18,7 @@ const ALL_FLAVOURS: FlavourTag[] = [
 
 function neutralScores(): Record<FlavourTag, number> {
   const s: Partial<Record<FlavourTag, number>> = {};
-  for (const f of ALL_FLAVOURS) s[f] = 50;
+  for (const f of ALL_FLAVOURS) s[f] = 38;
   return s as Record<FlavourTag, number>;
 }
 
@@ -39,9 +39,9 @@ function clamp(v: number): number {
 }
 
 const RATING_WEIGHTS: Record<string, number> = {
-  love: 4,
-  like: 2.4,
-  skip: -2.4,
+  love: 6,
+  like: 3,
+  skip: -3,
 };
 
 export const useTasteStore = create<TasteState>((set, get) => ({
@@ -84,7 +84,7 @@ export const useTasteStore = create<TasteState>((set, get) => ({
     const scores = neutralScores();
     if (archetype) {
       for (const f of archetype.primaryFlavours) {
-        scores[f] = clamp((scores[f] ?? 50) + 20);
+        scores[f] = clamp((scores[f] ?? 38) + 12);
       }
     }
     const profile = { ...get().profile, archetypeId: id, dominantFlavours: flavours, scores };
