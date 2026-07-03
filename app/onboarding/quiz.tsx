@@ -121,7 +121,7 @@ export default function Quiz() {
       setSelected(optionId);
 
       autoAdvanceRef.current = setTimeout(() => {
-        setAnswer(question.id as keyof typeof answers, optionId);
+        setAnswer(question.id, optionId);
         setSelected(null);
 
         if (currentStep + 1 >= totalSteps) {

@@ -1,3 +1,4 @@
+import { View } from 'react-native';
 import { useEffect } from 'react';
 import { Tabs, router } from 'expo-router';
 import { Text } from 'react-native';
@@ -5,12 +6,18 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 
 export default function TabLayout() {
   const isPremium = useSessionStore((s) => s.isPremium);
+  const hydrated = useSessionStore((s) => s._hydrated);
 
   useEffect(() => {
-    if (!isPremium) {
+    if (hydrated && !isPremium) {
       router.replace('/paywall');
     }
-  }, [isPremium]);
+  }, [hydrated, isPremium]);
+
+  if (!hydrated) {
+    return <View style={{ flex: 1, backgroundColor: '#0A0A0A' }} />;
+  }
+
   return (
     <Tabs
       screenOptions={{

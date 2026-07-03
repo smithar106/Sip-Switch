@@ -2,9 +2,9 @@ import { create } from 'zustand';
 import type { OnboardingAnswers } from '../types';
 
 interface OnboardingState {
-  answers: OnboardingAnswers;
+  answers: Partial<Record<string, string>>;
   currentStep: number;
-  setAnswer: (key: keyof OnboardingAnswers, value: string) => void;
+  setAnswer: (key: string, value: string) => void;
   nextStep: () => void;
   reset: () => void;
 }

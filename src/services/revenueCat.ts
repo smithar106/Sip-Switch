@@ -1,8 +1,3 @@
-import { Platform } from 'react-native';
-
-const IS_EXPO_GO = !!(global as any).expo?.modules?.ExpoModulesCore === false 
-  || typeof (global as any).__expo !== 'undefined';
-
 export function configureRevenueCat() {
   if (__DEV__) {
     console.log('[RevenueCat] Skipped — dev mode');

@@ -6,8 +6,10 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 export default function Index() {
   const hasOnboarded = useSessionStore((s) => s.hasOnboarded);
   const isPremium = useSessionStore((s) => s.isPremium);
+  const hydrated = useSessionStore((s) => s._hydrated);
 
   useEffect(() => {
+    if (!hydrated) return;
     const timer = setTimeout(() => {
       if (!hasOnboarded) {
         router.replace('/onboarding/welcome');
@@ -18,7 +20,7 @@ export default function Index() {
       }
     }, 100);
     return () => clearTimeout(timer);
-  }, [hasOnboarded, isPremium]);
+  }, [hasOnboarded, isPremium, hydrated]);
 
   return (
     <View style={styles.screen}>

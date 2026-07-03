@@ -23,7 +23,7 @@ export default function RootLayout() {
     if (!__DEV__) {
       configureRevenueCat();
       getCustomerInfo().then((info) => {
-        if (info?.entitlements?.active) {
+        if (info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0) {
           setIsPremium(true);
         }
       });
