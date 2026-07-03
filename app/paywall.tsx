@@ -4,17 +4,18 @@ import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
 import { useSessionStore } from '@/src/stores/sessionStore';
+import { ARCHETYPES } from '@/src/constants/archetypes';
 import { getOfferings, purchasePackage, restorePurchases } from '@/src/services/revenueCat';
 
 const PLANS = [
   {
-    id: 'weekly',
-    label: 'Weekly',
-    price: '$1.99/wk',
-    sub: 'Try it this week',
-    billingNote: '$1.99/week billed weekly · Cancel anytime in Settings',
-    badge: null,
-    isTrial: false,
+    id: 'annual',
+    label: 'Annual · Best Value',
+    price: '$29.99/yr',
+    sub: '$2.49/mo · 7 days free',
+    billingNote: 'Free for 7 days, then $29.99/yr · Cancel anytime in Settings',
+    badge: 'BEST VALUE',
+    isTrial: true,
   },
   {
     id: 'monthly',
@@ -26,19 +27,19 @@ const PLANS = [
     isTrial: false,
   },
   {
-    id: 'annual',
-    label: 'Annual · Best Value',
-    price: '$29.99/yr',
-    sub: '$2.49/mo · 7 days free',
-    billingNote: 'Free for 7 days, then $29.99/yr · Cancel anytime in Settings',
-    badge: 'BEST VALUE',
-    isTrial: true,
+    id: 'weekly',
+    label: 'Weekly',
+    price: '$1.99/wk',
+    sub: 'Try it this week',
+    billingNote: '$1.99/week billed weekly · Cancel anytime in Settings',
+    badge: null,
+    isTrial: false,
   },
 ];
 
 const BENEFITS = [
-  'Unlimited personalised NA drink recommendations',
-  'Live tab — instant match for any occasion',
+  "Never waste $12 on an NA drink you won't finish — matched to your taste",
+  "Walk into any bar knowing exactly what to order — no trial and error",
   'Full swap engine — every classic drink mapped',
   'Taste profile that learns with every rating',
 ];
@@ -53,6 +54,11 @@ export default function Paywall() {
   const setIsPremium = useSessionStore((s) => s.setIsPremium);
   const setTrialStartDate = useSessionStore((s) => s.setTrialStartDate);
   const setHasOnboarded = useSessionStore((s) => s.setHasOnboarded);
+  const archetypeId = useSessionStore((s) => s.archetypeId);
+  const archetype = archetypeId ? ARCHETYPES[archetypeId] : null;
+  const headlineText = archetype
+    ? `Your ${archetype.name} matches are ready — drinks you'll love, no more guessing.`
+    : "Your matches are ready — drinks you'll love, no more guessing.";
 
   useEffect(() => {
     const timer = setTimeout(() => setRcTimedOut(true), 4000);
@@ -142,7 +148,7 @@ export default function Paywall() {
     <View style={[styles.screen, { paddingTop: insets.top }]}>
       <ScrollView style={styles.scroll} contentContainerStyle={styles.wrap} showsVerticalScrollIndicator={false}>
         <Text style={styles.eyebrow}>SIP SWITCH PRO</Text>
-        <Text style={styles.headline}>Make the switch{'\n'}for good.</Text>
+        <Text style={styles.headline}>{headlineText}</Text>
 
         <View style={styles.benefits}>
           {BENEFITS.map((b) => (
@@ -177,6 +183,15 @@ export default function Paywall() {
             </TouchableOpacity>
           ))}
           <Text style={styles.billingNote}>{plan.billingNote}</Text>
+        </View>
+
+        <View style={styles.valueMath}>
+          <Text style={styles.valueMathLine}>
+            💸 Premium NA drinks run $8–15 at a bar, $3–6 a can. A few disappointing ones cost more than a month of Sip Switch.
+          </Text>
+          <Text style={styles.valueMathLine}>
+            ⏳ Skip months of trial-and-error buying NA drinks that miss — know what you'll love before you spend.
+          </Text>
         </View>
 
         <TouchableOpacity style={styles.cta} onPress={handlePurchase} activeOpacity={0.9} disabled={loading || (offeringsLoading && !rcTimedOut)}>
@@ -225,7 +240,7 @@ const styles = StyleSheet.create({
   scroll:        { flex: 1 },
   wrap:          { paddingHorizontal: 24, paddingTop: 48, paddingBottom: 52, gap: 20 },
   eyebrow:       { color: '#C8A96E', fontSize: 12, fontWeight: '800', letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center' },
-  headline:      { color: '#FFF', fontSize: 38, fontWeight: '800', lineHeight: 44, letterSpacing: -1, textAlign: 'center' },
+  headline:      { color: '#FFF', fontSize: 28, fontWeight: '800', lineHeight: 36, letterSpacing: -0.5, textAlign: 'center' },
   benefits:      { gap: 12 },
   benefitRow:    { flexDirection: 'row', alignItems: 'center', gap: 12 },
   dot:           { width: 6, height: 6, borderRadius: 3, backgroundColor: '#C8A96E', flexShrink: 0 },
@@ -245,6 +260,8 @@ const styles = StyleSheet.create({
   planPrice:     { color: '#E5E5E5', fontSize: 15, fontWeight: '800', flexShrink: 0 },
   planPriceActive:{ color: '#C8A96E' },
   billingNote:   { color: '#888888', fontSize: 11, textAlign: 'center' },
+  valueMath:     { gap: 10, marginTop: 4, paddingHorizontal: 4 },
+  valueMathLine: { color: '#888888', fontSize: 12, lineHeight: 18 },
   cta:           { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 18, alignItems: 'center' },
   ctaTxt:        { color: '#0A0A0A', fontSize: 17, fontWeight: '800' },
   reminder:      { color: '#888888', fontSize: 12, textAlign: 'center', marginTop: 8 },
