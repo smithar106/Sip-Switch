@@ -18,6 +18,23 @@ interface Question {
 
 const QUESTIONS: Question[] = [
   {
+    id: 'waste_money',
+    text: 'Bought an NA drink so bad you just wanted a real one?',
+    options: [
+      { id: 'a', label: 'Yes' },
+      { id: 'b', label: 'Every time' },
+    ],
+  },
+  {
+    id: 'waste_time',
+    text: 'How many NA drinks have you tried to find one you like?',
+    options: [
+      { id: 'a', label: 'A few' },
+      { id: 'b', label: 'Lost count' },
+      { id: 'c', label: 'Gave up' },
+    ],
+  },
+  {
     id: 'drink',
     text: 'What do you usually drink?',
     options: [
@@ -116,7 +133,7 @@ export default function Quiz() {
           updateArchetype(result);
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           reset();
-          router.push('/onboarding/archetype-reveal');
+          router.push('/onboarding/bridge');
         } else {
           nextStep();
           fadeAnim.setValue(0);

@@ -17,7 +17,8 @@ export default function Welcome() {
         <Text style={styles.eyebrow}>SIP SWITCH</Text>
 
         <Text style={styles.headline}>
-          You've probably ordered a sparkling water at the bar and felt completely left out.
+          You've probably ordered a sparkling water at the bar and felt completely left out —
+          after wasting money on NA drinks that never hit.
         </Text>
 
         <Text style={styles.subheadline}>
@@ -26,7 +27,7 @@ export default function Welcome() {
 
         <View style={styles.valueRows}>
           {[
-            'Tell us what you love about drinking — 5 questions',
+            'Tell us what you love about drinking — 7 questions',
             'Get your Sip Switch profile',
             'Your first 3 NA drink matches, free',
             'Recommendations that get sharper every time you rate',
@@ -48,7 +49,7 @@ export default function Welcome() {
           <Text style={styles.ctaText}>Find my drink →</Text>
         </TouchableOpacity>
         <Text style={styles.finePrint}>
-          5 questions · Start your 7-day free trial
+          7 questions · Start your 7-day free trial
         </Text>
       </View>
     </View>
