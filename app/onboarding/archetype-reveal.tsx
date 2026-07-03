@@ -71,7 +71,7 @@ export default function ArchetypeReveal() {
           <Text style={styles.ctaText}>Unlock my full match list →</Text>
         </TouchableOpacity>
 
-        <Text style={styles.finePrint}>14-day free trial · Cancel anytime</Text>
+        <Text style={styles.finePrint}>7-day free trial · Cancel anytime</Text>
       </ScrollView>
     </View>
   );

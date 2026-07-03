@@ -48,7 +48,7 @@ export default function Welcome() {
           <Text style={styles.ctaText}>Find my drink →</Text>
         </TouchableOpacity>
         <Text style={styles.finePrint}>
-          5 questions · Start your 14-day free trial
+          5 questions · Start your 7-day free trial
         </Text>
       </View>
     </View>

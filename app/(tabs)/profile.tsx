@@ -111,7 +111,7 @@ export default function Profile() {
         {/* Subscription */}
         <Text style={styles.sectionTitle}>Subscription</Text>
         <Text style={[styles.subStatus, isPremium && { color: '#C8A96E' }]}>
-          {isPremium ? 'Pro · Active' : '14-day trial'}
+          {isPremium ? 'Pro · Active' : '7-day trial'}
         </Text>
         {!isPremium && (
           <TouchableOpacity style={styles.subBtn} onPress={() => router.push('/paywall')}>
