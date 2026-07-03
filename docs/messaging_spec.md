@@ -169,6 +169,6 @@ Every app, every prompt implements:
   □ BRIDGE/REVEAL demonstrates the ~10-second TIME win explicitly
   □ PAYWALL: outcome headline + bullets (each tagged money or time) +
     BOTH a 💸 money-math line AND a ⏳ time-math line
-  □ Plans ordered: Free Trial → Monthly → Weekly → Annual
+  □ Plans ordered: Annual (Best Value, default-selected) → Monthly → Weekly, with free trial as headline framing
   □ Trial length correct: book 14 · chef 14 · thrift 7 · sip 7
     (display copy AND RevenueCat entitlement must match)
