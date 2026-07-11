@@ -31,10 +31,10 @@ export default function Welcome() {
 
         <View style={styles.valueRows}>
           {[
-            'Tell us what you love about drinking — 7 questions',
-            'Get your Sip Switch profile',
-            'Your first 3 NA drink matches, free',
-            'Recommendations that get sharper every time you rate',
+            'Stop pouring $12 drinks down the sink — matched to your taste',
+            'Walk into any bar knowing exactly what to order',
+            'Your first 3 NA matches, free with your trial',
+            'Taste profile that sharpens with every rating — never guess again',
           ].map((text) => (
             <View key={text} style={styles.valueRow}>
               <Text style={styles.checkmark}>✓</Text>

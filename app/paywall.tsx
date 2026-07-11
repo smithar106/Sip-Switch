@@ -60,6 +60,10 @@ export default function Paywall() {
     ? `Your ${archetype.name} matches are ready — drinks you'll love, no more guessing.`
     : "Your matches are ready — drinks you'll love, no more guessing.";
 
+  const lossAversionText = archetype
+    ? `Your ${archetype.name} profile will reset if you leave — lock it in free.`
+    : 'Your taste profile will reset if you leave — lock it in free.';
+
   useEffect(() => {
     const timer = setTimeout(() => setRcTimedOut(true), 4000);
     return () => clearTimeout(timer);
@@ -150,6 +154,20 @@ export default function Paywall() {
         <Text style={styles.eyebrow}>SIP SWITCH PRO</Text>
         <Text style={styles.headline}>{headlineText}</Text>
 
+        {archetype && (
+          <View style={styles.archetypeBadge}>
+            <Text style={styles.archetypeBadgeEmoji}>{archetype.emoji}</Text>
+            <View style={styles.archetypeBadgeInfo}>
+              <Text style={styles.archetypeBadgeName}>{archetype.name}</Text>
+              <View style={styles.archetypeBadgeFlavours}>
+                {archetype.primaryFlavours.slice(0, 3).map((f) => (
+                  <Text key={f} style={styles.archetypeBadgeTag}>{f}</Text>
+                ))}
+              </View>
+            </View>
+          </View>
+        )}
+
         <View style={styles.benefits}>
           {BENEFITS.map((b) => (
             <View key={b} style={styles.benefitRow}>
@@ -204,6 +222,8 @@ export default function Paywall() {
           )}
         </TouchableOpacity>
 
+        <Text style={styles.lossAversion}>{lossAversionText}</Text>
+
         <Text style={styles.reminder}>
           🔔 We'll remind you 2 days before your trial ends.
         </Text>
@@ -241,6 +261,12 @@ const styles = StyleSheet.create({
   wrap:          { paddingHorizontal: 24, paddingTop: 48, paddingBottom: 52, gap: 20 },
   eyebrow:       { color: '#C8A96E', fontSize: 12, fontWeight: '800', letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center' },
   headline:      { color: '#FFF', fontSize: 28, fontWeight: '800', lineHeight: 36, letterSpacing: -0.5, textAlign: 'center' },
+  archetypeBadge: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: 'rgba(200,169,110,0.08)', borderRadius: 14, borderWidth: 1, borderColor: 'rgba(200,169,110,0.2)', padding: 14 },
+  archetypeBadgeEmoji: { fontSize: 32 },
+  archetypeBadgeInfo: { flex: 1, gap: 4 },
+  archetypeBadgeName: { color: '#FFF', fontSize: 15, fontWeight: '700' },
+  archetypeBadgeFlavours: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
+  archetypeBadgeTag: { color: '#C8A96E', fontSize: 11, fontWeight: '600' },
   benefits:      { gap: 12 },
   benefitRow:    { flexDirection: 'row', alignItems: 'center', gap: 12 },
   dot:           { width: 6, height: 6, borderRadius: 3, backgroundColor: '#C8A96E', flexShrink: 0 },
@@ -264,6 +290,7 @@ const styles = StyleSheet.create({
   valueMathLine: { color: '#888888', fontSize: 12, lineHeight: 18 },
   cta:           { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 18, alignItems: 'center' },
   ctaTxt:        { color: '#0A0A0A', fontSize: 17, fontWeight: '800' },
+  lossAversion:  { color: '#AA3939', fontSize: 12, fontWeight: '600', textAlign: 'center', marginTop: 8, marginBottom: 4 },
   reminder:      { color: '#888888', fontSize: 12, textAlign: 'center', marginTop: 8 },
   trialNote:     { color: '#C8A96E', fontSize: 13, fontWeight: '600', textAlign: 'center' },
   restoreBtn:    { alignItems: 'center', paddingVertical: 8 },

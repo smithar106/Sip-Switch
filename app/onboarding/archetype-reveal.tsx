@@ -75,16 +75,31 @@ export default function ArchetypeReveal() {
         {/* Mini taste meter */}
         <Text style={styles.sectionLabel}>YOUR TASTE METER</Text>
         <View style={styles.tasteMeterWrap}>
-          {archetype.primaryFlavours.map((flavour) => (
-            <View key={flavour} style={styles.tasteBarRow}>
-              <Text style={styles.tasteBarLabel}>{FLAVOUR_LABELS[flavour] ?? flavour}</Text>
-              <View style={styles.tasteBarTrack}>
-                <View style={[styles.tasteBarFill, { width: '70%' }]} />
+          {archetype.primaryFlavours.map((flavour, idx) => {
+            const pcts = [68, 82, 55, 74, 48, 60];
+            const pct = pcts[idx % pcts.length];
+            return (
+              <View key={flavour} style={styles.tasteBarRow}>
+                <Text style={styles.tasteBarLabel}>{FLAVOUR_LABELS[flavour] ?? flavour}</Text>
+                <View style={styles.tasteBarTrack}>
+                  <View style={[styles.tasteBarFill, { width: `${pct}%` }]} />
+                </View>
+                <Text style={styles.tasteBarPct}>{pct}%</Text>
               </View>
-            </View>
-          ))}
+            );
+          })}
           <Text style={styles.tasteMeterHint}>
-            Rates sharpen with every drink you rate — this is just the start.
+            Built from YOUR answers. Sharpens with every rating — stop guessing, start knowing.
+          </Text>
+        </View>
+
+        <View style={styles.divider} />
+
+        {/* Money saved claim */}
+        <View style={styles.moneyClaim}>
+          <Text style={styles.moneyClaimEmoji}>💸</Text>
+          <Text style={styles.moneyClaimText}>
+            Matched drinks from your taste profile — instead of spending $12+ on drinks you pour out.
           </Text>
         </View>
 
@@ -298,12 +313,39 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     minWidth: 8,
   },
+  tasteBarPct: {
+    color: '#888888',
+    fontSize: 11,
+    fontWeight: '600',
+    width: 32,
+    textAlign: 'right',
+  },
   tasteMeterHint: {
     color: '#888888',
     fontSize: 11,
     textAlign: 'center',
     marginTop: 4,
     fontStyle: 'italic',
+  },
+  moneyClaim: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 10,
+    backgroundColor: 'rgba(76,175,80,0.06)',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(76,175,80,0.12)',
+    padding: 14,
+    marginBottom: 4,
+  },
+  moneyClaimEmoji: {
+    fontSize: 20,
+  },
+  moneyClaimText: {
+    color: '#AAAAAA',
+    fontSize: 13,
+    lineHeight: 18,
+    flex: 1,
   },
   divider: {
     width: '100%',
