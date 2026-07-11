@@ -21,6 +21,10 @@ export default function Welcome() {
           after wasting money on NA drinks that never hit.
         </Text>
 
+        <Text style={styles.painLine}>
+          Or spent weeks buying drink after drink, trying to find one that actually tastes like something.
+        </Text>
+
         <Text style={styles.subheadline}>
           Sip Switch maps your taste to the exact NA drinks that actually hit. 5 minutes. No more soda water.
         </Text>
@@ -89,6 +93,15 @@ const styles = StyleSheet.create({
     lineHeight: 36,
     marginBottom: 12,
     paddingHorizontal: 4,
+  },
+  painLine: {
+    color: '#AA3939',
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: 16,
+    paddingHorizontal: 8,
   },
   subheadline: {
     color: '#CCCCCC',
