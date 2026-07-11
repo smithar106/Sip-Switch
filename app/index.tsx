@@ -1,17 +1,20 @@
 import { useEffect } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { router } from 'expo-router';
+import { usePostHog } from 'posthog-react-native';
 import { useSessionStore } from '@/src/stores/sessionStore';
 
 export default function Index() {
   const hasOnboarded = useSessionStore((s) => s.hasOnboarded);
   const isPremium = useSessionStore((s) => s.isPremium);
   const hydrated = useSessionStore((s) => s._hydrated);
+  const posthog = usePostHog();
 
   useEffect(() => {
     if (!hydrated) return;
     const timer = setTimeout(() => {
       if (!hasOnboarded) {
+        posthog.capture('onboarding_started');
         router.replace('/onboarding/welcome');
       } else if (!isPremium && !__DEV__) {
         router.replace('/paywall');

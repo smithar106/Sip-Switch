@@ -5,10 +5,15 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import * as Linking from 'expo-linking';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { PostHogProvider } from 'posthog-react-native';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useLiveStore } from '@/src/stores/liveStore';
 import { configureRevenueCat, getCustomerInfo } from '@/src/services/revenueCat';
+
+const posthogApiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '';
+const posthogHost = process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
+const posthogEnabled = posthogApiKey.length > 0 && posthogApiKey !== '<SIP_POSTHOG_KEY_HERE>';
 
 export default function RootLayout() {
   const loadSession = useSessionStore((s) => s.loadFromStorage);
@@ -61,7 +66,14 @@ export default function RootLayout() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <StatusBar style="light" />
-        <Stack screenOptions={{ headerShown: false, animation: 'fade', contentStyle: { backgroundColor: '#0A0A0A' } }}>
+        <PostHogProvider
+          apiKey={posthogApiKey}
+          options={{
+            host: posthogHost,
+            disabled: !posthogEnabled,
+          }}
+        >
+          <Stack screenOptions={{ headerShown: false, animation: 'fade', contentStyle: { backgroundColor: '#0A0A0A' } }}>
           <Stack.Screen name="index" />
           <Stack.Screen name="onboarding" />
           <Stack.Screen name="(tabs)" />
@@ -74,6 +86,7 @@ export default function RootLayout() {
             }} 
           />
         </Stack>
+        </PostHogProvider>
       </SafeAreaProvider>
     </GestureHandlerRootView>
   );
