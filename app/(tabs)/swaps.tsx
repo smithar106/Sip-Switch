@@ -178,7 +178,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 3,
   },
-  savedBadgeTxt:    { color: '#0A0A0A', fontSize: 9, fontWeight: '800', letterSpacing: 0.5 },
+  savedBadgeTxt:    { color: '#0A0A0A', fontSize: 10, fontWeight: '800', letterSpacing: 0.5 },
   swapLeft:         { alignItems: 'center', width: 56, gap: 4 },
   swapFromEmoji:    { fontSize: 24 },
   swapFromName:     { color: '#AAAAAA', fontSize: 11, fontWeight: '600', textAlign: 'center', lineHeight: 14 },

@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
   finePrint: {
-    color: '#666666',
+    color: '#AAAAAA',
     fontSize: 12,
     textAlign: 'center',
     marginTop: 8,

@@ -369,7 +369,7 @@ const styles = StyleSheet.create({
   drinkEmoji: { fontSize: 28 },
   drinkInfo: { flex: 1 },
   drinkName: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
-  drinkNameLocked: { color: '#666666', fontSize: 15, fontWeight: '600' },
+  drinkNameLocked: { color: '#AAAAAA', fontSize: 15, fontWeight: '600' },
   drinkSub: { color: '#888888', fontSize: 12, marginTop: 2 },
   matchBadge: {
     backgroundColor: 'rgba(76,175,80,0.15)',
