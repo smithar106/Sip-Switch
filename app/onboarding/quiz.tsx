@@ -19,7 +19,7 @@ interface Question {
 const QUESTIONS: Question[] = [
   {
     id: 'waste_money',
-    text: 'Bought an NA drink so bad you just wanted a real one?',
+    text: 'Ever bought an NA drink you regretted?',
     options: [
       { id: 'a', label: 'Yes' },
       { id: 'b', label: 'Every time' },
@@ -27,7 +27,7 @@ const QUESTIONS: Question[] = [
   },
   {
     id: 'waste_time',
-    text: 'How many NA drinks have you tried to find one you like?',
+    text: 'How many NA drinks have you tried?',
     options: [
       { id: 'a', label: 'A few' },
       { id: 'b', label: 'Lost count' },
@@ -40,51 +40,51 @@ const QUESTIONS: Question[] = [
     options: [
       { id: 'a', label: '🍺 Beer & cider' },
       { id: 'b', label: '🍷 Wine' },
-      { id: 'c', label: '🍸 Cocktails & spirits' },
-      { id: 'd', label: '🍹 Something light & refreshing' },
+      { id: 'c', label: '🍸 Cocktails' },
+      { id: 'd', label: '🍹 Something light' },
     ],
   },
   {
     id: 'moment',
-    text: 'When do you most want a drink in hand?',
+    text: 'When do you want a drink?',
     options: [
-      { id: 'a', label: '🍽️ Dinner — it needs to pair with food' },
-      { id: 'b', label: '🎉 Social occasions — something to sip' },
-      { id: 'c', label: '😮‍💨 Unwinding after work' },
-      { id: 'd', label: '☀️ Daytime — something refreshing' },
+      { id: 'a', label: '🍽️ Dinner' },
+      { id: 'b', label: '🎉 Social events' },
+      { id: 'c', label: '😮‍💨 After work' },
+      { id: 'd', label: '☀️ Daytime' },
     ],
   },
   {
     id: 'flavour',
-    text: 'What flavour notes do you love?',
+    text: 'Favorite flavors?',
     grid: true,
     options: [
-      { id: 'a', label: '🌿 Herbal, earthy, botanical' },
-      { id: 'b', label: '🍋 Citrus, bright, acidic' },
-      { id: 'c', label: '🍒 Rich, dark, fruity' },
-      { id: 'd', label: '🫧 Clean, crisp, minimal' },
+      { id: 'a', label: '🌿 Herbal\n& earthy' },
+      { id: 'b', label: '🍋 Citrus\n& bright' },
+      { id: 'c', label: '🍒 Rich\n& dark' },
+      { id: 'd', label: '🫧 Clean\n& crisp' },
     ],
   },
   {
     id: 'texture',
-    text: 'What does the perfect drink feel like?',
+    text: 'How should it feel?',
     grid: true,
     options: [
-      { id: 'a', label: '🫧 Sparkling and lively' },
-      { id: 'b', label: '🧊 Still and smooth' },
-      { id: 'c', label: '🍯 Rich with some weight to it' },
-      { id: 'd', label: '💧 Light and easy — no fuss' },
+      { id: 'a', label: '🫧 Sparkling' },
+      { id: 'b', label: '🧊 Still & smooth' },
+      { id: 'c', label: '🍯 Rich & heavy' },
+      { id: 'd', label: '💧 Light & easy' },
     ],
   },
   {
     id: 'goal',
-    text: 'What are you looking for right now?',
+    text: 'What matters most?',
     grid: true,
     options: [
-      { id: 'a', label: '🧠 Something sophisticated — not just juice' },
-      { id: 'b', label: '⚡ Something with a kick — adaptogens, caffeine' },
-      { id: 'c', label: '🎭 A real cocktail experience, zero alcohol' },
-      { id: 'd', label: '🌱 Clean ingredients, nothing artificial' },
+      { id: 'a', label: '🧠 Sophisticated' },
+      { id: 'b', label: '⚡ Functional kick' },
+      { id: 'c', label: '🎭 Real cocktail' },
+      { id: 'd', label: '🌱 All natural' },
     ],
   },
 ];

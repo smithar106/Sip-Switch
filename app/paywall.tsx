@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, ScrollView, StyleSheet, Alert, ActivityIndicator, Linking } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
@@ -38,10 +38,9 @@ const PLANS = [
 ];
 
 const BENEFITS = [
-  "Never waste $12 on an NA drink you won't finish — matched to your taste",
-  "Walk into any bar knowing exactly what to order — no trial and error",
-  'Full swap engine — every classic drink mapped',
-  'Taste profile that learns with every rating',
+  'Personalized drink matches, not guesswork',
+  'Know what to order at any bar',
+  'Taste profile that sharpens with every rating',
 ];
 
 export default function Paywall() {
@@ -55,14 +54,7 @@ export default function Paywall() {
   const setTrialStartDate = useSessionStore((s) => s.setTrialStartDate);
   const setHasOnboarded = useSessionStore((s) => s.setHasOnboarded);
   const archetypeId = useSessionStore((s) => s.archetypeId);
-  const archetype = archetypeId ? ARCHETYPES[archetypeId] : null;
-  const headlineText = archetype
-    ? `Your ${archetype.name} matches are ready — drinks you'll love, no more guessing.`
-    : "Your matches are ready — drinks you'll love, no more guessing.";
-
-  const lossAversionText = archetype
-    ? `Your ${archetype.name} profile will reset if you leave — lock it in free.`
-    : 'Your taste profile will reset if you leave — lock it in free.';
+  const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
 
   useEffect(() => {
     const timer = setTimeout(() => setRcTimedOut(true), 4000);
@@ -149,24 +141,22 @@ export default function Paywall() {
   const plan = PLANS.find((p) => p.id === selected) ?? PLANS[0];
 
   return (
-    <View style={[styles.screen, { paddingTop: insets.top }]}>
-      <ScrollView style={styles.scroll} contentContainerStyle={styles.wrap} showsVerticalScrollIndicator={false}>
-        <Text style={styles.eyebrow}>SIP SWITCH PRO</Text>
-        <Text style={styles.headline}>{headlineText}</Text>
-
-        {archetype && (
-          <View style={styles.archetypeBadge}>
-            <Text style={styles.archetypeBadgeEmoji}>{archetype.emoji}</Text>
-            <View style={styles.archetypeBadgeInfo}>
-              <Text style={styles.archetypeBadgeName}>{archetype.name}</Text>
-              <View style={styles.archetypeBadgeFlavours}>
-                {archetype.primaryFlavours.slice(0, 3).map((f) => (
-                  <Text key={f} style={styles.archetypeBadgeTag}>{f}</Text>
-                ))}
-              </View>
+    <View style={[styles.screen, { paddingTop: insets.top, paddingBottom: insets.bottom + 16 }]}>
+      <View style={styles.content}>
+        <View style={styles.archetypeBadge}>
+          <Text style={styles.archetypeBadgeEmoji}>{archetype.emoji}</Text>
+          <View style={styles.archetypeBadgeInfo}>
+            <Text style={styles.archetypeBadgeName}>{archetype.name}</Text>
+            <View style={styles.archetypeBadgeFlavours}>
+              {archetype.primaryFlavours.slice(0, 3).map((f) => (
+                <Text key={f} style={styles.archetypeBadgeTag}>{f}</Text>
+              ))}
             </View>
           </View>
-        )}
+        </View>
+
+        <Text style={styles.headline}>Your {archetype.name} profile is ready.</Text>
+        <Text style={styles.subtext}>Unlock your personalized drink matches.</Text>
 
         <View style={styles.benefits}>
           {BENEFITS.map((b) => (
@@ -185,11 +175,7 @@ export default function Paywall() {
               onPress={() => setSelected(p.id)}
               activeOpacity={0.85}
             >
-              {p.badge && (
-                <View style={styles.badge}>
-                  <Text style={styles.badgeTxt}>{p.badge}</Text>
-                </View>
-              )}
+              {p.badge && <View style={styles.badge}><Text style={styles.badgeTxt}>{p.badge}</Text></View>}
               <View style={[styles.radio, selected === p.id && styles.radioActive]}>
                 {selected === p.id && <View style={styles.radioDot} />}
               </View>
@@ -203,15 +189,6 @@ export default function Paywall() {
           <Text style={styles.billingNote}>{plan.billingNote}</Text>
         </View>
 
-        <View style={styles.valueMath}>
-          <Text style={styles.valueMathLine}>
-            💸 Premium NA drinks run $8–15 at a bar, $3–6 a can. A few disappointing ones cost more than a month of Sip Switch.
-          </Text>
-          <Text style={styles.valueMathLine}>
-            ⏳ Skip months of trial-and-error buying NA drinks that miss — know what you'll love before you spend.
-          </Text>
-        </View>
-
         <TouchableOpacity style={styles.cta} onPress={handlePurchase} activeOpacity={0.9} disabled={loading || (offeringsLoading && !rcTimedOut)}>
           {loading ? (
             <ActivityIndicator color="#0A0A0A" />
@@ -222,80 +199,51 @@ export default function Paywall() {
           )}
         </TouchableOpacity>
 
-        <Text style={styles.lossAversion}>{lossAversionText}</Text>
-
-        <Text style={styles.reminder}>
-          🔔 We'll remind you 2 days before your trial ends.
-        </Text>
-
         <Text style={styles.trialNote}>
-          {selected === 'annual'
-            ? 'Try free for 7 days · No charge until trial ends'
-            : selected === 'weekly'
-            ? '$1.99/week · Cancel anytime in Settings'
-            : '$4.99/mo · Cancel anytime'}
+          {selected === 'annual' ? 'Try free for 7 days · Cancel anytime' : selected === 'weekly' ? '$1.99/wk · Cancel anytime' : '$4.99/mo · Cancel anytime'}
         </Text>
 
         <TouchableOpacity style={styles.restoreBtn} onPress={handleRestore} disabled={loading || (offeringsLoading && !rcTimedOut)}>
           <Text style={styles.restoreTxt}>Restore Purchases</Text>
         </TouchableOpacity>
-
-        <View style={styles.legalRow}>
-          <TouchableOpacity onPress={() => Linking.openURL('https://sipswitch.app/terms')}>
-            <Text style={styles.legalLink}>Terms</Text>
-          </TouchableOpacity>
-          <Text style={styles.legalSep}>·</Text>
-          <TouchableOpacity onPress={() => Linking.openURL('https://sipswitch.app/privacy')}>
-            <Text style={styles.legalLink}>Privacy</Text>
-          </TouchableOpacity>
-        </View>
-
-      </ScrollView>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  screen:        { flex: 1, backgroundColor: '#0A0A0A' },
-  scroll:        { flex: 1 },
-  wrap:          { paddingHorizontal: 24, paddingTop: 48, paddingBottom: 52, gap: 20 },
-  eyebrow:       { color: '#C8A96E', fontSize: 12, fontWeight: '800', letterSpacing: 2, textTransform: 'uppercase', textAlign: 'center' },
-  headline:      { color: '#FFF', fontSize: 28, fontWeight: '800', lineHeight: 36, letterSpacing: -0.5, textAlign: 'center' },
-  archetypeBadge: { flexDirection: 'row', alignItems: 'center', gap: 12, backgroundColor: 'rgba(200,169,110,0.08)', borderRadius: 14, borderWidth: 1, borderColor: 'rgba(200,169,110,0.2)', padding: 14 },
-  archetypeBadgeEmoji: { fontSize: 32 },
-  archetypeBadgeInfo: { flex: 1, gap: 4 },
-  archetypeBadgeName: { color: '#FFF', fontSize: 15, fontWeight: '700' },
-  archetypeBadgeFlavours: { flexDirection: 'row', gap: 6, flexWrap: 'wrap' },
+  screen:       { flex: 1, backgroundColor: '#0A0A0A' },
+  content:      { flex: 1, paddingHorizontal: 24, justifyContent: 'center', gap: 12 },
+  headline:     { color: '#FFF', fontSize: 22, fontWeight: '800', textAlign: 'center' },
+  subtext:      { color: '#AAAAAA', fontSize: 14, textAlign: 'center', marginBottom: 4 },
+  archetypeBadge: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: 'rgba(200,169,110,0.06)', borderRadius: 14, borderWidth: 1, borderColor: 'rgba(200,169,110,0.15)', padding: 12 },
+  archetypeBadgeEmoji: { fontSize: 28 },
+  archetypeBadgeInfo: { flex: 1, gap: 2 },
+  archetypeBadgeName: { color: '#FFF', fontSize: 14, fontWeight: '700' },
+  archetypeBadgeFlavours: { flexDirection: 'row', gap: 4, flexWrap: 'wrap' },
   archetypeBadgeTag: { color: '#C8A96E', fontSize: 11, fontWeight: '600' },
-  benefits:      { gap: 12 },
-  benefitRow:    { flexDirection: 'row', alignItems: 'center', gap: 12 },
-  dot:           { width: 6, height: 6, borderRadius: 3, backgroundColor: '#C8A96E', flexShrink: 0 },
-  benefitTxt:    { color: '#EEEEEE', fontSize: 15, fontWeight: '500', flex: 1 },
-  plans:         { gap: 10 },
-  planCard:      { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 14, padding: 16, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.08)', flexDirection: 'row', alignItems: 'center', gap: 12, position: 'relative' },
+  benefits:    { gap: 6 },
+  benefitRow:  { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  dot:         { width: 5, height: 5, borderRadius: 3, backgroundColor: '#C8A96E', flexShrink: 0 },
+  benefitTxt:  { color: '#CCCCCC', fontSize: 13, fontWeight: '500', flex: 1 },
+  plans:       { gap: 6 },
+  planCard:    { backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 14, padding: 12, borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.08)', flexDirection: 'row', alignItems: 'center', gap: 10, position: 'relative' },
   planCardActive:{ backgroundColor: 'rgba(200,169,110,0.1)', borderColor: '#C8A96E' },
-  badge:         { position: 'absolute', top: -8, right: 10, backgroundColor: '#C8A96E', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
-  badgeTxt:      { color: '#0A0A0A', fontSize: 10, fontWeight: '800', letterSpacing: 0.5 },
-  radio:         { width: 44, height: 44, borderRadius: 22, borderWidth: 2, borderColor: '#888888', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
-  radioActive:   { borderColor: '#C8A96E' },
-  radioDot:      { width: 12, height: 12, borderRadius: 6, backgroundColor: '#C8A96E' },
-  planInfo:      { flex: 1, gap: 2 },
-  planLabel:     { color: '#E5E5E5', fontSize: 14, fontWeight: '700' },
+  badge:       { position: 'absolute', top: -8, right: 10, backgroundColor: '#C8A96E', borderRadius: 6, paddingHorizontal: 8, paddingVertical: 3 },
+  badgeTxt:    { color: '#0A0A0A', fontSize: 10, fontWeight: '800', letterSpacing: 0.5 },
+  radio:       { width: 36, height: 36, borderRadius: 18, borderWidth: 2, borderColor: '#888888', alignItems: 'center', justifyContent: 'center', flexShrink: 0 },
+  radioActive: { borderColor: '#C8A96E' },
+  radioDot:    { width: 10, height: 10, borderRadius: 5, backgroundColor: '#C8A96E' },
+  planInfo:    { flex: 1, gap: 1 },
+  planLabel:   { color: '#E5E5E5', fontSize: 13, fontWeight: '700' },
   planLabelActive:{ color: '#FFF' },
-  planSub:       { color: '#AAAAAA', fontSize: 12 },
-  planPrice:     { color: '#E5E5E5', fontSize: 15, fontWeight: '800', flexShrink: 0 },
+  planSub:     { color: '#AAAAAA', fontSize: 11 },
+  planPrice:   { color: '#E5E5E5', fontSize: 14, fontWeight: '800', flexShrink: 0 },
   planPriceActive:{ color: '#C8A96E' },
-  billingNote:   { color: '#AAAAAA', fontSize: 12, textAlign: 'center' },
-  valueMath:     { gap: 10, marginTop: 4, paddingHorizontal: 4 },
-  valueMathLine: { color: '#AAAAAA', fontSize: 12, lineHeight: 18 },
-  cta:           { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 18, alignItems: 'center' },
-  ctaTxt:        { color: '#0A0A0A', fontSize: 17, fontWeight: '800' },
-  lossAversion:  { color: '#AA3939', fontSize: 12, fontWeight: '600', textAlign: 'center', marginTop: 8, marginBottom: 4 },
-  reminder:      { color: '#888888', fontSize: 12, textAlign: 'center', marginTop: 8 },
-  trialNote:     { color: '#C8A96E', fontSize: 13, fontWeight: '600', textAlign: 'center' },
-  restoreBtn:    { alignItems: 'center', paddingVertical: 8 },
-  restoreTxt:    { color: '#888888', fontSize: 14 },
-  legalRow:      { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8 },
-  legalLink:     { color: '#888888', fontSize: 12, textDecorationLine: 'underline' },
-  legalSep:      { color: '#888888', fontSize: 12 },
+  billingNote: { color: '#AAAAAA', fontSize: 11, textAlign: 'center' },
+  cta:         { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 16, alignItems: 'center' },
+  ctaTxt:      { color: '#0A0A0A', fontSize: 16, fontWeight: '800' },
+  trialNote:   { color: '#C8A96E', fontSize: 12, fontWeight: '600', textAlign: 'center' },
+  restoreBtn:  { paddingVertical: 4, alignItems: 'center' },
+  restoreTxt:  { color: '#888888', fontSize: 13 },
 });
