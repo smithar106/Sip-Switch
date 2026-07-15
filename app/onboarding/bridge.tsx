@@ -3,10 +3,10 @@ import { View, Text, StyleSheet, Animated } from 'react-native';
 import { router } from 'expo-router';
 
 const MESSAGES = [
-  'Analyzing your taste buds…',
-  'Matching against real drinks…',
-  'Finding your perfect pour…',
-  'Almost there…',
+  'Mapping your taste profile…',
+  'Scoring your flavor dimensions…',
+  'Finding your closest matches…',
+  'Preparing your profile…',
 ];
 
 export default function Bridge() {

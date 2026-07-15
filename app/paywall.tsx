@@ -155,7 +155,7 @@ export default function Paywall() {
           </View>
         </View>
 
-        <Text style={styles.headline}>Your {archetype.name} profile is ready.</Text>
+        <Text style={styles.headline}>Your taste profile is ready.</Text>
         <Text style={styles.subtext}>Unlock your personalized drink matches.</Text>
 
         <View style={styles.benefits}>
@@ -194,7 +194,7 @@ export default function Paywall() {
             <ActivityIndicator color="#0A0A0A" />
           ) : (
             <Text style={styles.ctaTxt}>
-              {selected === 'annual' ? 'Start my 7-day free trial →' : 'Subscribe →'}
+              {selected === 'annual' ? 'Start my 7-day free trial' : 'Subscribe'}
             </Text>
           )}
         </TouchableOpacity>

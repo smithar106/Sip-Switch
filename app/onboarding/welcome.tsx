@@ -12,18 +12,18 @@ export default function Welcome() {
         <Text style={styles.eyebrow}>SIP SWITCH</Text>
 
         <Text style={styles.headline}>
-          Ditch the soda water.{'\n'}Find your drink.
+          Find NA drinks{'\n'}you'll actually love.
         </Text>
 
         <Text style={styles.subheadline}>
-          Taste-matched NA drinks in 7 questions. Finally, something that actually hits.
+          Take a 60-second taste quiz and get matched to drinks based on how you drink — not generic recommendations.
         </Text>
 
         <View style={styles.valueRows}>
           {[
-            'Matched to your exact taste',
-            'Know what to order at any bar',
-            'Sharper picks with every rating',
+            'Matched to your taste',
+            'Know what to order',
+            'Sharper picks every time you rate',
           ].map((text) => (
             <View key={text} style={styles.valueRow}>
               <Text style={styles.checkmark}>✓</Text>
@@ -39,7 +39,7 @@ export default function Welcome() {
           activeOpacity={0.9}
           onPress={() => router.push('/onboarding/quiz')}
         >
-          <Text style={styles.ctaText}>Find my drink →</Text>
+          <Text style={styles.ctaText}>Build My Taste Profile</Text>
         </TouchableOpacity>
         <Text style={styles.finePrint}>
           7 questions · 7-day free trial
