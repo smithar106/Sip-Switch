@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Animated } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePostHog } from 'posthog-react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Haptics from 'expo-haptics';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
@@ -16,24 +17,7 @@ interface Question {
   grid?: boolean;
 }
 
-const QUESTIONS: Question[] = [
-  {
-    id: 'waste_money',
-    text: 'Ever bought an NA drink you regretted?',
-    options: [
-      { id: 'a', label: 'Yes' },
-      { id: 'b', label: 'Every time' },
-    ],
-  },
-  {
-    id: 'waste_time',
-    text: 'How many NA drinks have you tried?',
-    options: [
-      { id: 'a', label: 'A few' },
-      { id: 'b', label: 'Lost count' },
-      { id: 'c', label: 'Gave up' },
-    ],
-  },
+const STEPS: Question[] = [
   {
     id: 'drink',
     text: 'What do you usually drink?',
@@ -94,6 +78,7 @@ export default function Quiz() {
   const { answers, setAnswer, currentStep, nextStep, reset } = useOnboardingStore();
   const setArchetypeId = useSessionStore((s) => s.setArchetypeId);
   const updateArchetype = useTasteStore((s) => s.updateArchetype);
+  const posthog = usePostHog();
   const [selected, setSelected] = useState<string | null>(null);
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const autoAdvanceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -105,15 +90,19 @@ export default function Quiz() {
         const result = JSON.parse(raw);
         if (result.archetypeId) {
           setArchetypeId(result.archetypeId);
-          router.replace('/onboarding/archetype-reveal');
+          router.replace('/onboarding/identity');
         }
         AsyncStorage.removeItem('@ss_quiz_result');
       } catch {}
     });
   }, []);
 
-  const question = QUESTIONS[currentStep];
-  const totalSteps = QUESTIONS.length;
+  useEffect(() => {
+    posthog.capture('onboarding_question_seen', { step: STEPS[currentStep]?.id });
+  }, [currentStep]);
+
+  const step = STEPS[currentStep];
+  const totalSteps = STEPS.length;
 
   const advance = useCallback(
     (optionId: string) => {
@@ -121,16 +110,17 @@ export default function Quiz() {
       setSelected(optionId);
 
       autoAdvanceRef.current = setTimeout(() => {
-        setAnswer(question.id, optionId);
+        setAnswer(step.id, optionId);
         setSelected(null);
 
         if (currentStep + 1 >= totalSteps) {
           const result = calculateArchetype({
             ...answers,
-            [question.id]: optionId,
+            [step.id]: optionId,
           });
           setArchetypeId(result);
           updateArchetype(result);
+          posthog.capture('onboarding_quiz_completed', { archetypeId: result });
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           reset();
           router.push('/onboarding/bridge');
@@ -138,21 +128,23 @@ export default function Quiz() {
           nextStep();
           fadeAnim.setValue(0);
           Animated.timing(fadeAnim, {
-            toValue: 1,
-            duration: 220,
-            useNativeDriver: true,
+            toValue: 1, duration: 220, useNativeDriver: true,
           }).start();
         }
       }, 180);
     },
-    [currentStep, answers, question.id, setAnswer, nextStep, fadeAnim, setArchetypeId, updateArchetype, totalSteps, reset]
+    [currentStep, answers, step, setAnswer, nextStep, fadeAnim, setArchetypeId, updateArchetype, totalSteps, reset]
   );
 
   const handleBack = useCallback(() => {
     if (autoAdvanceRef.current) clearTimeout(autoAdvanceRef.current);
-    reset();
-    router.back();
-  }, [reset]);
+    if (currentStep === 0) {
+      router.back();
+    } else {
+      reset();
+      router.back();
+    }
+  }, [currentStep, reset]);
 
   const progress = ((currentStep + 1) / totalSteps) * 100;
 
@@ -164,27 +156,21 @@ export default function Quiz() {
           <Text style={styles.backLabel}>Back</Text>
         </TouchableOpacity>
       </View>
-
       <View style={styles.container}>
         <View style={styles.progressTrack}>
           <View style={[styles.progressFill, { width: `${progress}%` }]} />
         </View>
-
-        <Text style={styles.stepLabel}>
-          Step {currentStep + 1} of {totalSteps}
-        </Text>
-
-        <Animated.View style={{ opacity: fadeAnim }}>
-          <Text style={styles.questionText}>{question.text}</Text>
-
-          <View style={question.grid ? styles.grid : styles.list}>
-            {question.options.map((opt) => {
+        <Text style={styles.stepLabel}>Step {currentStep + 1} of {totalSteps}</Text>
+        <Animated.View style={{ opacity: fadeAnim, flex: 1 }}>
+          <Text style={styles.questionText}>{step.text}</Text>
+          <View style={step.grid ? styles.grid : styles.list}>
+            {step.options.map((opt) => {
               const isSelected = selected === opt.id;
               return (
                 <TouchableOpacity
                   key={opt.id}
                   style={[
-                    question.grid ? styles.cardGrid : styles.cardFull,
+                    step.grid ? styles.cardGrid : styles.cardFull,
                     isSelected && styles.cardSelected,
                     selected !== null && !isSelected && styles.cardDisabled,
                   ]}
@@ -204,100 +190,21 @@ export default function Quiz() {
 }
 
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: '#0A0A0A',
-  },
-  backRow: {
-    paddingHorizontal: 20,
-    paddingTop: 4,
-    paddingBottom: 8,
-  },
-  backBtn: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignSelf: 'flex-start',
-    paddingVertical: 12,
-    paddingRight: 16,
-  },
-  backArrow: {
-    color: '#C8A96E',
-    fontSize: 20,
-    fontWeight: '600',
-    marginRight: 4,
-  },
-  backLabel: {
-    color: '#C8A96E',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  container: {
-    flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 12,
-    paddingBottom: 24,
-  },
-  progressTrack: {
-    width: '100%',
-    height: 2,
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 999,
-    marginBottom: 12,
-  },
-  progressFill: {
-    height: 2,
-    backgroundColor: '#C8A96E',
-    borderRadius: 999,
-  },
-  stepLabel: {
-    color: '#C8A96E',
-    fontSize: 12,
-    fontWeight: '600',
-    textTransform: 'uppercase',
-    letterSpacing: 1.5,
-    marginBottom: 20,
-  },
-  questionText: {
-    color: '#FFFFFF',
-    fontSize: 26,
-    fontWeight: '700',
-    marginBottom: 24,
-    lineHeight: 34,
-  },
-  list: {
-    gap: 10,
-  },
-  grid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  cardFull: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 16,
-    padding: 20,
-  },
-  cardGrid: {
-    backgroundColor: 'rgba(255,255,255,0.05)',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 16,
-    padding: 18,
-    width: '48%',
-    flexGrow: 1,
-  },
-  cardSelected: {
-    backgroundColor: 'rgba(200,169,110,0.15)',
-    borderColor: '#C8A96E',
-  },
-  cardDisabled: {
-    opacity: 0.35,
-  },
-  cardLabel: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-  },
+  screen: { flex: 1, backgroundColor: '#0A0A0A' },
+  backRow: { paddingHorizontal: 20, paddingTop: 4, paddingBottom: 4 },
+  backBtn: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-start', paddingVertical: 12, paddingRight: 16 },
+  backArrow: { color: '#C8A96E', fontSize: 20, fontWeight: '600', marginRight: 4 },
+  backLabel: { color: '#C8A96E', fontSize: 14, fontWeight: '600' },
+  container: { flex: 1, paddingHorizontal: 24, paddingTop: 12, paddingBottom: 24 },
+  progressTrack: { width: '100%', height: 2, backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: 999, marginBottom: 12 },
+  progressFill: { height: 2, backgroundColor: '#C8A96E', borderRadius: 999 },
+  stepLabel: { color: '#C8A96E', fontSize: 12, fontWeight: '600', textTransform: 'uppercase', letterSpacing: 1.5, marginBottom: 20 },
+  questionText: { color: '#FFFFFF', fontSize: 24, fontWeight: '700', marginBottom: 24, lineHeight: 32 },
+  list: { gap: 10 },
+  grid: { flexDirection: 'row', flexWrap: 'wrap', gap: 10 },
+  cardFull: { backgroundColor: 'rgba(255,255,255,0.05)', borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.08)', borderRadius: 16, padding: 20 },
+  cardGrid: { backgroundColor: 'rgba(255,255,255,0.05)', borderWidth: 1.5, borderColor: 'rgba(255,255,255,0.08)', borderRadius: 16, padding: 18, width: '48%', flexGrow: 1 },
+  cardSelected: { backgroundColor: 'rgba(200,169,110,0.15)', borderColor: '#C8A96E' },
+  cardDisabled: { opacity: 0.35 },
+  cardLabel: { color: '#FFFFFF', fontSize: 15, fontWeight: '600' },
 });

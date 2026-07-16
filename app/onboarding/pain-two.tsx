@@ -3,19 +3,19 @@ import { router } from 'expo-router';
 import { usePostHog } from 'posthog-react-native';
 import ProblemScreen from '@/src/components/onboarding/ProblemScreen';
 
-export default function Welcome() {
+export default function PainTwo() {
   const posthog = usePostHog();
 
   useEffect(() => {
-    posthog.capture('onboarding_welcome_seen');
+    posthog.capture('onboarding_pain_two_seen');
   }, []);
 
   return (
     <ProblemScreen
-      headline="Ever ordered the wrong drink?"
-      subtext="...after staring at the menu for five minutes?"
-      primaryButton="Yes"
-      onPrimary={() => router.push('/onboarding/pain-two')}
+      headline="Finding your favorite shouldn't take ten bad bottles."
+      subtext="Skip the trial and error."
+      primaryButton="I'm in"
+      onPrimary={() => router.push('/onboarding/quiz')}
     />
   );
 }

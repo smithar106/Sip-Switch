@@ -38,9 +38,9 @@ const PLANS = [
 ];
 
 const BENEFITS = [
-  'Personalized drink matches, not guesswork',
-  'Know what to order at any bar',
-  'Taste profile that sharpens with every rating',
+  'Personalized drink matches',
+  'Never guess what to order',
+  'Smarter recommendations over time',
 ];
 
 export default function Paywall() {
@@ -155,8 +155,8 @@ export default function Paywall() {
           </View>
         </View>
 
-        <Text style={styles.headline}>Your taste profile is ready.</Text>
-        <Text style={styles.subtext}>Unlock your personalized drink matches.</Text>
+        <Text style={styles.headline}>Unlock Your Taste Profile</Text>
+        <Text style={styles.subtext}>Get personalized drink matches, handpicked for your taste.</Text>
 
         <View style={styles.benefits}>
           {BENEFITS.map((b) => (
