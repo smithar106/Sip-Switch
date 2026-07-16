@@ -1,6 +1,7 @@
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Linking } from 'react-native';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePostHog } from 'posthog-react-native';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
@@ -9,6 +10,7 @@ import type { Archetype } from '@/src/types';
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
+  const posthog = usePostHog();
   const isPremium = useSessionStore((s) => s.isPremium);
   const archetypeId = useSessionStore((s) => s.archetypeId);
   const profile = useTasteStore((s) => s.profile);
@@ -17,6 +19,7 @@ export default function Profile() {
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : null;
 
   const handleRetake = () => {
+    posthog.capture('profile_quiz_retaken', { archetype_id: archetypeId });
     resetOnboarding();
     router.push('/onboarding/quiz');
   };
@@ -114,7 +117,10 @@ export default function Profile() {
           {isPremium ? 'Pro · Active' : '7-day trial'}
         </Text>
         {!isPremium && (
-          <TouchableOpacity style={styles.subBtn} onPress={() => router.push('/paywall')}>
+          <TouchableOpacity style={styles.subBtn} onPress={() => {
+            posthog.capture('profile_upgrade_tapped', { archetype_id: archetypeId });
+            router.push('/paywall');
+          }}>
             <Text style={styles.subBtnText}>Upgrade to Pro</Text>
           </TouchableOpacity>
         )}

@@ -4,6 +4,7 @@ import {
   TextInput, KeyboardAvoidingView, Platform
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePostHog } from 'posthog-react-native';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useLiveStore } from '@/src/stores/liveStore';
 import { MOMENTS } from '@/src/constants/moments';
@@ -15,6 +16,7 @@ type Phase = 'pick' | 'result';
 
 export default function Live() {
   const insets = useSafeAreaInsets();
+  const posthog = usePostHog();
   const archetypeId = useSessionStore((s) => s.archetypeId) as ArchetypeId | null;
   const { history, streak, addEntry, rateEntry } = useLiveStore();
   const [phase, setPhase] = useState<Phase>('pick');
@@ -42,14 +44,16 @@ export default function Live() {
     setSelectedMoment(momentId);
     setCurrentEntry(entry);
     addEntry(entry);
+    posthog.capture('live_moment_selected', { moment_id: momentId, moment_label: moment.label, recommended_drink: rec.drink, archetype_id: archetypeId });
     setTimeout(() => {
       setPhase('result');
     }, 180);
-  }, [archetypeId, addEntry]);
+  }, [archetypeId, addEntry, posthog]);
 
   const handleRate = useCallback((rating: LiveEntry['rating']) => {
     if (currentEntry) {
       rateEntry(currentEntry.id, rating);
+      posthog.capture('live_recommendation_rated', { rating: rating ?? null, moment_id: currentEntry.momentId, recommended_drink: currentEntry.recommendedDrink, archetype_id: archetypeId });
     }
     setTimeout(() => {
       setPhase('pick');
@@ -58,7 +62,7 @@ export default function Live() {
       setShowCustomInput(false);
       setCustomMoment('');
     }, 600);
-  }, [currentEntry, rateEntry]);
+  }, [currentEntry, rateEntry, archetypeId, posthog]);
 
   const handleCustomSubmit = useCallback(() => {
     if (!customMoment.trim()) return;
@@ -75,8 +79,9 @@ export default function Live() {
     };
     setCurrentEntry(entry);
     addEntry(entry);
+    posthog.capture('live_custom_moment_submitted', { recommended_drink: rec.drink, archetype_id: archetypeId });
     setPhase('result');
-  }, [customMoment, archetypeId, addEntry]);
+  }, [customMoment, archetypeId, addEntry, posthog]);
 
   return (
     <KeyboardAvoidingView

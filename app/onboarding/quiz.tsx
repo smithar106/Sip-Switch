@@ -120,7 +120,7 @@ export default function Quiz() {
           });
           setArchetypeId(result);
           updateArchetype(result);
-          posthog.capture('onboarding_quiz_completed', { archetypeId: result });
+          posthog.capture('onboarding_quiz_completed', { archetypeId: result, $set: { archetype_id: result, has_completed_quiz: true } });
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           reset();
           router.push('/onboarding/bridge');
