@@ -3,6 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Alert, ActivityIndicator } fr
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
+import { usePostHog } from 'posthog-react-native';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { ARCHETYPES } from '@/src/constants/archetypes';
 import { getOfferings, purchasePackage, restorePurchases } from '@/src/services/revenueCat';
@@ -50,11 +51,16 @@ export default function Paywall() {
   const [rcTimedOut, setRcTimedOut] = useState(false);
   const [packages, setPackages] = useState<any[]>([]);
   const insets = useSafeAreaInsets();
+  const posthog = usePostHog();
   const setIsPremium = useSessionStore((s) => s.setIsPremium);
   const setTrialStartDate = useSessionStore((s) => s.setTrialStartDate);
   const setHasOnboarded = useSessionStore((s) => s.setHasOnboarded);
   const archetypeId = useSessionStore((s) => s.archetypeId);
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
+
+  useEffect(() => {
+    posthog.capture('paywall_viewed', { archetype_id: archetypeId, default_plan: selected });
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => setRcTimedOut(true), 4000);
@@ -85,6 +91,7 @@ export default function Paywall() {
       if (selected === 'annual') {
         setTrialStartDate(new Date().toISOString().slice(0, 10));
       }
+      posthog.capture('subscription_started', { plan: selected, archetype_id: archetypeId, is_trial: selected === 'annual', $set: { is_premium: true, subscription_plan: selected } });
       router.replace('/(tabs)/feed');
       return;
     }
@@ -102,10 +109,14 @@ export default function Paywall() {
         if (selected === 'annual') {
           setTrialStartDate(new Date().toISOString().slice(0, 10));
         }
+        posthog.capture('subscription_started', { plan: selected, archetype_id: archetypeId, is_trial: selected === 'annual', $set: { is_premium: true, subscription_plan: selected } });
         router.replace('/(tabs)/feed');
       }
     } catch (e: any) {
-      if (!e?.userCancelled) {
+      if (e?.userCancelled) {
+        posthog.capture('subscription_cancelled', { plan: selected, archetype_id: archetypeId });
+      } else {
+        posthog.capture('subscription_failed', { plan: selected, archetype_id: archetypeId });
         Alert.alert('Purchase Failed', 'Your payment could not be processed. Check your payment method and try again.');
       }
     } finally {
@@ -117,6 +128,7 @@ export default function Paywall() {
     if (__DEV__) {
       setIsPremium(true);
       setHasOnboarded(true);
+      posthog.capture('subscription_restored', { archetype_id: archetypeId, $set: { is_premium: true } });
       router.replace('/(tabs)/feed');
       return;
     }
@@ -127,6 +139,7 @@ export default function Paywall() {
         setIsPremium(true);
         setHasOnboarded(true);
         Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success).catch(() => {});
+        posthog.capture('subscription_restored', { archetype_id: archetypeId, $set: { is_premium: true } });
         router.replace('/(tabs)/feed');
       } else {
         Alert.alert('Nothing to Restore', 'No active subscription found for this Apple ID.');
@@ -172,7 +185,10 @@ export default function Paywall() {
             <TouchableOpacity
               key={p.id}
               style={[styles.planCard, selected === p.id && styles.planCardActive]}
-              onPress={() => setSelected(p.id)}
+              onPress={() => {
+                setSelected(p.id);
+                posthog.capture('paywall_plan_selected', { plan: p.id, archetype_id: archetypeId });
+              }}
               activeOpacity={0.85}
             >
               {p.badge && <View style={styles.badge}><Text style={styles.badgeTxt}>{p.badge}</Text></View>}

@@ -2,6 +2,7 @@ import { useMemo, useCallback } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, LayoutAnimation } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { usePostHog } from 'posthog-react-native';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { ARCHETYPES } from '@/src/constants/archetypes';
@@ -96,6 +97,7 @@ function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
 
 export default function Feed() {
   const insets = useSafeAreaInsets();
+  const posthog = usePostHog();
   const archetypeId = useSessionStore((s) => s.archetypeId);
   const addRating = useTasteStore((s) => s.addRating);
   const ratings = useTasteStore((s) => s.ratings);
@@ -116,7 +118,8 @@ export default function Feed() {
   const handleRate = useCallback((drinkId: string, rating: DrinkRating['rating'], flavourTags?: DrinkRating['flavourTags']) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     addRating({ drinkId, rating, timestamp: new Date().toISOString(), flavourTags });
-  }, [addRating]);
+    posthog.capture('drink_rated', { drink_id: drinkId, rating, archetype_id: archetypeId, flavour_tags: flavourTags ?? null });
+  }, [addRating, archetypeId, posthog]);
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
