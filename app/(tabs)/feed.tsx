@@ -1,4 +1,4 @@
-import { useMemo, useCallback } from 'react';
+import { useMemo, useCallback, useState, useEffect } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, LayoutAnimation } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -7,7 +7,12 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { ARCHETYPES } from '@/src/constants/archetypes';
 import { RADIUS } from '@/src/constants/theme';
+import { fetchActiveDrinks } from '@/src/services/drinks';
+import { isSupabaseConfigured } from '@/src/services/supabase';
+import { rankDrinksForFeed } from '@/src/utils/recommendationEngine';
+import { supabaseDrinksToDrinkProfiles, supabaseDrinkToDrinkProfile } from '@/src/utils/drinkAdapter';
 import type { ArchetypeId, DrinkProfile, DrinkRating } from '@/src/types';
+import type { SupabaseDrink, UserTasteVector } from '@/src/types/supabase';
 
 const CATEGORY_GRADIENTS: Record<string, readonly [string, string]> = {
   na_beer: ['#C8A96E', '#8B7355'],
@@ -23,76 +28,56 @@ const CATEGORY_GRADIENTS: Record<string, readonly [string, string]> = {
 };
 
 const CATEGORY_EMOJIS: Record<string, string> = {
-  na_beer:        '🍺',
-  na_wine:        '🍷',
-  na_spirits:     '🥃',
-  na_sparkling:   '🥂',
-  na_aperitif:    '🍊',
-  na_cocktail_kit:'🍸',
-  na_kombucha:    '🫚',
-  na_adaptogen:   '🌿',
-  na_soda:        '🫧',
+  na_beer:        '🍺', na_wine:        '🍷', na_spirits:     '🥃',
+  na_sparkling:   '🥂', na_aperitif:    '🍊', na_cocktail_kit:'🍸',
+  na_kombucha:    '🫚', na_adaptogen:   '🌿', na_soda:        '🫧',
   na_cider:       '🍏',
 };
 
-function generateMockDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
+function buildFallbackDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
-  const categories = archetype.categories.map((c) => {
-    if (c.includes('Aperitif')) return 'na_aperitif' as const;
-    if (c.includes('Herbal') || c.includes('Tonic')) return 'na_kombucha' as const;
-    if (c.includes('Shrub')) return 'na_adaptogen' as const;
-    if (c.includes('Sparkling') || c.includes('Soda')) return 'na_sparkling' as const;
-    if (c.includes('Wine')) return 'na_wine' as const;
-    if (c.includes('Spirit')) return 'na_spirits' as const;
-    if (c.includes('Cocktail')) return 'na_cocktail_kit' as const;
-    if (c.includes('Beer')) return 'na_beer' as const;
-    if (c.includes('Cider')) return 'na_cider' as const;
-    if (c.includes('Brew') || c.includes('Cold Brew')) return 'na_adaptogen' as const;
-    if (c.includes('Adaptogen')) return 'na_adaptogen' as const;
-    if (c.includes('Kombucha')) return 'na_kombucha' as const;
-    if (c.includes('Kefir')) return 'na_cider' as const;
-    return 'na_soda' as const;
-  });
-
+  const catMap: Record<string, string> = {
+    'Aperitif': 'na_aperitif', 'Herbal': 'na_kombucha', 'Tonic': 'na_kombucha',
+    'Shrub': 'na_adaptogen', 'Sparkling': 'na_sparkling', 'Soda': 'na_sparkling',
+    'Wine': 'na_wine', 'Spirit': 'na_spirits', 'Cocktail': 'na_cocktail_kit',
+    'Beer': 'na_beer', 'Cider': 'na_cider', 'Brew': 'na_adaptogen',
+    'Cold Brew': 'na_adaptogen', 'Adaptogen': 'na_adaptogen',
+    'Kombucha': 'na_kombucha', 'Kefir': 'na_cider',
+  };
+  const mapCat = (c: string): DrinkProfile['category'] => {
+    for (const [key, val] of Object.entries(catMap)) {
+      if (c.includes(key)) return val as DrinkProfile['category'];
+    }
+    return 'na_soda' as DrinkProfile['category'];
+  };
+  const categories = archetype.categories.map(mapCat);
   const drinks: DrinkProfile[] = [];
   archetype.examples.forEach((brand, i) => {
     const category = categories[i] ?? categories[0];
     drinks.push({
-      id: `${archetype.id}-${i}`,
-      name: brand,
-      brand,
-      category,
-      imageUrl: '',
-      description: `A perfect NA match for your ${archetype.id} taste profile.`,
-      flavourTags: [archetype.primaryFlavours[i % archetype.primaryFlavours.length], archetype.primaryFlavours[(i + 1) % archetype.primaryFlavours.length]],
-      alcoholic: false,
-      gemScore: 80 + Math.floor(Math.random() * 20),
+      id: `${archetype.id}-${i}`, name: brand, brand, category,
+      imageUrl: '', description: `A perfect NA match for your ${archetype.id} taste profile.`,
+      flavourTags: [archetype.primaryFlavours[i % archetype.primaryFlavours.length]],
+      alcoholic: false, gemScore: 85,
     });
   });
-
-  const extraData = [
-    { name: 'Atypique', category: 'na_wine' as const },
-    { name: 'De Soi', category: 'na_adaptogen' as const },
-    { name: 'Rightside', category: 'na_spirits' as const },
-    { name: 'Tenneyson', category: 'na_spirits' as const },
-    { name: 'Dhos', category: 'na_aperitif' as const },
-  ];
-
-  extraData.forEach(({ name, category }, i) => {
-    drinks.push({
-      id: `extra-${i}`,
-      name,
-      brand: name,
-      category,
-      imageUrl: '',
-      description: 'A unique NA option crafted for discerning taste.',
-      flavourTags: [archetype.primaryFlavours[i % archetype.primaryFlavours.length], archetype.primaryFlavours[(i + 1) % archetype.primaryFlavours.length]],
-      alcoholic: false,
-      gemScore: 70 + Math.floor(Math.random() * 25),
-    });
-  });
-
   return drinks;
+}
+
+function buildUserTasteVector(archetypeId: ArchetypeId | null): UserTasteVector {
+  const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
+  const pf = archetype.primaryFlavours;
+  return {
+    sweetness: pf.includes('light') ? 7 : 5,
+    bitterness: pf.includes('bitter') ? 8 : pf.includes('bold') ? 6 : 4,
+    acidity: pf.includes('dry') ? 7 : pf.includes('citrus') ? 8 : 5,
+    body: pf.includes('bold') ? 8 : pf.includes('complex') ? 7 : 5,
+    complexity: pf.includes('complex') ? 8 : 5,
+    carbonation: pf.includes('carbonated') ? 8 : 4,
+    favoriteFlavorTags: pf,
+    avoidedFlavorTags: [],
+    preferredCategories: archetype.categories,
+  };
 }
 
 export default function Feed() {
@@ -101,9 +86,33 @@ export default function Feed() {
   const archetypeId = useSessionStore((s) => s.archetypeId);
   const addRating = useTasteStore((s) => s.addRating);
   const ratings = useTasteStore((s) => s.ratings);
+  const getRatedDrinkIds = useTasteStore((s) => s.getRatedDrinkIds);
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
+  const [supabaseDrinks, setSupabaseDrinks] = useState<SupabaseDrink[]>([]);
+  const [loadingSupabase, setLoadingSupabase] = useState(true);
 
-  const drinks = useMemo(() => generateMockDrinks(archetypeId), [archetypeId]);
+  useEffect(() => {
+    if (isSupabaseConfigured()) {
+      fetchActiveDrinks().then((drinks) => {
+        setSupabaseDrinks(drinks);
+        setLoadingSupabase(false);
+      });
+    } else {
+      setLoadingSupabase(false);
+    }
+  }, []);
+
+  const userTaste = useMemo(() => buildUserTasteVector(archetypeId), [archetypeId]);
+
+  const drinks = useMemo(() => {
+    if (supabaseDrinks.length > 0) {
+      const ratedIds = getRatedDrinkIds();
+      const ranked = rankDrinksForFeed(supabaseDrinks, userTaste, ratedIds);
+      const scoreMap = new Map(ranked.map((r) => [r.drinkId, { score: r.score, reason: r.reason }]));
+      return supabaseDrinksToDrinkProfiles(supabaseDrinks, scoreMap);
+    }
+    return buildFallbackDrinks(archetypeId);
+  }, [supabaseDrinks, archetypeId, userTaste, ratings]);
 
   const ratedDrinks = useMemo(() => {
     const map: Record<string, 'love' | 'skip'> = {};
@@ -126,6 +135,10 @@ export default function Feed() {
       <ScrollView style={styles.scroll} contentContainerStyle={styles.wrap} showsVerticalScrollIndicator={false}>
         <Text style={styles.headline}>For You</Text>
         <Text style={styles.archetypeName}>{archetype.name}</Text>
+
+        {!loadingSupabase && supabaseDrinks.length === 0 && (
+          <Text style={styles.fallbackNote}>Drink data loading — showing taste preview</Text>
+        )}
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillScroll} contentContainerStyle={styles.pillRow}>
           {archetype.primaryFlavours.map((f) => (
@@ -151,8 +164,17 @@ export default function Feed() {
             </LinearGradient>
 
             <View style={styles.drinkInfo}>
-              <Text style={styles.brand}>{drink.brand.toUpperCase()}</Text>
+              <View style={styles.nameRow}>
+                <Text style={styles.brand}>{drink.brand.toUpperCase()}</Text>
+                {drink.displayScore != null && (
+                  <Text style={styles.matchScore}>{drink.displayScore}%</Text>
+                )}
+              </View>
               <Text style={styles.drinkName}>{drink.name}</Text>
+
+              {drink.recommendationReason && (
+                <Text style={styles.reason}>{drink.recommendationReason}</Text>
+              )}
 
               <View style={styles.flavourRow}>
                 {drink.flavourTags.map((tag) => (
@@ -164,10 +186,7 @@ export default function Feed() {
 
               <View style={styles.actionRow}>
                 <TouchableOpacity
-                  style={[
-                    styles.loveBtn,
-                    ratedDrinks[drink.id] === 'love' && styles.loveBtnActive
-                  ]}
+                  style={[styles.loveBtn, ratedDrinks[drink.id] === 'love' && styles.loveBtnActive]}
                   onPress={() => handleRate(drink.id, 'love', drink.flavourTags)}
                 >
                   <Text style={styles.loveBtnText}>
@@ -175,16 +194,10 @@ export default function Feed() {
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  style={[
-                    styles.skipBtn,
-                    ratedDrinks[drink.id] === 'skip' && styles.skipBtnActive
-                  ]}
+                  style={[styles.skipBtn, ratedDrinks[drink.id] === 'skip' && styles.skipBtnActive]}
                   onPress={() => handleRate(drink.id, 'skip', drink.flavourTags)}
                 >
-                  <Text style={[
-                    styles.skipBtnText,
-                    ratedDrinks[drink.id] === 'skip' && styles.skipBtnTextActive
-                  ]}>
+                  <Text style={[styles.skipBtnText, ratedDrinks[drink.id] === 'skip' && styles.skipBtnTextActive]}>
                     {ratedDrinks[drink.id] === 'skip' ? '✕ Skipped' : '✕ Not for me'}
                   </Text>
                 </TouchableOpacity>
@@ -194,7 +207,7 @@ export default function Feed() {
         ))}
 
         <View style={styles.loadingRow}>
-          <Text style={styles.loadingText}>Rate drinks to refine your taste profile</Text>
+          <Text style={styles.loadingText}>{supabaseDrinks.length > 0 ? 'Rate drinks to refine your taste profile' : 'Rate drinks to refine your taste profile'}</Text>
         </View>
       </ScrollView>
     </View>
@@ -207,6 +220,7 @@ const styles = StyleSheet.create({
   wrap:          { paddingHorizontal: 20, paddingBottom: 40 },
   headline:      { color: '#FFF', fontSize: 28, fontWeight: '800', marginTop: 12 },
   archetypeName: { color: '#C8A96E', fontSize: 15, fontWeight: '600', marginTop: 4, marginBottom: 16 },
+  fallbackNote:  { color: '#888888', fontSize: 12, textAlign: 'center', marginBottom: 12 },
   pillScroll:    { marginBottom: 8 },
   pillRow:       { gap: 8, flexDirection: 'row' },
   pill:          { backgroundColor: 'rgba(200,169,110,0.1)', borderRadius: 999, paddingHorizontal: 14, paddingVertical: 6, borderWidth: 1, borderColor: 'rgba(200,169,110,0.2)' },
@@ -216,8 +230,11 @@ const styles = StyleSheet.create({
   imagePlaceholder: { height: 140, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' },
   imageEmoji:    { fontSize: 40, opacity: 0.6 },
   drinkInfo:     { padding: 16 },
+  nameRow:       { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
   brand:         { color: '#CCCCCC', fontSize: 11, fontWeight: '700', letterSpacing: 1.5, marginBottom: 4 },
-  drinkName:     { color: '#FFF', fontSize: 18, fontWeight: '700', marginBottom: 10 },
+  matchScore:    { color: '#C8A96E', fontSize: 14, fontWeight: '800' },
+  drinkName:     { color: '#FFF', fontSize: 18, fontWeight: '700', marginBottom: 4 },
+  reason:        { color: '#C8A96E', fontSize: 12, fontStyle: 'italic', marginBottom: 10, lineHeight: 16 },
   flavourRow:    { flexDirection: 'row', gap: 6, marginBottom: 14 },
   tagPill:       { backgroundColor: 'rgba(200,169,110,0.08)', borderRadius: 6, paddingHorizontal: 10, paddingVertical: 4 },
   tagText:       { color: '#C8A96E', fontSize: 11, fontWeight: '600' },

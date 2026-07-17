@@ -20,7 +20,7 @@ interface SessionState {
 }
 
 function safeSet(key: string, value: string) {
-  AsyncStorage.setItem(key, value).catch(() => {});
+  AsyncStorage.setItem(key, value).catch((err) => console.error('[sessionStore] write error:', err));
 }
 
 export const useSessionStore = create<SessionState>((set) => ({
@@ -63,8 +63,8 @@ export const useSessionStore = create<SessionState>((set) => ({
         trialStartDate: trial,
         _hydrated: true,
       });
-    } catch {
-      // Corrupted storage — use defaults
+    } catch (err) {
+      console.error('[sessionStore] load error:', err);
     }
   },
 }));

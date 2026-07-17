@@ -9,6 +9,8 @@ interface TasteState {
   addRating: (rating: DrinkRating) => void;
   updateArchetype: (id: ArchetypeId) => void;
   loadFromStorage: () => Promise<void>;
+  getRatedDrinkIds: () => Map<string, 'love' | 'like' | 'skip'>;
+  getDrinkRating: (drinkId: string) => DrinkRating | undefined;
 }
 
 const ALL_FLAVOURS: FlavourTag[] = [
@@ -31,7 +33,7 @@ const DEFAULT_PROFILE: TasteProfile = {
 };
 
 function safeSet(key: string, value: string) {
-  AsyncStorage.setItem(key, value).catch(() => {});
+  AsyncStorage.setItem(key, value).catch((err) => console.error('[tasteStore] write error:', err));
 }
 
 function clamp(v: number): number {
@@ -91,6 +93,16 @@ export const useTasteStore = create<TasteState>((set, get) => ({
     set({ profile });
     safeSet('@ss_profile', JSON.stringify(profile));
   },
+  getRatedDrinkIds: () => {
+    const map = new Map<string, 'love' | 'like' | 'skip'>();
+    for (const r of get().ratings) {
+      map.set(r.drinkId, r.rating as 'love' | 'like' | 'skip');
+    }
+    return map;
+  },
+  getDrinkRating: (drinkId: string) => {
+    return get().ratings.find((r) => r.drinkId === drinkId);
+  },
   loadFromStorage: async () => {
     try {
       const [ratingsRaw, profileRaw] = await Promise.all([
@@ -101,8 +113,8 @@ export const useTasteStore = create<TasteState>((set, get) => ({
       const profile: TasteProfile = profileRaw ? JSON.parse(profileRaw) : DEFAULT_PROFILE;
       profile.totalRatings = ratings.filter(r => r.rating === 'love' || r.rating === 'like').length;
       set({ ratings, profile });
-    } catch {
-      // Corrupted storage — use defaults
+    } catch (err) {
+      console.error('[tasteStore] load error:', err);
     }
   },
 }));

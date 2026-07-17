@@ -76,42 +76,33 @@ export const SWAP_MAP: SwapEntry[] = [
   { from: '🍹 Mojito', to: 'Curious Elixirs No. 1', reason: 'Herbaceous, citrus, complex' },
 ];
 
-export function calculateArchetype(answers: OnboardingAnswers): ArchetypeId {
-  const scores: Record<string, number> = {
-    bitter: 0, carbonated: 0, complex: 0, dry: 0, bold: 0, light: 0,
-  };
+const ANSWER_SCORES: Record<string, Partial<Record<string, number>>> = {
+  'q1_a': { bitter: 3, carbonated: 2 },
+  'q1_b': { complex: 3, dry: 2 },
+  'q1_c': { bold: 3, complex: 1 },
+  'q1_d': { light: 3, carbonated: 1 },
+  'q2_a': { complex: 3, dry: 1 },
+  'q2_b': { carbonated: 2, light: 2, bold: 1 },
+  'q2_c': { bold: 2, complex: 2 },
+  'q2_d': { light: 3, carbonated: 2 },
+  'q3_a': { complex: 3, bitter: 1 },
+  'q3_b': { light: 2, carbonated: 2 },
+  'q3_c': { bold: 3, dry: 1 },
+  'q3_d': { light: 3, dry: 2 },
+  'q4_a': { carbonated: 4 },
+  'q4_b': { dry: 2, complex: 2 },
+  'q4_c': { bold: 3, complex: 1 },
+  'q4_d': { light: 4 },
+  'q5_a': { complex: 3, dry: 2 },
+  'q5_b': { bold: 3, bitter: 1 },
+  'q5_c': { bold: 2, complex: 2, carbonated: 1 },
+  'q5_d': { light: 3, dry: 1 },
+};
 
-  const ANSWER_SCORES: Record<string, Partial<Record<string, number>>> = {
-    'q1_a': { bitter: 3, carbonated: 2 },
-    'q1_b': { complex: 3, dry: 2 },
-    'q1_c': { bold: 3, complex: 1 },
-    'q1_d': { light: 3, carbonated: 1 },
-    'q2_a': { complex: 3, dry: 1 },
-    'q2_b': { carbonated: 2, light: 2, bold: 1 },
-    'q2_c': { bold: 2, complex: 2 },
-    'q2_d': { light: 3, carbonated: 2 },
-    'q3_a': { complex: 3, bitter: 1 },
-    'q3_b': { light: 2, carbonated: 2 },
-    'q3_c': { bold: 3, dry: 1 },
-    'q3_d': { light: 3, dry: 2 },
-    'q4_a': { carbonated: 4 },
-    'q4_b': { dry: 2, complex: 2 },
-    'q4_c': { bold: 3, complex: 1 },
-    'q4_d': { light: 4 },
-    'q5_a': { complex: 3, dry: 2 },
-    'q5_b': { bold: 3, bitter: 1 },
-    'q5_c': { bold: 2, complex: 2, carbonated: 1 },
-    'q5_d': { light: 3, dry: 1 },
-  };
-
+function applyAnswerScores(answers: OnboardingAnswers, scores: Record<string, number>): void {
   const answerMap: Record<keyof OnboardingAnswers, string> = {
-    drink: 'q1',
-    moment: 'q2',
-    flavour: 'q3',
-    texture: 'q4',
-    goal: 'q5',
+    drink: 'q1', moment: 'q2', flavour: 'q3', texture: 'q4', goal: 'q5',
   };
-
   for (const [key, prefix] of Object.entries(answerMap)) {
     const answer = answers[key as keyof OnboardingAnswers];
     if (!answer) continue;
@@ -119,14 +110,61 @@ export function calculateArchetype(answers: OnboardingAnswers): ArchetypeId {
     const contribution = ANSWER_SCORES[scoreKey];
     if (!contribution) continue;
     for (const [dim, pts] of Object.entries(contribution)) {
-      scores[dim] = (scores[dim] ?? 0) + (pts ?? 0);
+      const p = pts as number;
+      scores[dim] = (scores[dim] ?? 0) + p;
     }
   }
+}
 
+export function calculateArchetype(answers: OnboardingAnswers): ArchetypeId {
+  const scores: Record<string, number> = {
+    bitter: 0, carbonated: 0, complex: 0, dry: 0, bold: 0, light: 0,
+  };
+  applyAnswerScores(answers, scores);
   const tiebreak: ArchetypeId[] = ['complex', 'bold', 'carbonated', 'dry', 'light', 'bitter'];
   let best: ArchetypeId = 'complex';
   for (const dim of tiebreak) {
     if ((scores[dim] ?? 0) > (scores[best] ?? 0)) best = dim;
   }
   return best;
+}
+
+export function calculateConfidence(rawScores: Record<string, number>): number {
+  const all = Object.entries(rawScores)
+    .filter(([, v]) => v > 0)
+    .sort((a, b) => b[1] - a[1]);
+  if (all.length === 0) return 70;
+  const top = all[0][1];
+  const second = all[1]?.[1] ?? 0;
+  const gap = top - second;
+  const maxGap = 20;
+  const confidence = 70 + ((gap / maxGap) * 28);
+  return Math.round(Math.min(98, Math.max(70, confidence)));
+}
+
+export function answersToPreferencePreferences(
+  answers: OnboardingAnswers,
+  rawFlavourScores: Record<string, number>,
+): Record<string, number> {
+  const s = rawFlavourScores;
+  const maxScore = Math.max(...Object.values(s), 1);
+  const normalize = (v: number) => Math.round(((v / maxScore) * 10));
+
+  return {
+    sweetness_preference: normalize((s.light ?? 0) + (s.carbonated ?? 0) / 2),
+    bitterness_preference: normalize(s.bitter ?? 0),
+    acidity_preference: normalize((s.dry ?? 0) + (s.herbal ?? 0) / 2),
+    body_preference: normalize((s.bold ?? 0) + (s.complex ?? 0) / 2),
+    complexity_preference: normalize(s.complex ?? 0),
+    carbonation_preference: normalize(s.carbonated ?? 0),
+  };
+}
+
+export function computeDimensionScores(answers: OnboardingAnswers): Record<string, number> {
+  const scores: Record<string, number> = {
+    bitter: 0, carbonated: 0, complex: 0, dry: 0, bold: 0, light: 0,
+    herbal: 0, citrus: 0, dark_fruit: 0, clean: 0,
+  };
+  applyAnswerScores(answers, scores);
+  return scores;
 }

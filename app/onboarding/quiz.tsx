@@ -8,7 +8,7 @@ import * as Haptics from 'expo-haptics';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
-import { calculateArchetype } from '@/src/constants/archetypes';
+import { calculateArchetype, calculateConfidence, computeDimensionScores, answersToPreferencePreferences } from '@/src/constants/archetypes';
 
 interface Question {
   id: string;
@@ -93,7 +93,7 @@ export default function Quiz() {
           router.replace('/onboarding/identity');
         }
         AsyncStorage.removeItem('@ss_quiz_result');
-      } catch {}
+      } catch (e) { console.error('[quiz] quiz_result parse error:', e); }
     });
   }, []);
 
@@ -114,13 +114,27 @@ export default function Quiz() {
         setSelected(null);
 
         if (currentStep + 1 >= totalSteps) {
-          const result = calculateArchetype({
-            ...answers,
-            [step.id]: optionId,
-          });
+          const finalAnswers = { ...answers, [step.id]: optionId };
+          const result = calculateArchetype(finalAnswers);
+          const dimScores = computeDimensionScores(finalAnswers);
+          const confidence = calculateConfidence(dimScores);
+
           setArchetypeId(result);
           updateArchetype(result);
-          posthog.capture('onboarding_quiz_completed', { archetypeId: result, $set: { archetype_id: result, has_completed_quiz: true } });
+          // Persist onboarding answers and preference vector for Supabase sync
+          const onboardingData = {
+            onboarding_answers: finalAnswers,
+            dimension_scores: dimScores,
+            preference_profile: answersToPreferencePreferences(finalAnswers, dimScores),
+            confidence,
+          };
+          AsyncStorage.setItem('@ss_onboarding_data', JSON.stringify(onboardingData));
+
+          posthog.capture('onboarding_quiz_completed', {
+            archetypeId: result,
+            confidence,
+            $set: { archetype_id: result, has_completed_quiz: true },
+          });
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           reset();
           router.push('/onboarding/bridge');

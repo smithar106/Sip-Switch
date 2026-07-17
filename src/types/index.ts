@@ -12,6 +12,8 @@ export interface DrinkProfile {
   productUrl?: string;
   price?: number;
   currency?: string;
+  displayScore?: number;
+  recommendationReason?: string;
 }
 
 export type DrinkCategory =

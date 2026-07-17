@@ -1,60 +1,142 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import {
   View, Text, TouchableOpacity, StyleSheet, ScrollView,
-  TextInput, KeyboardAvoidingView, Platform
+  TextInput, KeyboardAvoidingView, Platform, ActivityIndicator,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePostHog } from 'posthog-react-native';
 import { useSessionStore } from '@/src/stores/sessionStore';
+import { useTasteStore } from '@/src/stores/tasteStore';
 import { useLiveStore } from '@/src/stores/liveStore';
 import { MOMENTS } from '@/src/constants/moments';
+import { ARCHETYPES } from '@/src/constants/archetypes';
 import { getRecommendation } from '@/src/utils/recommend';
+import { fetchActiveDrinks } from '@/src/services/drinks';
+import { isSupabaseConfigured } from '@/src/services/supabase';
+import { scoreDrinks } from '@/src/utils/recommendationEngine';
 import type { LiveEntry } from '@/src/types/liveTypes';
-import type { ArchetypeId } from '@/src/types';
+import type { ArchetypeId, DrinkRating } from '@/src/types';
+import type { SupabaseDrink, UserTasteVector } from '@/src/types/supabase';
 
 type Phase = 'pick' | 'result';
+
+function buildUserTasteVector(archetypeId: ArchetypeId | null): UserTasteVector {
+  const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
+  const pf = archetype.primaryFlavours;
+  return {
+    sweetness: pf.includes('light') ? 7 : 5,
+    bitterness: pf.includes('bitter') ? 8 : pf.includes('bold') ? 6 : 4,
+    acidity: pf.includes('dry') ? 7 : pf.includes('citrus') ? 8 : 5,
+    body: pf.includes('bold') ? 8 : pf.includes('complex') ? 7 : 5,
+    complexity: pf.includes('complex') ? 8 : 5,
+    carbonation: pf.includes('carbonated') ? 8 : 4,
+    favoriteFlavorTags: pf,
+    avoidedFlavorTags: [],
+    preferredCategories: archetype.categories,
+  };
+}
 
 export default function Live() {
   const insets = useSafeAreaInsets();
   const posthog = usePostHog();
   const archetypeId = useSessionStore((s) => s.archetypeId) as ArchetypeId | null;
+  const addRating = useTasteStore((s) => s.addRating);
+  const getRatedDrinkIds = useTasteStore((s) => s.getRatedDrinkIds);
   const { history, streak, addEntry, rateEntry } = useLiveStore();
   const [phase, setPhase] = useState<Phase>('pick');
   const [selectedMoment, setSelectedMoment] = useState<string | null>(null);
   const [customMoment, setCustomMoment] = useState('');
   const [currentEntry, setCurrentEntry] = useState<LiveEntry | null>(null);
   const [showCustomInput, setShowCustomInput] = useState(false);
+  const [supabaseDrinks, setSupabaseDrinks] = useState<SupabaseDrink[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const userTaste = useMemo(() => buildUserTasteVector(archetypeId), [archetypeId]);
+
+  useEffect(() => {
+    if (isSupabaseConfigured()) {
+      fetchActiveDrinks().then((drinks) => {
+        setSupabaseDrinks(drinks);
+        setLoading(false);
+      });
+    } else {
+      setLoading(false);
+    }
+  }, []);
 
   const handleMomentSelect = useCallback((momentId: string) => {
     const moment = MOMENTS.find(m => m.id === momentId);
     if (!moment) return;
 
-    const rec = getRecommendation(momentId, archetypeId);
+    let drinkName: string;
+    let drinkBrand: string;
+    let reason: string;
+    let drinkId: string | null = null;
+
+    if (supabaseDrinks.length > 0) {
+      const ratedIds = getRatedDrinkIds();
+      const scored = scoreDrinks(supabaseDrinks, userTaste, { occasion: momentId }, ratedIds);
+      const top = scored[0];
+      if (top) {
+        const drink = supabaseDrinks.find((d) => d.id === top.drinkId);
+        drinkName = drink?.name ?? top.drinkId;
+        drinkBrand = drink?.brand ?? '';
+        reason = top.reason;
+        drinkId = top.drinkId;
+      } else {
+        const fallback = getRecommendation(momentId, archetypeId);
+        drinkName = fallback.drink;
+        drinkBrand = fallback.brand;
+        reason = fallback.reason;
+      }
+    } else {
+      const rec = getRecommendation(momentId, archetypeId);
+      drinkName = rec.drink;
+      drinkBrand = rec.brand;
+      reason = rec.reason;
+    }
+
     const entry: LiveEntry = {
-      id: `${momentId}-${Date.now()}`,
+      id: drinkId ?? `${momentId}-${Date.now()}`,
       momentId,
       momentLabel: moment.label,
       momentEmoji: moment.emoji,
-      recommendedDrink: rec.drink,
-      recommendedBrand: rec.brand,
-      reason: rec.reason,
+      recommendedDrink: drinkName,
+      recommendedBrand: drinkBrand,
+      reason,
       timestamp: new Date().toISOString(),
     };
 
     setSelectedMoment(momentId);
     setCurrentEntry(entry);
     addEntry(entry);
-    posthog.capture('live_moment_selected', { moment_id: momentId, moment_label: moment.label, recommended_drink: rec.drink, archetype_id: archetypeId });
+    posthog.capture('live_moment_selected', { moment_id: momentId, moment_label: moment.label, recommended_drink: drinkName, archetype_id: archetypeId });
     setTimeout(() => {
       setPhase('result');
     }, 180);
-  }, [archetypeId, addEntry, posthog]);
+  }, [archetypeId, supabaseDrinks, userTaste, getRatedDrinkIds, addEntry, posthog]);
 
-  const handleRate = useCallback((rating: LiveEntry['rating']) => {
-    if (currentEntry) {
-      rateEntry(currentEntry.id, rating);
-      posthog.capture('live_recommendation_rated', { rating: rating ?? null, moment_id: currentEntry.momentId, recommended_drink: currentEntry.recommendedDrink, archetype_id: archetypeId });
+  const handleRate = useCallback((liveRating: 'loved' | 'liked' | 'skipped') => {
+    if (!currentEntry) return;
+
+    rateEntry(currentEntry.id, liveRating);
+    posthog.capture('live_recommendation_rated', { rating: liveRating, moment_id: currentEntry.momentId, recommended_drink: currentEntry.recommendedDrink, archetype_id: archetypeId });
+
+    // Map Live rating to taste profile rating
+    const profileRatingMap: Record<string, DrinkRating['rating']> = {
+      loved: 'love',
+      liked: 'like',
+      skipped: 'skip',
+    };
+    const profileRating = profileRatingMap[liveRating];
+    if (profileRating && currentEntry.recommendedDrink) {
+      addRating({
+        drinkId: currentEntry.id,
+        rating: profileRating,
+        timestamp: new Date().toISOString(),
+      });
     }
+
     setTimeout(() => {
       setPhase('pick');
       setSelectedMoment(null);
@@ -62,35 +144,58 @@ export default function Live() {
       setShowCustomInput(false);
       setCustomMoment('');
     }, 600);
-  }, [currentEntry, rateEntry, archetypeId, posthog]);
+  }, [currentEntry, rateEntry, addRating, archetypeId, posthog]);
 
   const handleCustomSubmit = useCallback(() => {
     if (!customMoment.trim()) return;
-    const rec = getRecommendation('casual_night', archetypeId);
+
+    let drinkName: string;
+    let drinkBrand: string;
+    let reason: string;
+    let drinkId: string | null = null;
+
+    if (supabaseDrinks.length > 0) {
+      const ratedIds = getRatedDrinkIds();
+      const scored = scoreDrinks(supabaseDrinks, userTaste, undefined, ratedIds);
+      const top = scored[0];
+      if (top) {
+        const drink = supabaseDrinks.find((d) => d.id === top.drinkId);
+        drinkName = drink?.name ?? top.drinkId;
+        drinkBrand = drink?.brand ?? '';
+        reason = top.reason;
+        drinkId = top.drinkId;
+      } else {
+        const fallback = getRecommendation('casual_night', archetypeId);
+        drinkName = fallback.drink;
+        drinkBrand = fallback.brand;
+        reason = fallback.reason;
+      }
+    } else {
+      const rec = getRecommendation('casual_night', archetypeId);
+      drinkName = rec.drink;
+      drinkBrand = rec.brand;
+      reason = rec.reason;
+    }
+
     const entry: LiveEntry = {
-      id: `custom-${Date.now()}`,
+      id: drinkId ?? `custom-${Date.now()}`,
       momentId: 'custom',
       momentLabel: customMoment.trim(),
       momentEmoji: '✨',
-      recommendedDrink: rec.drink,
-      recommendedBrand: rec.brand,
-      reason: rec.reason,
+      recommendedDrink: drinkName,
+      recommendedBrand: drinkBrand,
+      reason,
       timestamp: new Date().toISOString(),
     };
     setCurrentEntry(entry);
     addEntry(entry);
-    posthog.capture('live_custom_moment_submitted', { recommended_drink: rec.drink, archetype_id: archetypeId });
+    posthog.capture('live_custom_moment_submitted', { recommended_drink: drinkName, archetype_id: archetypeId });
     setPhase('result');
-  }, [customMoment, archetypeId, addEntry, posthog]);
+  }, [customMoment, archetypeId, supabaseDrinks, userTaste, getRatedDrinkIds, addEntry, posthog]);
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={[styles.screen, { paddingTop: insets.top }]}>
-
-        {/* Header */}
         <View style={styles.header}>
           <View>
             <Text style={styles.headline}>Live</Text>
@@ -105,21 +210,19 @@ export default function Live() {
           )}
         </View>
 
-        {phase === 'pick' && (
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.scrollContent}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Moment grid */}
+        {loading && (
+          <View style={styles.loadingWrap}>
+            <ActivityIndicator color="#C8A96E" />
+          </View>
+        )}
+
+        {!loading && phase === 'pick' && (
+          <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
             <View style={styles.momentGrid}>
               {MOMENTS.map((moment) => (
                 <TouchableOpacity
                   key={moment.id}
-                  style={[
-                    styles.momentCard,
-                    selectedMoment === moment.id && styles.momentCardSelected,
-                  ]}
+                  style={[styles.momentCard, selectedMoment === moment.id && styles.momentCardSelected]}
                   onPress={() => handleMomentSelect(moment.id)}
                   activeOpacity={0.8}
                 >
@@ -130,7 +233,6 @@ export default function Live() {
               ))}
             </View>
 
-            {/* Custom input */}
             {showCustomInput ? (
               <View style={styles.customInputWrap}>
                 <TextInput
@@ -152,16 +254,11 @@ export default function Live() {
                 </TouchableOpacity>
               </View>
             ) : (
-              <TouchableOpacity
-                style={styles.customBtn}
-                onPress={() => setShowCustomInput(true)}
-                activeOpacity={0.7}
-              >
+              <TouchableOpacity style={styles.customBtn} onPress={() => setShowCustomInput(true)} activeOpacity={0.7}>
                 <Text style={styles.customBtnTxt}>✏️  Describe your own moment</Text>
               </TouchableOpacity>
             )}
 
-            {/* History */}
             {history.length > 0 && (
               <View style={styles.historySection}>
                 <Text style={styles.historyLabel}>YOUR SWITCH HISTORY</Text>
@@ -172,46 +269,29 @@ export default function Live() {
                       <Text style={styles.historyMoment}>{entry.momentLabel}</Text>
                       <Text style={styles.historyDrink}>{entry.recommendedDrink}</Text>
                       <Text style={styles.historyDate}>
-                        {new Date(entry.timestamp).toLocaleDateString('en-US', {
-                          weekday: 'short', month: 'short', day: 'numeric'
-                        })}
+                        {new Date(entry.timestamp).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}
                       </Text>
                     </View>
                     {entry.rating && (
-                      <Text
-                        style={styles.historyRating}
-                        accessibilityLabel={
-                          entry.rating === 'loved' ? 'Rated loved' : entry.rating === 'liked' ? 'Rated liked' : 'Rated skipped'
-                        }
-                      >
+                      <Text style={styles.historyRating}>
                         {entry.rating === 'loved' ? '♥' : entry.rating === 'liked' ? '👍' : '✕'}
                       </Text>
                     )}
                   </View>
                 ))}
-                {history.length > 5 && (
-                  <Text style={styles.historyMore}>
-                    +{history.length - 5} more moments
-                  </Text>
-                )}
+                {history.length > 5 && <Text style={styles.historyMore}>+{history.length - 5} more moments</Text>}
               </View>
             )}
           </ScrollView>
         )}
 
-        {phase === 'result' && currentEntry && (
-          <ScrollView
-            style={styles.scroll}
-            contentContainerStyle={styles.resultContent}
-            showsVerticalScrollIndicator={false}
-          >
-            {/* Moment context */}
+        {!loading && phase === 'result' && currentEntry && (
+          <ScrollView style={styles.scroll} contentContainerStyle={styles.resultContent} showsVerticalScrollIndicator={false}>
             <View style={styles.resultMoment}>
               <Text style={styles.resultMomentEmoji}>{currentEntry.momentEmoji}</Text>
               <Text style={styles.resultMomentLabel}>{currentEntry.momentLabel}</Text>
             </View>
 
-            {/* Recommendation */}
             <View style={styles.recCard}>
               <Text style={styles.recEyebrow}>YOUR SIP SWITCH</Text>
               <Text style={styles.recDrink}>{currentEntry.recommendedDrink}</Text>
@@ -220,40 +300,23 @@ export default function Live() {
               <Text style={styles.recReason}>{currentEntry.reason}</Text>
             </View>
 
-            {/* Rating */}
             <Text style={styles.ratingPrompt}>How did it go?</Text>
             <View style={styles.ratingRow}>
-              <TouchableOpacity
-                style={styles.ratingBtn}
-                onPress={() => handleRate('loved')}
-              >
+              <TouchableOpacity style={styles.ratingBtn} onPress={() => handleRate('loved')}>
                 <Text style={styles.ratingBtnEmoji}>♥</Text>
                 <Text style={styles.ratingBtnLabel}>Loved it</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.ratingBtn}
-                onPress={() => handleRate('liked')}
-              >
+              <TouchableOpacity style={styles.ratingBtn} onPress={() => handleRate('liked')}>
                 <Text style={styles.ratingBtnEmoji}>👍</Text>
                 <Text style={styles.ratingBtnLabel}>Pretty good</Text>
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.ratingBtn}
-                onPress={() => handleRate('skipped')}
-              >
+              <TouchableOpacity style={styles.ratingBtn} onPress={() => handleRate('skipped')}>
                 <Text style={styles.ratingBtnEmoji}>✕</Text>
                 <Text style={styles.ratingBtnLabel}>Not for me</Text>
               </TouchableOpacity>
             </View>
 
-            <TouchableOpacity
-              style={styles.backBtn}
-              onPress={() => {
-                setPhase('pick');
-                setCurrentEntry(null);
-                setSelectedMoment(null);
-              }}
-            >
+            <TouchableOpacity style={styles.backBtn} onPress={() => { setPhase('pick'); setCurrentEntry(null); setSelectedMoment(null); }}>
               <Text style={styles.backBtnTxt}>← Try another moment</Text>
             </TouchableOpacity>
           </ScrollView>
@@ -274,6 +337,7 @@ const styles = StyleSheet.create({
   streakLabel:      { color: '#C8A96E', fontSize: 10, fontWeight: '600', opacity: 0.7 },
   scroll:           { flex: 1 },
   scrollContent:    { paddingHorizontal: 20, paddingBottom: 40 },
+  loadingWrap:      { flex: 1, alignItems: 'center', justifyContent: 'center' },
   momentGrid:       { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 16 },
   momentCard:       { width: '47%', backgroundColor: 'rgba(255,255,255,0.04)', borderRadius: 16, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', padding: 14, gap: 4 },
   momentCardSelected:{ backgroundColor: 'rgba(200,169,110,0.15)', borderColor: '#C8A96E', borderWidth: 2 },
