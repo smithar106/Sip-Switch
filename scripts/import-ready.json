@@ -1,0 +1,4089 @@
+[
+  {
+    "name": "Negroni",
+    "brand": "St. Agrestis",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Bittersweet non-alcoholic negroni with Tuscan juniper, Sicilian citrus, and floral botanicals. Lightly carbonated with a silky finish.",
+    "image_url": null,
+    "product_url": "https://stagrestis.com/products/phony-negroni",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 5,
+    "body_score": 8,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Juniper",
+      "Citrus",
+      "Floral",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Happy Hour",
+      "Dinner Party"
+    ],
+    "food_pairing_tags": [
+      "Charcuterie",
+      "Aged Cheese",
+      "Orange Peel"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Espresso Cocktail",
+    "brand": "St. Agrestis",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Rich non-alcoholic espresso negroni combining cold brew coffee with bitter aperitif botanicals and vanilla. Smooth with a velvety mouthfeel.",
+    "image_url": null,
+    "product_url": "https://stagrestis.com/products/phony-espresso-negroni",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 3,
+    "body_score": 8,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Espresso",
+      "Coffee",
+      "Vanilla",
+      "Cocoa",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Nightcap"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Tiramisu",
+      "Vanilla Gelato"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Negroni",
+    "brand": "St. Agrestis",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Smoky non-alcoholic mezcal-style negroni with vegetal complexity and earthy agave notes. Made with 30 botanicals, double gold medal winner.",
+    "image_url": null,
+    "product_url": "https://stagrestis.com/products/phony-mezcal-negroni",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 9,
+    "acidity_score": 5,
+    "body_score": 8,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Smoke",
+      "Citrus",
+      "Gentian",
+      "Earthy",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Happy Hour"
+    ],
+    "food_pairing_tags": [
+      "Grilled Vegetables",
+      "Smoked Cheese",
+      "Dark Chocolate"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Negroni",
+    "brand": "St. Agrestis",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Bright clarified non-alcoholic white negroni driven by amplified gentian root and citrus. Champagne-like clarity with bitter backbone.",
+    "image_url": null,
+    "product_url": "https://stagrestis.com/products/phony-white-negroni",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 9,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Gentian",
+      "Citrus",
+      "Floral",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Celebration",
+      "Brunch",
+      "Aperitivo Hour"
+    ],
+    "food_pairing_tags": [
+      "Seafood",
+      "Light Appetizers",
+      "Citrus Desserts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Amaro Falso",
+    "brand": "St. Agrestis",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Complex non-alcoholic amaro with layered herbal bitterness, gentian, and Sicilian citrus. Sip neat or over ice as a digestivo.",
+    "image_url": null,
+    "product_url": "https://stagrestis.com/products/amaro-falso",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 10,
+    "acidity_score": 3,
+    "body_score": 5,
+    "complexity_score": 10,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Gentian",
+      "Herbal",
+      "Citrus",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Digestivo"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Aged Cheese",
+      "Nuts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Negroni",
+    "brand": "St. Agrestis",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Limited release citrus-forward non-alcoholic negroni with bright lemon notes and the signature 30-botanical base. Crisp and refreshing.",
+    "image_url": null,
+    "product_url": "https://stagrestis.com/products/phony-limone-negroni",
+    "price_range": null,
+    "availability_regions": [
+      "Limited"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Lemon",
+      "Citrus",
+      "Juniper",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Brunch",
+      "Aperitivo Hour"
+    ],
+    "food_pairing_tags": [
+      "Light Salads",
+      "Seafood",
+      "Citrus Tarts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Aperitivo",
+    "brand": "Ghia",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Complex non-alcoholic aperitif with bitter herbal notes, yuzu, ginger, and elderflower. Inspired by Mediterranean aperitivo culture.",
+    "image_url": null,
+    "product_url": "https://drinkghia.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 9,
+    "acidity_score": 9,
+    "body_score": 5,
+    "complexity_score": 10,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Yuzu",
+      "Ginger",
+      "Elderflower",
+      "Gentian",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Dinner Party"
+    ],
+    "food_pairing_tags": [
+      "Pasta",
+      "Antipasto",
+      "Citrus Desserts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Ghia",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Bursting non-alcoholic spritz with orange blossom and strawberry flavors. Effervescent with a soft creamy mouthfeel like sparkling rosé.",
+    "image_url": null,
+    "product_url": "https://drinkghia.com/products/le-fizz",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Strawberry",
+      "Orange Blossom",
+      "Floral",
+      "Bubbly"
+    ],
+    "occasion_tags": [
+      "Celebration",
+      "Brunch",
+      "Dinner Party"
+    ],
+    "food_pairing_tags": [
+      "Fruit Tarts",
+      "Soft Cheese",
+      "Light Appetizers"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Ghia",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Bright refreshing non-alcoholic spritz with blood orange and a whisper of marjoram. Softer and less bitter than original Ghia.",
+    "image_url": null,
+    "product_url": "https://drinkghia.com/products/le-spritz-blood-orange",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Blood Orange",
+      "Marjoram",
+      "Citrus",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Brunch",
+      "Picnic"
+    ],
+    "food_pairing_tags": [
+      "Grilled Fish",
+      "Citrus Salad",
+      "Goat Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Ghia",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Salty tangy non-alcoholic spritz with lime and sea salt. Like a dip in the Mediterranean with bright citrus and mineral finish.",
+    "image_url": null,
+    "product_url": "https://drinkghia.com/products/le-spritz-lime-salt",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Lime",
+      "Sea Salt",
+      "Citrus",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Beach",
+      "Picnic",
+      "Summer"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Ceviche",
+      "Grilled Vegetables"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Ghia",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Warming spicy non-alcoholic spritz with ginger, yuzu, and chili pepper extract. Fiery finish with complex botanical depth.",
+    "image_url": null,
+    "product_url": "https://drinkghia.com/products/ghia-ginger",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Ginger",
+      "Yuzu",
+      "Chili",
+      "Herbal",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Evening",
+      "Cool Weather"
+    ],
+    "food_pairing_tags": [
+      "Spicy Noodles",
+      "Ginger Desserts",
+      "Dumplings"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Ghia",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Earthy tangy non-alcoholic spritz with sumac and chili. For those who like it hot with bright acidity and warming spice.",
+    "image_url": null,
+    "product_url": "https://drinkghia.com/products/sumac-and-chili",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 9,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Sumac",
+      "Chili",
+      "Citrus",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Happy Hour",
+      "Adventurous Palates"
+    ],
+    "food_pairing_tags": [
+      "Middle Eastern Food",
+      "Grilled Meats",
+      "Spicy Snacks"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "De Soi",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Italian-inspired non-alcoholic aperitivo spritz with bitter orange and adaptogens. Lightly sparkling with L-theanine and lion's mane.",
+    "image_url": null,
+    "product_url": "https://drinkdesoi.com/products/spritz-italiano",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Bitter Orange",
+      "Citrus",
+      "Herbal",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Happy Hour"
+    ],
+    "food_pairing_tags": [
+      "Antipasto",
+      "Bruschetta",
+      "Light Pasta"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Aperitivo",
+    "brand": "De Soi",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Deep fruity non-alcoholic aperitif with dark berry notes and rose. Infused with adaptogens for relaxation without alcohol.",
+    "image_url": null,
+    "product_url": "https://drinkdesoi.com/products/purple-lune",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Dark Berries",
+      "Rose",
+      "Elderberry",
+      "Vanilla"
+    ],
+    "occasion_tags": [
+      "Evening",
+      "Relaxation",
+      "Dinner Party"
+    ],
+    "food_pairing_tags": [
+      "Chocolate Desserts",
+      "Cheese Plate",
+      "Berries"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Aperitivo",
+    "brand": "De Soi",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Rosé-inspired non-alcoholic aperitif with sparkling raspberry and floral notes. Light body with adaptogenic benefits.",
+    "image_url": null,
+    "product_url": "https://drinkdesoi.com/products/tres-rose",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Raspberry",
+      "Rose",
+      "Floral",
+      "Berry"
+    ],
+    "occasion_tags": [
+      "Brunch",
+      "Afternoon",
+      "Celebrations"
+    ],
+    "food_pairing_tags": [
+      "Charcuterie",
+      "Fruit",
+      "Light Salads"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Margarita",
+    "brand": "De Soi",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Spicy non-alcoholic margarita with lime, jalapeño, and agave. Infused with adaptogens for a mindful happy hour experience.",
+    "image_url": null,
+    "product_url": "https://drinkdesoi.com/products/haute-margarita",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Lime",
+      "Jalapeño",
+      "Agave",
+      "Sea Salt"
+    ],
+    "occasion_tags": [
+      "Happy Hour",
+      "Taco Night"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Guacamole",
+      "Spicy Mexican Food"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "De Soi",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Warming non-alcoholic golden milk-style drink with turmeric, ginger, and adaptogens. Caffeine-free with a soothing profile.",
+    "image_url": null,
+    "product_url": "https://drinkdesoi.com/products/golden-hour",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 5,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Turmeric",
+      "Ginger",
+      "Cinnamon",
+      "Vanilla",
+      "Honey"
+    ],
+    "occasion_tags": [
+      "Evening",
+      "Wind Down",
+      "Cold Weather"
+    ],
+    "food_pairing_tags": [
+      "Tea Cakes",
+      "Light Desserts",
+      "Almond Cookies"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "De Soi",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Limited winter release mule with pomegranate, cranberry, ginger, rosemary and adaptogens. Cozy apres-ski flavors.",
+    "image_url": null,
+    "product_url": "https://drinkdesoi.com/collections/all-beverages",
+    "price_range": null,
+    "availability_regions": [
+      "Limited"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Pomegranate",
+      "Cranberry",
+      "Ginger",
+      "Rosemary",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Winter",
+      "Holidays",
+      "Après-Ski"
+    ],
+    "food_pairing_tags": [
+      "Roasted Meats",
+      "Winter Vegetables",
+      "Spiced Desserts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Kin Euphorics",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Adaptogenic non-alcoholic social spirit with Rhodiola Rosea, 5-HTP, and GABA. Herbaceous blend of hibiscus and orange bitters.",
+    "image_url": null,
+    "product_url": "https://www.kineuphorics.com/products/high-rhode",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Hibiscus",
+      "Orange Bitters",
+      "Licorice",
+      "Sea Salt",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Social Hour",
+      "Happy Hour",
+      "Parties"
+    ],
+    "food_pairing_tags": [
+      "Cheese Board",
+      "Bruschetta",
+      "Citrus Desserts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Kin Euphorics",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Mood-boosting non-alcoholic sparkling beverage with ginger, tart citrus, and adaptogens. Uplifting and invigorating with no alcohol.",
+    "image_url": null,
+    "product_url": "https://www.kineuphorics.com/products/kin-spritz",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Ginger",
+      "Citrus",
+      "Hibiscus",
+      "Orange Bitters",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Afternoon",
+      "Socializing",
+      "Work"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Fruit",
+      "Salad"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Kin Euphorics",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Heart-opening non-alcoholic functional drink with floral botanicals and adaptogens. Lightly sweet with a joyful bright profile.",
+    "image_url": null,
+    "product_url": "https://www.kineuphorics.com/products/kin-bloom",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Floral",
+      "Citrus",
+      "Herbal",
+      "Honey",
+      "Botanicals"
+    ],
+    "occasion_tags": [
+      "Brunch",
+      "Daytime",
+      "Celebrations"
+    ],
+    "food_pairing_tags": [
+      "Pastries",
+      "Fruit Tarts",
+      "Light Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Kin Euphorics",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Meditative non-alcoholic sparkling blend of lavender-vanilla and smoked sea salt. Reishi mushroom for calm relaxation.",
+    "image_url": null,
+    "product_url": "https://www.kineuphorics.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 5,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Lavender",
+      "Vanilla",
+      "Smoked Sea Salt",
+      "Passionflower"
+    ],
+    "occasion_tags": [
+      "Evening",
+      "Wind Down",
+      "Yoga"
+    ],
+    "food_pairing_tags": [
+      "Chamomile Tea",
+      "Light Snacks",
+      "Dark Chocolate"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Negroni",
+    "brand": "Curious Elixirs",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Bold booze-free pomegranate negroni with layered herbaceous bitterness. Adaptogens like gentian and rhodiola for unwinding.",
+    "image_url": null,
+    "product_url": "https://curiouselixirs.com/products/curious-no-1-cocktails",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 10,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Pomegranate",
+      "Juniper",
+      "Herbal",
+      "Bitter",
+      "Citrus"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "After Work"
+    ],
+    "food_pairing_tags": [
+      "Aged Cheese",
+      "Dark Chocolate",
+      "Grilled Meats"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Margarita",
+    "brand": "Curious Elixirs",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Spicy pineapple ginger margarita fusion with ancho chili and jalapeño. Damiana herb helps you unwind while flavors dance.",
+    "image_url": null,
+    "product_url": "https://curiouselixirs.com/products/curious-no-2-cocktails",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Pineapple",
+      "Ginger",
+      "Lime",
+      "Ancho Chili",
+      "Spicy"
+    ],
+    "occasion_tags": [
+      "Happy Hour",
+      "Taco Night",
+      "Spicy Food Lovers"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Guacamole",
+      "Spicy Asian Food"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Curious Elixirs",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Botanical cucumber collins with juniper, lavender, and lemon verbena. Lightly sparkling with crisp refreshing finish.",
+    "image_url": null,
+    "product_url": "https://curiouselixirs.com/products/curious-no-3-cocktails",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Cucumber",
+      "Lavender",
+      "Juniper",
+      "Lemon Verbena",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Afternoon",
+      "Garden Party",
+      "Brunch"
+    ],
+    "food_pairing_tags": [
+      "Light Salads",
+      "Tea Sandwiches",
+      "Goat Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Curious Elixirs",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Blood orange turmeric spritz with bright citrus and earthy warmth. Sicilian-inspired with adaptogens for stress relief.",
+    "image_url": null,
+    "product_url": "https://curiouselixirs.com/products/curious-no-4-cocktails",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 5,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Blood Orange",
+      "Turmeric",
+      "Citrus",
+      "Ginger",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Brunch"
+    ],
+    "food_pairing_tags": [
+      "Hummus",
+      "Grilled Vegetables",
+      "Citrus Desserts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Curious Elixirs",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Smoked chocolate cherry old fashioned with rich molasses and cocoa. Complex booze-free sipper with cherry warmth.",
+    "image_url": null,
+    "product_url": "https://curiouselixirs.com/products/curious-no-5-cocktails",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 9,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 8,
+    "complexity_score": 10,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Cherry",
+      "Chocolate",
+      "Molasses",
+      "Smoke",
+      "Vanilla"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Nightcap",
+      "Dessert"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Cherry Pie",
+      "Roasted Nuts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Curious Elixirs",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Tropical spiced coconut pineapple cocktail with island vibes. Creamy coconut meets tangy pineapple with adaptogens.",
+    "image_url": null,
+    "product_url": "https://curiouselixirs.com/products/curious-no-6-cocktails",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 9,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Coconut",
+      "Pineapple",
+      "Spice",
+      "Tropical",
+      "Creamy"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Beach",
+      "Tropical Theme"
+    ],
+    "food_pairing_tags": [
+      "Thai Food",
+      "Grilled Shrimp",
+      "Coconut Desserts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Curious Elixirs",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Sparkling blanc de blancs style non-alcoholic wine cocktail with green apple and pear. Crisp, dry, and celebratory.",
+    "image_url": null,
+    "product_url": "https://curiouselixirs.com/products/curious-no-7-cocktails",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Green Apple",
+      "Pear",
+      "White Grape",
+      "Citrus",
+      "Dry"
+    ],
+    "occasion_tags": [
+      "Celebration",
+      "Brunch",
+      "Wedding"
+    ],
+    "food_pairing_tags": [
+      "Oysters",
+      "Light Appetizers",
+      "Soft Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Curious Elixirs",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Black and blue amaro digestif with dark berries, herbs, and mushroom extracts. Complex bitter-sweet finish for after dinner.",
+    "image_url": null,
+    "product_url": "https://curiouselixirs.com/products/curious-no-8-cocktails",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 10,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Blackberry",
+      "Blueberry",
+      "Herbal",
+      "Mushroom",
+      "Bitter"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Digestivo",
+      "Nightcap"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Aged Cheese",
+      "Nuts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Hiyo",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Organic adaptogenic seltzer with ashwagandha and L-theanine. Bold blackberry and lemon with 30 calories per can.",
+    "image_url": null,
+    "product_url": "https://drinkhiyo.com/collections/all",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Blackberry",
+      "Lemon",
+      "Berry",
+      "Citrus"
+    ],
+    "occasion_tags": [
+      "Afternoon",
+      "Socializing",
+      "Work"
+    ],
+    "food_pairing_tags": [
+      "Light Snacks",
+      "Fruit",
+      "Nuts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Hiyo",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Tart and tempting functional seltzer with passion fruit and tangerine. Bright citrus with mood-boosting botanical blend.",
+    "image_url": null,
+    "product_url": "https://drinkhiyo.com/products/passion-fruit-tangerine",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Passion Fruit",
+      "Tangerine",
+      "Citrus",
+      "Tropical"
+    ],
+    "occasion_tags": [
+      "Afternoon",
+      "Morning",
+      "Energy"
+    ],
+    "food_pairing_tags": [
+      "Fresh Fruit",
+      "Yogurt",
+      "Granola"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Hiyo",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Bright uplifting functional seltzer with pineapple and coconut. Tropical escape with 1,700mg functional ingredients per can.",
+    "image_url": null,
+    "product_url": "https://drinkhiyo.com/products/pineapple-coconut",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Pineapple",
+      "Coconut",
+      "Tropical",
+      "Creamy"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Beach",
+      "Vacation"
+    ],
+    "food_pairing_tags": [
+      "Thai Food",
+      "Grilled Fish",
+      "Coconut Desserts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "HOP WTR",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Crisp sparkling hop water with Citra and Amarillo hops. Zero calories with adaptogens and nootropics for balanced energy.",
+    "image_url": null,
+    "product_url": "https://hopwtr.com/products/classic-non-alcoholic-sparkling-hop-water-12-pack",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 3,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Hops",
+      "Citrus",
+      "Pine",
+      "Floral",
+      "Bitter"
+    ],
+    "occasion_tags": [
+      "After Work",
+      "Socializing",
+      "Anytime"
+    ],
+    "food_pairing_tags": [
+      "Nuts",
+      "Charcuterie",
+      "Grilled Meats"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "HOP WTR",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Zesty blood orange hop water with bright citrus and hop bitterness. Zero sugar with vitamin C and adaptogens.",
+    "image_url": null,
+    "product_url": "https://hopwtr.com/products/blood-orange-non-alcoholic-sparkling-hop-water-12-pack",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Blood Orange",
+      "Hops",
+      "Citrus",
+      "Bitter"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Afternoon",
+      "Happy Hour"
+    ],
+    "food_pairing_tags": [
+      "Grilled Fish",
+      "Citrus Salad",
+      "Light Fare"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "HOP WTR",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Juicy mango hop water with tropical sweetness balanced by hop bitterness. Zero calories with functional nootropic blend.",
+    "image_url": null,
+    "product_url": "https://hopwtr.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Mango",
+      "Hops",
+      "Tropical",
+      "Citrus"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Beach",
+      "Taco Night"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Thai Food",
+      "Tropical Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Margarita",
+    "brand": "Recess",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Craft lime margarita mocktail with real agave and sea salt. Infused with guayusa and adaptogens for balanced energy.",
+    "image_url": null,
+    "product_url": "https://takearecess.com/shop/zero-proof/lime-margarita",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Lime",
+      "Agave",
+      "Sea Salt",
+      "Citrus",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Happy Hour",
+      "Taco Night",
+      "Party"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Guacamole",
+      "Mexican Food"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Recess",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Grapefruit paloma mocktail made with red Rio grapefruit juice. Uplifting guayusa and adaptogens with low calories.",
+    "image_url": null,
+    "product_url": "https://takearecess.com/shop/zero-proof/grapefruit-paloma",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Grapefruit",
+      "Citrus",
+      "Agave",
+      "Herbal",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Brunch",
+      "Afternoon",
+      "Summer"
+    ],
+    "food_pairing_tags": [
+      "Ceviche",
+      "Salads",
+      "Grilled Fish"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Recess",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Watermelon mojito mocktail with fresh mint and lime. Lightly sparkling with adaptogens for a balanced lift.",
+    "image_url": null,
+    "product_url": "https://takearecess.com/shop/zero-proof",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Watermelon",
+      "Mint",
+      "Lime",
+      "Fresh",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Poolside",
+      "BBQ"
+    ],
+    "food_pairing_tags": [
+      "Grilled Meats",
+      "Fruit Salad",
+      "Light Fare"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Botanical Soda",
+    "brand": "Casamara Club",
+    "category": "Soda",
+    "subcategory": null,
+    "description": "Italian chinotto-inspired botanical soda with subtle negroni flavors. Extra dry finish with complex citrus and herbal notes.",
+    "image_url": null,
+    "product_url": "https://www.casamaraclub.com/collections/all",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 9,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Chinotto",
+      "Citrus",
+      "Herbal",
+      "Bitter",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Dinner"
+    ],
+    "food_pairing_tags": [
+      "Pasta",
+      "Pizza",
+      "Antipasto"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Negroni",
+    "brand": "Casamara Club",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic aperitivo cocktail mashing up negroni and bitter orange soda. More refreshing than a negroni, more complex than a spritz.",
+    "image_url": null,
+    "product_url": "https://www.casamaraclub.com/collections/all",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 9,
+    "acidity_score": 9,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Chinotto",
+      "Bitter Orange",
+      "Herbal",
+      "Spice",
+      "Citrus"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Happy Hour",
+      "Dinner"
+    ],
+    "food_pairing_tags": [
+      "Charcuterie",
+      "Aged Cheese",
+      "Grilled Vegetables"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Mojito",
+    "brand": "Naked Life",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Fresh mint and lime non-alcoholic mojito with zero sugar. Steam-distilled botanicals for true cocktail taste at only 5 calories.",
+    "image_url": null,
+    "product_url": "https://drinknakedlife.com/products/mojito",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Mint",
+      "Lime",
+      "Citrus",
+      "Herbal",
+      "Rum Notes"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Poolside",
+      "Party"
+    ],
+    "food_pairing_tags": [
+      "Grilled Fish",
+      "Fresh Salads",
+      "Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Negroni",
+    "brand": "Naked Life",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Bitter fizzy non-alcoholic negroni spritz with cherry and orange. Chinchona and bitter orange for authentic complexity.",
+    "image_url": null,
+    "product_url": "https://drinknakedlife.com/products/negroni-spritz",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 9,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Cherry",
+      "Amaro",
+      "Orange",
+      "Bitter",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Happy Hour"
+    ],
+    "food_pairing_tags": [
+      "Cheese Plate",
+      "Olives",
+      "Antipasto"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Margarita",
+    "brand": "Naked Life",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Tart salty non-alcoholic margarita with lime and sea salt. Zero sugar with steam-distilled botanical blend.",
+    "image_url": null,
+    "product_url": "https://drinknakedlife.com/products/margarita",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Lime",
+      "Salt",
+      "Citrus",
+      "Agave",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Taco Night",
+      "Happy Hour",
+      "Party"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Guacamole",
+      "Mexican Food"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "RTD Mocktail",
+    "brand": "Naked Life",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Classic non-alcoholic G&T with lemon, bitter orange, and juniper. Crisp and refreshing with zero sugar and 5 calories.",
+    "image_url": null,
+    "product_url": "https://drinknakedlife.com/products/classic-gt",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Lemon",
+      "Juniper",
+      "Bitter Orange",
+      "Herbal",
+      "Citrus"
+    ],
+    "occasion_tags": [
+      "Afternoon",
+      "Summer",
+      "Anytime"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Seafood",
+      "Salads"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "RTD Mocktail",
+    "brand": "Naked Life",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Cranberry and lime non-alcoholic cosmo with subtle orange notes. Tart sweet balance with zero sugar and low calories.",
+    "image_url": null,
+    "product_url": "https://drinknakedlife.com/products/cosmo",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Cranberry",
+      "Lime",
+      "Orange",
+      "Citrus",
+      "Tart"
+    ],
+    "occasion_tags": [
+      "Girls Night",
+      "Party",
+      "Celebration"
+    ],
+    "food_pairing_tags": [
+      "Cheese Plate",
+      "Light Desserts",
+      "Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Naked Life",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Italian spritz non-alcoholic cocktail with bitter aperitivo flavors. Vibrant and complex with zero sugar and distilled botanicals.",
+    "image_url": null,
+    "product_url": "https://drinknakedlife.com/products/italian-spritz",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Bitter Orange",
+      "Herbal",
+      "Citrus",
+      "Floral",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Brunch",
+      "Dinner Party"
+    ],
+    "food_pairing_tags": [
+      "Antipasto",
+      "Bruschetta",
+      "Light Pasta"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Margarita",
+    "brand": "PARCH",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic prickly paloma with grapefruit, hibiscus, and desert botanicals. Blue weber agave base with adaptogens for stress relief.",
+    "image_url": null,
+    "product_url": "https://drinkparch.com/collections/parch-drinks",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Grapefruit",
+      "Hibiscus",
+      "Agave",
+      "Citrus",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Sundowner",
+      "Happy Hour",
+      "Taco Night"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Ceviche",
+      "Grilled Fish"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Margarita",
+    "brand": "PARCH",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Spiced non-alcoholic piñarita with roasted pineapple and cayenne. Smoky spicy margarita riff with organic agave and adaptogens.",
+    "image_url": null,
+    "product_url": "https://drinkparch.com/collections/parch-drinks/products/spiced-pinarita",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Pineapple",
+      "Cayenne",
+      "Agave",
+      "Smoke",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Taco Night",
+      "Spicy Food Fans"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Spicy Mexican Food",
+      "Grilled Meats"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "PARCH",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Limited edition sunrise supertonic elixir with adaptogens and desert botanicals. Bright uplifting functional blend for daytime.",
+    "image_url": null,
+    "product_url": "https://drinkparch.com/collections/parch-drinks",
+    "price_range": null,
+    "availability_regions": [
+      "Limited"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Citrus",
+      "Tropical",
+      "Herbal",
+      "Adaptogens",
+      "Bright"
+    ],
+    "occasion_tags": [
+      "Morning",
+      "Daytime",
+      "Energy"
+    ],
+    "food_pairing_tags": [
+      "Fresh Fruit",
+      "Yogurt",
+      "Light Breakfast"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Negroni",
+    "brand": "Lapo's",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic negroni with gentian root, bitter orange, and rhubarb. Lightly sparkling with cinnamon and hibiscus notes.",
+    "image_url": null,
+    "product_url": "https://drinklapos.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Gentian",
+      "Bitter Orange",
+      "Rhubarb",
+      "Hibiscus",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Happy Hour"
+    ],
+    "food_pairing_tags": [
+      "Cheese Board",
+      "Olives",
+      "Antipasto"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Lapo's",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Non-alcoholic citrus spritz with lemon, lime, and orange. Juniper and thyme add herbal complexity to this bright aperitivo.",
+    "image_url": null,
+    "product_url": "https://drinklapos.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Lemon",
+      "Lime",
+      "Orange",
+      "Juniper",
+      "Thyme"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Brunch",
+      "Summer"
+    ],
+    "food_pairing_tags": [
+      "Seafood",
+      "Light Salads",
+      "Citrus Desserts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Aperitivo",
+    "brand": "Lapo's",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Campari-style non-alcoholic aperitivo with cinnamon, clove, and rhubarb. Mix with soda for a light pre-meal sip.",
+    "image_url": null,
+    "product_url": "https://drinklapos.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 10,
+    "acidity_score": 3,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Cinnamon",
+      "Clove",
+      "Rhubarb",
+      "Herbal",
+      "Bitter"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Dinner Party"
+    ],
+    "food_pairing_tags": [
+      "Bruschetta",
+      "Olives",
+      "Aged Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Lapo's",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Pomegranate moscow mule with ginger and lime. Tart and spicy non-alcoholic twist on the classic mule.",
+    "image_url": null,
+    "product_url": "https://drinklapos.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Pomegranate",
+      "Ginger",
+      "Lime",
+      "Spice",
+      "Tart"
+    ],
+    "occasion_tags": [
+      "Fall",
+      "Winter",
+      "Happy Hour"
+    ],
+    "food_pairing_tags": [
+      "Roasted Meats",
+      "Spicy Dishes",
+      "Dark Chocolate"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Espresso Cocktail",
+    "brand": "Lapo's",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Rich non-alcoholic espresso martini with coffee, vanilla, and cinnamon. Velvety texture for after-dinner sipping.",
+    "image_url": null,
+    "product_url": "https://drinklapos.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 9,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 8,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Espresso",
+      "Vanilla",
+      "Cinnamon",
+      "Cocoa",
+      "Creamy"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Nightcap",
+      "Dessert"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Tiramisu",
+      "Biscotti"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Amaro Falso",
+    "brand": "Lapo's",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Northern Italian-style non-alcoholic amaro with licorice, cinnamon, and orange blossom. Complex digestivo for after dinner.",
+    "image_url": null,
+    "product_url": "https://drinklapos.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 10,
+    "acidity_score": 3,
+    "body_score": 5,
+    "complexity_score": 10,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Licorice",
+      "Cinnamon",
+      "Orange Blossom",
+      "Pine",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Digestivo"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Aged Cheese",
+      "Roasted Nuts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "RTD Mocktail",
+    "brand": "Mingle Mocktails",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Cranberry cosmo mocktail with tart cranberry and citrus. Low-calorie zero-proof alternative for cocktail hour.",
+    "image_url": null,
+    "product_url": "https://www.minglemocktails.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Cranberry",
+      "Lime",
+      "Orange",
+      "Citrus",
+      "Tart"
+    ],
+    "occasion_tags": [
+      "Girls Night",
+      "Party",
+      "Holidays"
+    ],
+    "food_pairing_tags": [
+      "Cheese Plate",
+      "Dark Chocolate",
+      "Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Espresso Cocktail",
+    "brand": "NITRO Mocktails",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Nitro-activated non-alcoholic espresso martini with cold brew and vanilla. Silky cascading foam from nitrogen widget.",
+    "image_url": null,
+    "product_url": "https://www.mocktails.com/products/espresso-martini-nitro-mocktail",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 9,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 8,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Espresso",
+      "Vanilla",
+      "Cocoa",
+      "Coffee",
+      "Creamy"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Nightcap",
+      "Dessert"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Tiramisu",
+      "Coffee Desserts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Margarita",
+    "brand": "NITRO Mocktails",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Nitro non-alcoholic mockarita with lime and agave. Creamy nitrogen-infused texture with zero carbonation for smooth sipping.",
+    "image_url": null,
+    "product_url": "https://www.mocktails.com/products/mockarita-mocktail",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 8,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Lime",
+      "Agave",
+      "Citrus",
+      "Sea Salt",
+      "Creamy"
+    ],
+    "occasion_tags": [
+      "Taco Night",
+      "Happy Hour",
+      "Party"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Guacamole",
+      "Mexican Food"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "NITRO Mocktails",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Nitro mockapolitan with cranberry and citrus. Nitrogen widget creates silky cocktail texture without carbonation or alcohol.",
+    "image_url": null,
+    "product_url": "https://www.mocktails.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 8,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Cranberry",
+      "Orange",
+      "Citrus",
+      "Tart",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Girls Night",
+      "Party",
+      "Celebration"
+    ],
+    "food_pairing_tags": [
+      "Cheese Plate",
+      "Light Desserts",
+      "Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Fauxmosa",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Alcohol-free mimosa with California chardonnay and sauvignon blanc grapes. Orange and turmeric with apple cider vinegar.",
+    "image_url": null,
+    "product_url": "https://www.totalwine.com/beer/nonalcoholic/na-cocktails/fauxmosa-orange-with-turmeric-nonalcoholic-mimosa/p/271387250",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Orange",
+      "Turmeric",
+      "Grape",
+      "Citrus",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Brunch",
+      "Celebration",
+      "Baby Shower"
+    ],
+    "food_pairing_tags": [
+      "Pastries",
+      "Fresh Fruit",
+      "Eggs Benedict"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Fauxmosa",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Alcohol-free cranberry mimosa with hibiscus and ginger. Tart festive flavors from California grapes and real fruit.",
+    "image_url": null,
+    "product_url": "https://www.totalwine.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Cranberry",
+      "Hibiscus",
+      "Ginger",
+      "Grape",
+      "Tart"
+    ],
+    "occasion_tags": [
+      "Holidays",
+      "Brunch",
+      "Thanksgiving"
+    ],
+    "food_pairing_tags": [
+      "Turkey",
+      "Stuffing",
+      "Cranberry Sauce"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Fauxmosa",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Alcohol-free pineapple mimosa with lemon and mint. Tropical bright flavor from California grapes and pineapple juice.",
+    "image_url": null,
+    "product_url": "https://www.editorialist.com/p/orange-with-turmeric-4-pack--fauxmosa/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Pineapple",
+      "Lemon",
+      "Mint",
+      "Grape",
+      "Tropical"
+    ],
+    "occasion_tags": [
+      "Brunch",
+      "Summer",
+      "Poolside"
+    ],
+    "food_pairing_tags": [
+      "Grilled Fish",
+      "Tropical Fruit",
+      "Light Fare"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Crodino",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Classic Italian non-alcoholic spritz since 1965 with herb and spice infusion. Bittersweet with clove cardamom and nutmeg for 6 months.",
+    "image_url": null,
+    "product_url": "https://www.crodino.com/en-us/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US/IT/EU)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Herbal",
+      "Spice",
+      "Citrus",
+      "Bitter",
+      "Vanilla"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Italian Cuisine"
+    ],
+    "food_pairing_tags": [
+      "Antipasto",
+      "Olives",
+      "Bruschetta",
+      "Charcuterie"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Tonic",
+    "brand": "Suze",
+    "category": "Mixer",
+    "subcategory": null,
+    "description": "Ready-to-drink non-alcoholic Suze and tonic with bright yellow color. Bittersweet gentian root flavor with delicate citrus finish.",
+    "image_url": null,
+    "product_url": "https://www.suze.com/product/suze-tonic-0",
+    "price_range": null,
+    "availability_regions": [
+      "Available (EU/US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 10,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 5,
+    "flavor_tags": [
+      "Gentian",
+      "Tonic",
+      "Citrus",
+      "Bitter",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "French Cuisine"
+    ],
+    "food_pairing_tags": [
+      "Cheese Board",
+      "Charcuterie",
+      "Light Appetizers"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "THC Seltzer",
+    "brand": "Cann",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Microdosed THC social tonic with 2mg THC and 4mg CBD per can. Balanced light buzz with blood orange and cardamom flavor.",
+    "image_url": null,
+    "product_url": "https://drinkcann.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (30+ states)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Blood Orange",
+      "Cardamom",
+      "Citrus",
+      "Spice",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Happy Hour",
+      "Socializing",
+      "Relaxation"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Fruit",
+      "Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "THC Seltzer",
+    "brand": "WYNK",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Zero-sugar THC seltzer with black cherry and balanced 1:1 THC to CBD ratio. Light bubbly buzz in 10-15 minutes.",
+    "image_url": null,
+    "product_url": "https://drinkwynk.com/products/black-cherry-fizz",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (37+ states)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Black Cherry",
+      "Berry",
+      "Tart",
+      "Sweet"
+    ],
+    "occasion_tags": [
+      "Socializing",
+      "Relaxation",
+      "Party"
+    ],
+    "food_pairing_tags": [
+      "Fruit",
+      "Cheese",
+      "Light Snacks"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "THC Seltzer",
+    "brand": "WYNK",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Sunny citrus THC seltzer with tangerine and balanced 1:1 THC to CBD. Zero calories zero sugar for guilt-free buzz.",
+    "image_url": null,
+    "product_url": "https://drinkwynk.com/products/tangerine",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (37+ states)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Tangerine",
+      "Citrus",
+      "Orange",
+      "Sweet",
+      "Bright"
+    ],
+    "occasion_tags": [
+      "Socializing",
+      "Daytime",
+      "Brunch"
+    ],
+    "food_pairing_tags": [
+      "Citrus Salad",
+      "Light Fare",
+      "Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "THC Seltzer",
+    "brand": "WYNK",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Juicy mango THC seltzer with tropical sweetness and balanced THC to CBD ratio. Zero calories zero sugar.",
+    "image_url": null,
+    "product_url": "https://drinkwynk.com/products/juicy-mango",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (37+ states)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Mango",
+      "Tropical",
+      "Citrus",
+      "Sweet"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Beach",
+      "Socializing"
+    ],
+    "food_pairing_tags": [
+      "Tropical Fruit",
+      "Grilled Fish",
+      "Light Fare"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "THC Seltzer",
+    "brand": "WYNK",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Zesty lime THC seltzer with bright citrus and balanced 1:1 THC to CBD ratio. Crisp refreshing microdosed experience.",
+    "image_url": null,
+    "product_url": "https://drinkwynk.com/products/lime-twist",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (37+ states)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Lime",
+      "Citrus",
+      "Zesty",
+      "Fresh"
+    ],
+    "occasion_tags": [
+      "Socializing",
+      "Happy Hour",
+      "Party"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Ceviche",
+      "Fresh Salads"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "THC Seltzer",
+    "brand": "WYNK",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Full-flavored strawberry lemonade THC seltzer with 10mg THC. Bold taste with zero sugar for stronger buzz.",
+    "image_url": null,
+    "product_url": "https://drinkwynk.com/products/lemonade",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (37+ states)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Strawberry",
+      "Lemonade",
+      "Berry",
+      "Citrus"
+    ],
+    "occasion_tags": [
+      "Party",
+      "Socializing",
+      "Evening"
+    ],
+    "food_pairing_tags": [
+      "BBQ",
+      "Fried Food",
+      "Sweet Treats"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Adaptogenic Seltzer",
+    "brand": "Recess (CBD)",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Hemp and adaptogen infused sparkling water with peach and ginger. 10mg broad spectrum hemp for calm and clarity.",
+    "image_url": null,
+    "product_url": "https://takearecess.com/shop/recess-mood",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Peach",
+      "Ginger",
+      "Spice",
+      "Herbal",
+      "Fruity"
+    ],
+    "occasion_tags": [
+      "Afternoon",
+      "Wind Down",
+      "Work"
+    ],
+    "food_pairing_tags": [
+      "Light Snacks",
+      "Fruit",
+      "Herbal Tea"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "CBD Seltzer",
+    "brand": "Daytrip",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "CBD sparkling water with 25mg fast-acting CBD and terpenes. Blackberry flavor for bold fruit refreshment without THC.",
+    "image_url": null,
+    "product_url": "https://wearedaytrip.com/products/blackberry-sparkling-water",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 3,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Blackberry",
+      "Berry",
+      "Tart",
+      "Sweet",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Afternoon",
+      "Relaxation",
+      "Self-Care"
+    ],
+    "food_pairing_tags": [
+      "Fruit",
+      "Light Snacks",
+      "Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "CBD Seltzer",
+    "brand": "Daytrip",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Watermelon CBD sparkling water with 25mg fast-acting hemp CBD. Juicy bold flavor for cooling refreshment with mood support.",
+    "image_url": null,
+    "product_url": "https://wearedaytrip.com/products/sparkling",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 3,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Watermelon",
+      "Melon",
+      "Sweet",
+      "Fresh",
+      "Fruity"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "Hydration",
+      "Workout"
+    ],
+    "food_pairing_tags": [
+      "Fresh Melon",
+      "Light Salads",
+      "Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "THC Seltzer",
+    "brand": "RIVR",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "THC yerba mate tea with mango passionfruit and functional mushrooms. Uplifting microdosed beverage with natural caffeine.",
+    "image_url": null,
+    "product_url": "https://drinkrivr.com/collections/all",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (35 states)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Mango",
+      "Passionfruit",
+      "Guava",
+      "Orange",
+      "Tropical"
+    ],
+    "occasion_tags": [
+      "Adventure",
+      "Daytime",
+      "Energy"
+    ],
+    "food_pairing_tags": [
+      "Tropical Fruit",
+      "Light Fare",
+      "Energy Snacks"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Aplós",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Functional ume plum spritz with grapefruit and white tea. Broad-spectrum hemp for calming effect with crisp bright flavor.",
+    "image_url": null,
+    "product_url": "https://www.aplos.world/collections/shop-all",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Ume Plum",
+      "Grapefruit",
+      "White Tea",
+      "Citrus",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Poolside",
+      "Afternoon",
+      "Relaxation"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Sushi",
+      "Salads"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Margarita",
+    "brand": "Aplós",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Functional chili margarita with mandarin and orange habanero. Adaptogens for mood elevation with spicy citrus punch.",
+    "image_url": null,
+    "product_url": "https://www.aplos.world/collections/shop-all",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Mandarin",
+      "Lime",
+      "Habanero",
+      "Sea Salt",
+      "Spicy"
+    ],
+    "occasion_tags": [
+      "Happy Hour",
+      "Taco Night",
+      "Spicy Food"
+    ],
+    "food_pairing_tags": [
+      "Tacos",
+      "Guacamole",
+      "Spicy Mexican Food"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Aplós",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Kola fashioned old fashioned style with kola nut and smoked cherrywood. Functional adaptogens for a ritual drinking experience.",
+    "image_url": null,
+    "product_url": "https://www.aplos.world/collections/shop-all",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Kola Nut",
+      "Smoked Cherry",
+      "Cardamom",
+      "Coconut",
+      "Warm"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Ritual",
+      "Wind Down"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Roasted Nuts",
+      "Aged Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Negroni",
+    "brand": "Aplós",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Mandora negroni with bitter orange and quassia. Complex bittersweet aperitivo with functional adaptogen blend.",
+    "image_url": null,
+    "product_url": "https://www.aplos.world/collections/shop-all",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Mandora Orange",
+      "Quassia",
+      "Oakwood",
+      "Herbal",
+      "Bitter"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Happy Hour"
+    ],
+    "food_pairing_tags": [
+      "Charcuterie",
+      "Aged Cheese",
+      "Olives"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Lyre's",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Ready-to-drink amalfi spritz with bittersweet orange and rhubarb. Fine bubbles with Mediterranean citrus and floral finish.",
+    "image_url": null,
+    "product_url": "https://lyres.com/products/amalfi-spritz-case-of-12",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US/EU/AU)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Orange",
+      "Rhubarb",
+      "Citrus",
+      "Floral",
+      "Bitter"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Brunch",
+      "Summer"
+    ],
+    "food_pairing_tags": [
+      "Antipasto",
+      "Seafood",
+      "Light Pasta"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Spritz",
+    "brand": "Lyre's",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Non-alcoholic Italian spritz aperitif with bitter orange and spice. Mix with classico for authentic spritz experience.",
+    "image_url": null,
+    "product_url": "https://lyres.com/products/lyres-non-alcoholic-spritz-mocktail-recipe",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US/EU/AU)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 9,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Bitter Orange",
+      "Rhubarb",
+      "Spice",
+      "Citrus",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Cocktail Hour"
+    ],
+    "food_pairing_tags": [
+      "Cheese Board",
+      "Olives",
+      "Bruschetta"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Lyre's",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic classico sparkling wine alternative with green apple and pear. Crisp dry finish for celebrations.",
+    "image_url": null,
+    "product_url": "https://lyres.com/products/classico-case-of-8",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US/EU/AU)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Green Apple",
+      "Pear",
+      "Peach",
+      "Grape",
+      "Dry"
+    ],
+    "occasion_tags": [
+      "Celebration",
+      "Brunch",
+      "Wedding"
+    ],
+    "food_pairing_tags": [
+      "Oysters",
+      "Light Appetizers",
+      "Soft Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Lyre's",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic gin and tonic premix with botanical juniper. Classic G&T experience without the alcohol.",
+    "image_url": null,
+    "product_url": "https://lyres.com/collections/ready-to-drink",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US/EU/AU)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Juniper",
+      "Citrus",
+      "Tonic",
+      "Herbal",
+      "Bitter"
+    ],
+    "occasion_tags": [
+      "Afternoon",
+      "Summer",
+      "Classic Cocktail Hour"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Fish and Chips",
+      "Salads"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Adaptogenic Seltzer",
+    "brand": "Recess Mood",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Magnesium and adaptogen sparkling water with strawberry rose. Mood-boosting formula without hemp or THC.",
+    "image_url": null,
+    "product_url": "https://takearecess.com/shop/recess-mood",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 3,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Strawberry",
+      "Rose",
+      "Floral",
+      "Berry",
+      "Sweet"
+    ],
+    "occasion_tags": [
+      "Relaxation",
+      "Self-Care",
+      "Afternoon"
+    ],
+    "food_pairing_tags": [
+      "Fruit Tarts",
+      "Light Desserts",
+      "Herbal Tea"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Juni",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Sparkling adaptogenic tea with black tea, green tea, and Super-5 blend. Lemonade iced tea with ashwagandha and lion's mane.",
+    "image_url": null,
+    "product_url": "https://www.drinkjuni.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Lemon",
+      "Tea",
+      "Citrus",
+      "Herbal",
+      "Adaptogens"
+    ],
+    "occasion_tags": [
+      "Afternoon",
+      "Daytime",
+      "Energy Boost"
+    ],
+    "food_pairing_tags": [
+      "Light Snacks",
+      "Fruit",
+      "Pastries"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Martini",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic floreale aperitivo with bergamot, chamomile, and lavender. Italian-inspired floral aperitif for mindful sipping.",
+    "image_url": null,
+    "product_url": "https://martini.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (EU/US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Bergamot",
+      "Chamomile",
+      "Lavender",
+      "Floral",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Italian Cuisine"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Antipasto",
+      "Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Töst",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Non-alcoholic sparkling white tea beverage with white cranberry and ginger. Organic adaptogenic drink for celebrations.",
+    "image_url": null,
+    "product_url": "https://www.drinktost.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "White Cranberry",
+      "Ginger",
+      "Citrus",
+      "Herbal",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Celebration",
+      "Brunch",
+      "Wedding"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Seafood",
+      "Salads"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Betty Buzz",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Clean ingredient sparkling mocktails with real fruit juices. Meyer lemon club soda with ginger and botanicals.",
+    "image_url": null,
+    "product_url": "https://bettybuzz.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Meyer Lemon",
+      "Ginger",
+      "Citrus",
+      "Herbal",
+      "Bubbly"
+    ],
+    "occasion_tags": [
+      "Brunch",
+      "Afternoon",
+      "Kid-Friendly"
+    ],
+    "food_pairing_tags": [
+      "Light Fare",
+      "Salads",
+      "Sandwiches"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Tonic",
+    "brand": "Hella Cocktail Co.",
+    "category": "Mixer",
+    "subcategory": null,
+    "description": "Non-alcoholic sparkling bitter aperitif with gentian and citrus. Complex bitter soda for sophisticated mocktails.",
+    "image_url": null,
+    "product_url": "https://hellacocktail.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 10,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 9,
+    "carbonation_score": 5,
+    "flavor_tags": [
+      "Gentian",
+      "Citrus",
+      "Herbal",
+      "Bitter",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Cocktail Hour"
+    ],
+    "food_pairing_tags": [
+      "Cheese Board",
+      "Charcuterie",
+      "Olives"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "The Pathfinder",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Hemp-infused non-alcoholic amaro with wormwood and Douglas fir. Complex herbal digestivo for after dinner.",
+    "image_url": null,
+    "product_url": "https://www.drinkpathfinder.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 10,
+    "acidity_score": 3,
+    "body_score": 8,
+    "complexity_score": 10,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Wormwood",
+      "Douglas Fir",
+      "Herbal",
+      "Hemp",
+      "Bitter"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Digestivo",
+      "Nightcap"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Aged Cheese",
+      "Nuts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Espresso Cocktail",
+    "brand": "Spiritless",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic espresso martini with NA whiskey and real espresso. Rich coffee flavor with zero alcohol.",
+    "image_url": null,
+    "product_url": "https://spiritless.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 3,
+    "body_score": 8,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Espresso",
+      "Coffee",
+      "Vanilla",
+      "Cocoa",
+      "Smoky"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Nightcap",
+      "Dessert"
+    ],
+    "food_pairing_tags": [
+      "Dark Chocolate",
+      "Tiramisu",
+      "Coffee Cake"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Tonic",
+    "brand": "Barbican",
+    "category": "Mixer",
+    "subcategory": null,
+    "description": "Non-alcoholic bitter lemon and other fruit-flavored malt beverages. Crisp refreshing alcohol-free alternative from the UK.",
+    "image_url": null,
+    "product_url": "https://www.barbican.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (UK/EU)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 5,
+    "flavor_tags": [
+      "Lemon",
+      "Bitter",
+      "Citrus",
+      "Fruit",
+      "Malt"
+    ],
+    "occasion_tags": [
+      "Any Occasion",
+      "Casual"
+    ],
+    "food_pairing_tags": [
+      "Pub Food",
+      "Light Fare",
+      "Chips"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Three Spirit",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Functional non-alcoholic elixir with adaptogens and nootropics. Sparkling livener with guayusa and schisandra for energy.",
+    "image_url": null,
+    "product_url": "https://threespirit.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US/EU)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Guayusa",
+      "Schisandra",
+      "Citrus",
+      "Herbal",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Social Hour",
+      "Energy",
+      "Party"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Fruit",
+      "Herbal Fare"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "MARTINI",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic sparkling aperitivo with bitter orange and herbal botanicals. Vibrant color and complex Italian flavor profile.",
+    "image_url": null,
+    "product_url": "https://martini.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (EU/US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Bitter Orange",
+      "Herbal",
+      "Citrus",
+      "Spice",
+      "Floral"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Italian Cuisine"
+    ],
+    "food_pairing_tags": [
+      "Antipasto",
+      "Bruschetta",
+      "Olives"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Pentire",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Coastal non-alcoholic spritz with sea fennel and citrus. Botanical blend from Cornish coast for fresh crisp sipping.",
+    "image_url": null,
+    "product_url": "https://pentiredrinks.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (UK/EU/US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Sea Fennel",
+      "Citrus",
+      "Herbal",
+      "Coastal",
+      "Mineral"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Seaside",
+      "Summer"
+    ],
+    "food_pairing_tags": [
+      "Seafood",
+      "Light Salads",
+      "Fresh Oysters"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Aperitivo",
+    "brand": "Everleaf",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Non-alcoholic aperitif with saffron, gentian, and botanicals. Complex warming spirit alternative for cocktails.",
+    "image_url": null,
+    "product_url": "https://everleafdrinks.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (UK/EU/US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 5,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Saffron",
+      "Gentian",
+      "Citrus",
+      "Herbal",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Cocktail Hour"
+    ],
+    "food_pairing_tags": [
+      "Cheese Plate",
+      "Charcuterie",
+      "Nuts"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Everleaf",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic mountain aperitif with fir and citrus. Botanicals from 14 plants for a crisp complex spritz.",
+    "image_url": null,
+    "product_url": "https://everleafdrinks.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (UK/EU/US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Fir",
+      "Citrus",
+      "Herbal",
+      "Alpine",
+      "Pine"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Outdoor",
+      "Nature"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Salad",
+      "Fresh Cheese"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Moody Tongue",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Non-alcoholic sparkling water with grapefruit peel and black pepper. Culinary-inspired botanical soda for sophisticated sipping.",
+    "image_url": null,
+    "product_url": "https://modytongue.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Limited (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Grapefruit",
+      "Black Pepper",
+      "Citrus",
+      "Spice",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Dinner Party"
+    ],
+    "food_pairing_tags": [
+      "Grilled Fish",
+      "Fresh Salads",
+      "Light Fare"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Aperitivo",
+    "brand": "Wilderton",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Non-alcoholic botanical aperitif with wild foraged ingredients. Lustre flavor with chamomile and rhubarb. Smooth complex spirit alternative.",
+    "image_url": null,
+    "product_url": "https://wilderton.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 9,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Chamomile",
+      "Rhubarb",
+      "Herbal",
+      "Floral",
+      "Citrus"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Cocktail Hour"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Cheese",
+      "Garden Fare"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "De Soi",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Limited social spritz variety pack with adaptogens. Three flavors for uplifting mindful happy hour moments.",
+    "image_url": null,
+    "product_url": "https://drinkdesoi.com/collections/all-beverages",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Variety",
+      "Citrus",
+      "Floral",
+      "Berry",
+      "Adaptogens"
+    ],
+    "occasion_tags": [
+      "Social Hour",
+      "Happy Hour",
+      "Anytime"
+    ],
+    "food_pairing_tags": [
+      "Light Appetizers",
+      "Cheese",
+      "Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "HOP WTR",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Double hopped sparkling water with extra hop intensity. Zero calorie functional beverage for hop lovers.",
+    "image_url": null,
+    "product_url": "https://www.hopwtr.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 3,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Hops",
+      "Citrus",
+      "Pine",
+      "Resin",
+      "Bitter"
+    ],
+    "occasion_tags": [
+      "After Work",
+      "Craft Beer Alternative"
+    ],
+    "food_pairing_tags": [
+      "Nuts",
+      "Charcuterie",
+      "Grilled Foods"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Kin Euphorics",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Dream light relaxing nightcap with reishi, melatonin, and L-tryptophan. Warm spiced made-to-mix for sleep support.",
+    "image_url": null,
+    "product_url": "https://www.kineuphorics.com/products/dream-light",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 3,
+    "body_score": 8,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Oak",
+      "Clove",
+      "Cinnamon",
+      "Spice",
+      "Vanilla"
+    ],
+    "occasion_tags": [
+      "Nightcap",
+      "Sleep",
+      "Bedtime"
+    ],
+    "food_pairing_tags": [
+      "Warm Oat Milk",
+      "Honey",
+      "Chamomile"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "Hiyo",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Classic variety pack containing four flavors of organic social tonic. Best-selling adaptogen seltzer for exploring the float.",
+    "image_url": null,
+    "product_url": "https://drinkhiyo.com/products/variety-pack",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Variety",
+      "Berry",
+      "Citrus",
+      "Tropical",
+      "Mixed"
+    ],
+    "occasion_tags": [
+      "Anytime",
+      "Socializing",
+      "Work"
+    ],
+    "food_pairing_tags": [
+      "Mixed pairings",
+      "Various foods"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "CBD Seltzer",
+    "brand": "Lemmy",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Classic sparkling lemonade with real lemon juice since 1939. Nostalgic retro lemonade brand with natural flavor.",
+    "image_url": null,
+    "product_url": "https://www.orcabeverage.com/product/lemmy-half-half-tea--lemonade",
+    "price_range": null,
+    "availability_regions": [
+      "Limited (US)"
+    ],
+    "sweetness_score": 9,
+    "bitterness_score": 5,
+    "acidity_score": 9,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Lemon",
+      "Citrus",
+      "Sparkling",
+      "Lemonade",
+      "Sweet"
+    ],
+    "occasion_tags": [
+      "Summer",
+      "BBQ",
+      "Kid-Friendly"
+    ],
+    "food_pairing_tags": [
+      "BBQ",
+      "Fried Food",
+      "Outdoor Meals"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Canned Cocktail",
+    "brand": "Curious Elixirs",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Mini can variety pack with pomegranate negroni and Sicilian spritz. Perfect portable format for on-the-go sipping.",
+    "image_url": null,
+    "product_url": "https://curiouselixirs.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 5,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 9,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Variety",
+      "Pomegranate",
+      "Blood Orange",
+      "Herbal",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "On-the-Go",
+      "Picnic",
+      "Travel"
+    ],
+    "food_pairing_tags": [
+      "Various snacks",
+      "Cheese",
+      "Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "RTD Mocktail",
+    "brand": "Naked Life",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "Cocktail sampler dozen with 12 flavors for variety seekers. Zero sugar non-alcoholic cocktail discovery pack.",
+    "image_url": null,
+    "product_url": "https://drinknakedlife.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Variety",
+      "Mint",
+      "Citrus",
+      "Berry",
+      "Herbal"
+    ],
+    "occasion_tags": [
+      "Sampling",
+      "Party",
+      "Gifting"
+    ],
+    "food_pairing_tags": [
+      "Various foods",
+      "Universal pairings"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Functional Beverage",
+    "brand": "HOP WTR",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Party pack with all six flavors for maximum variety. Best-selling hop water collection for entertaining.",
+    "image_url": null,
+    "product_url": "https://hopwtr.com/products/party-pack-amazon-exclusive-12-pack",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 3,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Variety",
+      "Citrus",
+      "Tropical",
+      "Berry",
+      "Hops"
+    ],
+    "occasion_tags": [
+      "Party",
+      "Entertaining",
+      "BBQs"
+    ],
+    "food_pairing_tags": [
+      "Mixed pairings",
+      "versatile"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "CBD Seltzer",
+    "brand": "Daytrip",
+    "category": "Functional Drink",
+    "subcategory": null,
+    "description": "Variety pack of CBD sparkling waters with six flavors. 25mg CBD per can for exploring different terpene profiles.",
+    "image_url": null,
+    "product_url": "https://wearedaytrip.com/products/variety-pack",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Variety",
+      "Berry",
+      "Citrus",
+      "Tropical",
+      "Mixed"
+    ],
+    "occasion_tags": [
+      "Sampling",
+      "Relaxation",
+      "Everyday"
+    ],
+    "food_pairing_tags": [
+      "Various pairings"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Botanical Soda",
+    "brand": "Casamara Club",
+    "category": "Soda",
+    "subcategory": null,
+    "description": "Capo limited edition botanical soda. Seasonal offering with unique flavor profile from Casamara's rotating series.",
+    "image_url": null,
+    "product_url": "https://www.casamaraclub.com/",
+    "price_range": null,
+    "availability_regions": [
+      "Limited"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Seasonal",
+      "Botanicals",
+      "Herbal",
+      "Citrus"
+    ],
+    "occasion_tags": [
+      "Seasonal",
+      "Limited",
+      "Aperitivo"
+    ],
+    "food_pairing_tags": [
+      "Seasonal pairings"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "RTD Mocktail",
+    "brand": "Mingle Mocktails",
+    "category": "RTD Mocktail",
+    "subcategory": null,
+    "description": "7-flavor variety pack with full Mingle lineup. Best-selling zero-proof mocktail collection for parties.",
+    "image_url": null,
+    "product_url": "https://www.minglemocktails.com/products/7-mocktail-flavor-variety-pack",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 3,
+    "bitterness_score": 5,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 3,
+    "carbonation_score": 7,
+    "flavor_tags": [
+      "Variety",
+      "Cosmo",
+      "Margarita",
+      "Mimosa",
+      "Bellini",
+      "Paloma",
+      "Rosé"
+    ],
+    "occasion_tags": [
+      "Party",
+      "Entertaining",
+      "Gifting"
+    ],
+    "food_pairing_tags": [
+      "Various foods",
+      "Universal pairings"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Amaro Falso",
+    "brand": "St. Agrestis",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Non-alcoholic limone amaro with bright lemon and herbal bitterness. Digestivo style for after dinner sipping over ice.",
+    "image_url": null,
+    "product_url": "https://stagrestis.com/collections/all",
+    "price_range": null,
+    "availability_regions": [
+      "Limited (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 9,
+    "acidity_score": 9,
+    "body_score": 5,
+    "complexity_score": 9,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Lemon",
+      "Herbal",
+      "Bitter",
+      "Citrus",
+      "Spice"
+    ],
+    "occasion_tags": [
+      "After Dinner",
+      "Digestivo",
+      "Summer"
+    ],
+    "food_pairing_tags": [
+      "Lemon Desserts",
+      "Light Cheese",
+      "Fruit"
+    ],
+    "is_active": true
+  },
+  {
+    "name": "Aperitivo",
+    "brand": "De Soi",
+    "category": "Aperitif",
+    "subcategory": null,
+    "description": "Adaptogenic raspberry aperitif with floral notes. Non-alcoholic pre-mixed drink with L-theanine for relaxation.",
+    "image_url": null,
+    "product_url": "https://drinkdesoi.com/collections/all-beverages",
+    "price_range": null,
+    "availability_regions": [
+      "Wide (US)"
+    ],
+    "sweetness_score": 5,
+    "bitterness_score": 3,
+    "acidity_score": 5,
+    "body_score": 3,
+    "complexity_score": 5,
+    "carbonation_score": 2,
+    "flavor_tags": [
+      "Raspberry",
+      "Floral",
+      "Berry",
+      "Herbal",
+      "Adaptogens"
+    ],
+    "occasion_tags": [
+      "Aperitivo Hour",
+      "Happy Hour"
+    ],
+    "food_pairing_tags": [
+      "Fruit Tarts",
+      "Light Cheese",
+      "Chocolate"
+    ],
+    "is_active": true
+  }
+]

@@ -6,7 +6,6 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
 import { ARCHETYPES } from '@/src/constants/archetypes';
-import type { Archetype } from '@/src/types';
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
@@ -14,6 +13,9 @@ export default function Profile() {
   const isPremium = useSessionStore((s) => s.isPremium);
   const archetypeId = useSessionStore((s) => s.archetypeId);
   const profile = useTasteStore((s) => s.profile);
+  const vector = useTasteStore((s) => s.vector);
+  const confidence = useTasteStore((s) => s.confidence);
+  const favoriteFlavorTags = useTasteStore((s) => s.favoriteFlavorTags);
   const resetOnboarding = useOnboardingStore((s) => s.reset);
 
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : null;
@@ -23,13 +25,6 @@ export default function Profile() {
     resetOnboarding();
     router.push('/onboarding/quiz');
   };
-
-  const toGlass = (numerator: number, divisor: number) => {
-    const raw = (numerator / divisor) * 5;
-    return Math.min(5, Math.max(0.5, Math.round(raw * 2) / 2));
-  };
-
-  const s = profile.scores;
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
@@ -47,67 +42,39 @@ export default function Profile() {
 
         <View style={styles.divider} />
 
-        {/* Taste Meter */}
-        <Text style={styles.sectionTitle}>Your Taste Meter</Text>
+        {/* Taste Vector */}
+        <Text style={styles.sectionTitle}>Your Taste Profile</Text>
 
         {[
-          {
-            label: 'Social', emoji: '🎉',
-            score: toGlass(
-              (s.carbonated ?? 50) * 2 + (s.bold ?? 50) * 2 + (s.light ?? 50) * 1,
-              5 * 100
-            ),
-          },
-          {
-            label: 'Flavour', emoji: '🌿',
-            score: toGlass(
-              (s.complex ?? 50) * 2 + (s.bitter ?? 50) * 2 + (s.herbal ?? 50) * 1,
-              5 * 100
-            ),
-          },
-          {
-            label: 'Bubbles', emoji: '🫧',
-            score: toGlass(
-              (s.carbonated ?? 50) * 4 + (s.light ?? 50) * 1,
-              5 * 100
-            ),
-          },
-          {
-            label: 'Boldness', emoji: '🍸',
-            score: toGlass(
-              (s.bold ?? 50) * 3 + (s.bitter ?? 50) * 2 + (s.complex ?? 50) * 1,
-              6 * 100
-            ),
-          },
-          {
-            label: 'Freshness', emoji: '☀️',
-            score: toGlass(
-              (s.citrus ?? 50) * 3 + (s.light ?? 50) * 2 + (s.clean ?? 50) * 1,
-              6 * 100
-            ),
-          },
-        ].map(({ label, emoji, score }) => (
+          { label: 'Sweetness', emoji: '🍯', val: vector.sweetness },
+          { label: 'Bitterness', emoji: '🌿', val: vector.bitterness },
+          { label: 'Acidity', emoji: '🍋', val: vector.acidity },
+          { label: 'Body', emoji: '🍷', val: vector.body },
+          { label: 'Complexity', emoji: '🧠', val: vector.complexity },
+          { label: 'Carbonation', emoji: '🫧', val: vector.carbonation },
+        ].map(({ label, emoji, val }) => (
           <View key={label} style={styles.meterRow}>
             <Text style={styles.meterEmoji}>{emoji}</Text>
             <Text style={styles.meterLabel}>{label}</Text>
-            <View style={styles.meterGlasses}>
-              {[1,2,3,4,5].map(i => {
-                const filled = i <= Math.floor(score);
-                const half = !filled && i === Math.ceil(score) && score % 1 !== 0;
-                return (
-                  <Text key={i} style={[
-                    styles.meterGlass,
-                    filled ? styles.meterGlassFilled : half ? styles.meterGlassHalf : styles.meterGlassEmpty
-                  ]}>
-                    🥂
-                  </Text>
-                );
-              })}
+            <View style={styles.meterBarBg}>
+              <View style={[styles.meterBarFill, { width: `${val * 10}%` }]} />
             </View>
+            <Text style={styles.meterValue}>{val}</Text>
           </View>
         ))}
 
-        <Text style={styles.ratingCount}>{profile.totalRatings} drinks rated</Text>
+        {favoriteFlavorTags.length > 0 && (
+          <View style={styles.flavorRow}>
+            <Text style={styles.flavorLabel}>Top tags: </Text>
+            {favoriteFlavorTags.map((tag) => (
+              <Text key={tag} style={styles.flavorTag}>{tag}</Text>
+            ))}
+          </View>
+        )}
+
+        <Text style={styles.ratingCount}>
+          {profile.totalRatings} drinks rated · {confidence}% profile confidence
+        </Text>
 
         <View style={styles.divider} />
 
@@ -168,12 +135,13 @@ const styles = StyleSheet.create({
   meterRow:         { flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 14 },
   meterEmoji:       { fontSize: 20, width: 28, textAlign: 'center' },
   meterLabel:       { color: '#CCCCCC', fontSize: 13, fontWeight: '600', width: 72 },
-  meterGlasses:     { flexDirection: 'row', gap: 3, flex: 1 },
-  meterGlass:       { fontSize: 18 },
-  meterGlassFilled: { opacity: 1 },
-  meterGlassHalf:   { opacity: 0.5 },
-  meterGlassEmpty:  { opacity: 0.2 },
-  ratingCount:      { color: '#888888', fontSize: 12, marginTop: 4, marginBottom: 4 },
+  meterBarBg:       { flex: 1, height: 8, backgroundColor: 'rgba(255,255,255,0.08)', borderRadius: 4, overflow: 'hidden' },
+  meterBarFill:     { height: 8, backgroundColor: '#C8A96E', borderRadius: 4 },
+  meterValue:       { color: '#C8A96E', fontSize: 13, fontWeight: '700', width: 20, textAlign: 'right' },
+  flavorRow:        { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginTop: 12 },
+  flavorLabel:      { color: '#888888', fontSize: 12, fontWeight: '600' },
+  flavorTag:        { color: '#C8A96E', fontSize: 11, fontWeight: '600', backgroundColor: 'rgba(200,169,110,0.1)', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, borderWidth: 1, borderColor: 'rgba(200,169,110,0.2)' },
+  ratingCount:      { color: '#888888', fontSize: 12, marginTop: 12, marginBottom: 4 },
   subStatus:       { color: '#CCCCCC', fontSize: 15, fontWeight: '600', marginBottom: 10 },
   subBtn:          { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 16, alignItems: 'center' },
   subBtnText:      { color: '#0A0A0A', fontSize: 16, fontWeight: '800' },

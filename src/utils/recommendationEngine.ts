@@ -1,52 +1,51 @@
-import type { DrinkProfile, FlavourTag } from '../types';
-import type {
-  SupabaseDrink,
-  UserTasteVector,
-  ScoredRecommendation,
-} from '../types/supabase';
+import type { UserTasteVector, ScoredRecommendation, SupabaseDrink } from '../types/supabase';
 
-const FLAVOUR_TAG_WEIGHT = 0.20;
-const OCCASION_WEIGHT = 0.15;
-const CATEGORY_WEIGHT = 0.15;
-const NUMERIC_WEIGHT = 0.50;
-const AVOIDED_PENALTY = -0.25;
+const WEIGHTS = {
+  numeric: 0.45,
+  flavorTags: 0.20,
+  category: 0.15,
+  occasion: 0.10,
+  feedback: 0.10,
+};
 
-function extractNumericVector(drink: SupabaseDrink): number[] {
+const AVOID_PENALTY = -0.30;
+const SKIP_PENALTY = -0.50;
+const LOVE_BOOST = 0.35;
+const LIKE_BOOST = 0.10;
+
+// ── Extract numeric vectors ───────────────────────────────────────
+
+function drinkVector(d: SupabaseDrink): number[] {
   return [
-    drink.sweetness_score ?? 5,
-    drink.bitterness_score ?? 5,
-    drink.acidity_score ?? 5,
-    drink.body_score ?? 5,
-    drink.complexity_score ?? 5,
-    drink.carbonation_score ?? 5,
+    d.sweetness_score ?? 5,
+    d.bitterness_score ?? 5,
+    d.acidity_score ?? 5,
+    d.body_score ?? 5,
+    d.complexity_score ?? 5,
+    d.carbonation_score ?? 5,
   ];
 }
 
-function extractUserVector(user: UserTasteVector): number[] {
+function userVector(u: UserTasteVector): number[] {
   return [
-    user.sweetness,
-    user.bitterness,
-    user.acidity,
-    user.body,
-    user.complexity,
-    user.carbonation,
+    u.sweetness, u.bitterness, u.acidity,
+    u.body, u.complexity, u.carbonation,
   ];
 }
 
-function cosineSimilarity(a: number[], b: number[]): number {
-  let dot = 0, magA = 0, magB = 0;
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-    magA += a[i] * a[i];
-    magB += b[i] * b[i];
+// ── Distance-based similarity ─────────────────────────────────────
+
+function tasteSimilarity(user: number[], drink: number[]): number {
+  let distSq = 0;
+  for (let i = 0; i < user.length; i++) {
+    const diff = user[i] - drink[i];
+    distSq += diff * diff;
   }
-  const denom = Math.sqrt(magA) * Math.sqrt(magB);
-  return denom === 0 ? 0 : dot / denom;
+  const maxDist = 10 * Math.sqrt(6);
+  return 1 - (Math.sqrt(distSq) / maxDist);
 }
 
-function normalizeScore(raw: number, min: number, max: number): number {
-  return max === min ? 0.5 : ((raw - min) / (max - min));
-}
+// ── Tag overlap ratio ─────────────────────────────────────────────
 
 function tagOverlap(userTags: string[], drinkTags: string[] | null): number {
   if (!drinkTags || drinkTags.length === 0 || userTags.length === 0) return 0;
@@ -62,55 +61,50 @@ export function scoreDrinks(
   context?: { occasion?: string; category?: string },
   ratedDrinkIds?: Map<string, 'love' | 'like' | 'skip'>,
 ): ScoredRecommendation[] {
-  const userVec = extractUserVector(userTaste);
-  const reasons: string[] = [];
+  const uVec = userVector(userTaste);
 
   const scored = drinks.map((drink) => {
-    const drinkVec = extractNumericVector(drink);
+    // 1. Numeric taste similarity (45%)
+    const dVec = drinkVector(drink);
+    const numericScore = tasteSimilarity(uVec, dVec);
 
-    // Numeric similarity (50%)
-    const numericSim = cosineSimilarity(userVec, drinkVec);
-    const numericScore = normalizeScore(numericSim, -1, 1);
-
-    // Favorite flavor tags overlap (20%)
+    // 2. Flavor tag match (20%)
     const favTagScore = tagOverlap(userTaste.favoriteFlavorTags, drink.flavor_tags);
+    const avoidOverlap = tagOverlap(userTaste.avoidedFlavorTags, drink.flavor_tags);
+    const tagScore = favTagScore + (avoidOverlap * AVOID_PENALTY);
 
-    // Avoided flavor tags penalty
-    const avoidedOverlap = tagOverlap(userTaste.avoidedFlavorTags, drink.flavor_tags);
-    const avoidedScore = -avoidedOverlap * AVOIDED_PENALTY;
-
-    // Occasion match (15%)
-    let occasionScore = 0;
-    if (context?.occasion && drink.occasion_tags) {
-      occasionScore = drink.occasion_tags.includes(context.occasion) ? 1 : 0;
-    }
-
-    // Category preference (15%)
-    let categoryScore = 0;
+    // 3. Category preference (15%)
+    let catScore = 0;
     if (userTaste.preferredCategories.length > 0) {
-      categoryScore = userTaste.preferredCategories.includes(drink.category) ? 1 : 0;
+      catScore = userTaste.preferredCategories.includes(drink.category) ? 1 : 0;
     }
 
-    // Rating history boost/penalty
-    let ratingBoost = 0;
+    // 4. Occasion match (10%)
+    let occScore = 0;
+    if (context?.occasion && drink.occasion_tags) {
+      occScore = drink.occasion_tags.includes(context.occasion) ? 1 : 0;
+    }
+
+    // 5. Feedback history (10%)
+    let feedbackScore = 0;
     if (ratedDrinkIds) {
       const existing = ratedDrinkIds.get(drink.id);
-      if (existing === 'skip') ratingBoost = -0.5;
-      else if (existing === 'love') ratingBoost = 0.3;
+      if (existing === 'skip') feedbackScore = SKIP_PENALTY;
+      else if (existing === 'love') feedbackScore = LOVE_BOOST;
+      else if (existing === 'like') feedbackScore = LIKE_BOOST;
     }
 
     const total =
-      numericScore * NUMERIC_WEIGHT +
-      favTagScore * FLAVOUR_TAG_WEIGHT +
-      avoidedScore +
-      occasionScore * OCCASION_WEIGHT +
-      categoryScore * CATEGORY_WEIGHT +
-      ratingBoost;
+      numericScore * WEIGHTS.numeric +
+      tagScore * WEIGHTS.flavorTags +
+      (catScore * WEIGHTS.category) +
+      (occScore * WEIGHTS.occasion) +
+      (feedbackScore * WEIGHTS.feedback);
 
     return { drinkId: drink.id, score: total, drink };
   });
 
-  // Normalize scores to 0–100 for display
+  // Normalize scores to 0–100
   const scores = scored.map((s) => s.score);
   const minScore = Math.min(...scores, -1);
   const maxScore = Math.max(...scores, 1);
@@ -125,6 +119,8 @@ export function scoreDrinks(
     }));
 }
 
+// ── Reason generation ─────────────────────────────────────────────
+
 function buildReason(
   drink: SupabaseDrink,
   userTaste: UserTasteVector,
@@ -134,30 +130,19 @@ function buildReason(
     (t) => drink.flavor_tags?.includes(t),
   );
   if (favMatches.length >= 2) {
-    return `Matches your ${favMatches.slice(0, 2).join(', ')} taste profile.`;
+    return `Matches your ${favMatches.slice(0, 2).join(', ')} profile.`;
   }
   if (favMatches.length === 1) {
-    return `Aligned with your ${favMatches[0]} preference.`;
+    return `Great match for your ${favMatches[0]} preference.`;
   }
   if (context?.occasion && drink.occasion_tags?.includes(context.occasion)) {
-    return `Perfect for ${context.occasion.replace(/_/g, ' ')}.`;
+    const occ = context.occasion.replace(/_/g, ' ');
+    return `Perfect pick for ${occ}.`;
   }
   return 'Recommended based on your taste profile.';
 }
 
-// ── Legacy adapter for moment-based lookups ───────────────────────
-
-export function findBestDrinkForMoment(
-  drinks: SupabaseDrink[],
-  momentId: string,
-  userTaste: UserTasteVector,
-  ratedDrinkIds?: Map<string, 'love' | 'like' | 'skip'>,
-): ScoredRecommendation | null {
-  const scored = scoreDrinks(drinks, userTaste, { occasion: momentId }, ratedDrinkIds);
-  return scored[0] ?? null;
-}
-
-// ── Convenience for Feed ──────────────────────────────────────────
+// ── Feed ranking convenience ──────────────────────────────────────
 
 export function rankDrinksForFeed(
   drinks: SupabaseDrink[],

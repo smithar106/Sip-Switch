@@ -8,7 +8,7 @@ import * as Haptics from 'expo-haptics';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
-import { calculateArchetype, calculateConfidence, computeDimensionScores, answersToPreferencePreferences } from '@/src/constants/archetypes';
+import { calculateArchetype, onboardingToTasteVector } from '@/src/constants/archetypes';
 
 interface Question {
   id: string;
@@ -78,6 +78,7 @@ export default function Quiz() {
   const { answers, setAnswer, currentStep, nextStep, reset } = useOnboardingStore();
   const setArchetypeId = useSessionStore((s) => s.setArchetypeId);
   const updateArchetype = useTasteStore((s) => s.updateArchetype);
+  const setTasteVector = useTasteStore((s) => s.setTasteVector);
   const posthog = usePostHog();
   const [selected, setSelected] = useState<string | null>(null);
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -115,25 +116,24 @@ export default function Quiz() {
 
         if (currentStep + 1 >= totalSteps) {
           const finalAnswers = { ...answers, [step.id]: optionId };
-          const result = calculateArchetype(finalAnswers);
-          const dimScores = computeDimensionScores(finalAnswers);
-          const confidence = calculateConfidence(dimScores);
+          const archetypeId = calculateArchetype(finalAnswers);
+          const { vector, confidence } = onboardingToTasteVector(finalAnswers, archetypeId);
 
-          setArchetypeId(result);
-          updateArchetype(result);
-          // Persist onboarding answers and preference vector for Supabase sync
+          setArchetypeId(archetypeId);
+          updateArchetype(archetypeId);
+          setTasteVector(vector, vector.favoriteFlavorTags, confidence);
+          // Persist onboarding answers for Supabase sync
           const onboardingData = {
             onboarding_answers: finalAnswers,
-            dimension_scores: dimScores,
-            preference_profile: answersToPreferencePreferences(finalAnswers, dimScores),
             confidence,
+            taste_vector: vector,
           };
           AsyncStorage.setItem('@ss_onboarding_data', JSON.stringify(onboardingData));
 
           posthog.capture('onboarding_quiz_completed', {
-            archetypeId: result,
+            archetypeId,
             confidence,
-            $set: { archetype_id: result, has_completed_quiz: true },
+            $set: { archetype_id: archetypeId, has_completed_quiz: true },
           });
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           reset();

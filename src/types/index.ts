@@ -71,7 +71,7 @@ export interface DrinkRating {
   drinkId: string;
   rating: 'love' | 'like' | 'skip' | 'save';
   timestamp: string;
-  flavourTags?: FlavourTag[];
+  flavourTags?: string[];
 }
 
 export interface SwapEntry {

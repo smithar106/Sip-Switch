@@ -1,10 +1,9 @@
-import type { Archetype, SwapEntry, OnboardingAnswers, ArchetypeId } from '../types';
+import type { Archetype, FlavourTag, OnboardingAnswers, ArchetypeId } from '../types';
+import type { UserTasteVector } from '../types/supabase';
 
 export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
   bitter: {
-    id: 'bitter',
-    emoji: '🌿',
-    name: 'The Botanical Seeker',
+    id: 'bitter', emoji: '🌿', name: 'The Botanical Seeker',
     tagline: 'You want depth, bitterness, and something that feels grown-up.',
     description: "You're not here for sweet. You want NA drinks that taste like they were crafted — bitter aperitifs, herbal tonics, complex shrubs. The kind of drink that rewards attention.",
     categories: ['NA Aperitifs', 'Herbal Tonics', 'Shrubs & Switchels'],
@@ -12,9 +11,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     examples: ['Ghia', 'Curious Elixirs', 'Pentire'],
   },
   carbonated: {
-    id: 'carbonated',
-    emoji: '🫧',
-    name: 'The Sparkling Sipper',
+    id: 'carbonated', emoji: '🫧', name: 'The Sparkling Sipper',
     tagline: 'Bubbles are non-negotiable. You drink with your eyes and your ears.',
     description: "The pop of a can, the fizz in the glass — that's half the experience for you. NA sparkling wines, craft sodas with complexity, sparkling botanicals. It has to feel celebratory.",
     categories: ['NA Sparkling Wine', 'Craft Sodas', 'Sparkling Botanicals'],
@@ -22,9 +19,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     examples: ['Surely', "Lyre's Classico", 'Waterloo Sparkling'],
   },
   complex: {
-    id: 'complex',
-    emoji: '🍷',
-    name: 'The Connoisseur',
+    id: 'complex', emoji: '🍷', name: 'The Connoisseur',
     tagline: "You're not giving up the experience of a great drink — just the alcohol.",
     description: "Mouthfeel, finish, acidity, structure — you notice all of it. NA wines and spirits that are actually crafted, not just grape juice. You'll be the one converting people at dinner parties.",
     categories: ['NA Wine', 'NA Spirits', 'Craft Kombuchas'],
@@ -32,9 +27,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     examples: ['Leitz Eins Zwei Zero', 'Seedlip', 'Wild Tonic'],
   },
   dry: {
-    id: 'dry',
-    emoji: '🧊',
-    name: 'The Minimalist',
+    id: 'dry', emoji: '🧊', name: 'The Minimalist',
     tagline: 'Nothing sweet, nothing fussy. Just something clean and satisfying.',
     description: "You drink to complement a moment, not to make one. Dry, still, refined — NA wines with real structure, sparkling waters with a point of view, or a cold brew with intention.",
     categories: ['Dry NA Wine', 'Sparkling Water', 'Cold Brew'],
@@ -42,9 +35,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     examples: ['Thomson & Scott Noughty', 'Alder', 'Rowdy Mermaid'],
   },
   bold: {
-    id: 'bold',
-    emoji: '🍸',
-    name: 'The Cocktail Purist',
+    id: 'bold', emoji: '🍸', name: 'The Cocktail Purist',
     tagline: 'You want the full cocktail experience — the ritual, the glass, the flavour.',
     description: "The drink is the event. You want NA spirits that actually mix, cocktail kits that impress, and something that looks as good as it tastes. Mocktail is a word you never use.",
     categories: ['NA Spirits', 'NA Cocktail Kits', 'Adaptogen Drinks'],
@@ -52,9 +43,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
     examples: ['Monday Gin', "Lyre's", 'Kin Euphorics'],
   },
   light: {
-    id: 'light',
-    emoji: '☀️',
-    name: 'The Easy Drinker',
+    id: 'light', emoji: '☀️', name: 'The Easy Drinker',
     tagline: 'Refreshing, sessionable, and nothing that requires explanation.',
     description: "You want something you can reach for without thinking — at a BBQ, after a run, at a picnic. Light, clean, and genuinely satisfying. NA beer and cider territory, done right.",
     categories: ['NA Beer', 'NA Cider', 'Fruit Kefir'],
@@ -63,7 +52,7 @@ export const ARCHETYPES: Record<ArchetypeId, Archetype> = {
   },
 };
 
-export const SWAP_MAP: SwapEntry[] = [
+export const SWAP_MAP = [
   { from: '🍺 IPA', to: 'Athletic Brewing Run Wild IPA', reason: 'Same hop profile, zero alcohol' },
   { from: '🍺 Guinness', to: 'Guinness 0.0', reason: 'Identical — they nailed it' },
   { from: '🍷 Cabernet', to: 'Leitz Eins Zwei Zero Cabernet', reason: 'Tannins, structure, the works' },
@@ -75,6 +64,8 @@ export const SWAP_MAP: SwapEntry[] = [
   { from: '🥃 Whisky', to: "Lyre's American Malt", reason: 'Oak, vanilla, sipping spirit' },
   { from: '🍹 Mojito', to: 'Curious Elixirs No. 1', reason: 'Herbaceous, citrus, complex' },
 ];
+
+// ── Answer scoring map (shared between archetype calc and dimension compute) ──
 
 const ANSWER_SCORES: Record<string, Partial<Record<string, number>>> = {
   'q1_a': { bitter: 3, carbonated: 2 },
@@ -99,22 +90,23 @@ const ANSWER_SCORES: Record<string, Partial<Record<string, number>>> = {
   'q5_d': { light: 3, dry: 1 },
 };
 
+const ANSWER_MAP: Record<keyof OnboardingAnswers, string> = {
+  drink: 'q1', moment: 'q2', flavour: 'q3', texture: 'q4', goal: 'q5',
+};
+
 function applyAnswerScores(answers: OnboardingAnswers, scores: Record<string, number>): void {
-  const answerMap: Record<keyof OnboardingAnswers, string> = {
-    drink: 'q1', moment: 'q2', flavour: 'q3', texture: 'q4', goal: 'q5',
-  };
-  for (const [key, prefix] of Object.entries(answerMap)) {
+  for (const [key, prefix] of Object.entries(ANSWER_MAP)) {
     const answer = answers[key as keyof OnboardingAnswers];
     if (!answer) continue;
-    const scoreKey = `${prefix}_${answer}`;
-    const contribution = ANSWER_SCORES[scoreKey];
+    const contribution = ANSWER_SCORES[`${prefix}_${answer}`];
     if (!contribution) continue;
     for (const [dim, pts] of Object.entries(contribution)) {
-      const p = pts as number;
-      scores[dim] = (scores[dim] ?? 0) + p;
+      scores[dim] = (scores[dim] ?? 0) + (pts as number);
     }
   }
 }
+
+// ── Archetype calculation ─────────────────────────────────────────
 
 export function calculateArchetype(answers: OnboardingAnswers): ArchetypeId {
   const scores: Record<string, number> = {
@@ -129,6 +121,8 @@ export function calculateArchetype(answers: OnboardingAnswers): ArchetypeId {
   return best;
 }
 
+// ── Confidence calculation ────────────────────────────────────────
+
 export function calculateConfidence(rawScores: Record<string, number>): number {
   const all = Object.entries(rawScores)
     .filter(([, v]) => v > 0)
@@ -142,23 +136,7 @@ export function calculateConfidence(rawScores: Record<string, number>): number {
   return Math.round(Math.min(98, Math.max(70, confidence)));
 }
 
-export function answersToPreferencePreferences(
-  answers: OnboardingAnswers,
-  rawFlavourScores: Record<string, number>,
-): Record<string, number> {
-  const s = rawFlavourScores;
-  const maxScore = Math.max(...Object.values(s), 1);
-  const normalize = (v: number) => Math.round(((v / maxScore) * 10));
-
-  return {
-    sweetness_preference: normalize((s.light ?? 0) + (s.carbonated ?? 0) / 2),
-    bitterness_preference: normalize(s.bitter ?? 0),
-    acidity_preference: normalize((s.dry ?? 0) + (s.herbal ?? 0) / 2),
-    body_preference: normalize((s.bold ?? 0) + (s.complex ?? 0) / 2),
-    complexity_preference: normalize(s.complex ?? 0),
-    carbonation_preference: normalize(s.carbonated ?? 0),
-  };
-}
+// ── Raw dimension scores (all 10 flavor tags, 0-based raw) ────────
 
 export function computeDimensionScores(answers: OnboardingAnswers): Record<string, number> {
   const scores: Record<string, number> = {
@@ -167,4 +145,55 @@ export function computeDimensionScores(answers: OnboardingAnswers): Record<strin
   };
   applyAnswerScores(answers, scores);
   return scores;
+}
+
+// ── Convert onboarding answers → full taste vector (0-10) ─────────
+
+const CATEGORY_ANSWER_MAP: Record<string, string[]> = {
+  'Aperitif': ['a', 'c'],
+  'Functional Drink': ['d'],
+  'Mixer': ['b', 'a'],
+  'RTD Mocktail': ['c'],
+  'Soda': ['d'],
+};
+
+export function onboardingToTasteVector(
+  answers: OnboardingAnswers,
+  archetypeId: ArchetypeId,
+): {
+  vector: UserTasteVector;
+  archetypeId: ArchetypeId;
+  archetypeName: string;
+  confidence: number;
+} {
+  const raw = computeDimensionScores(answers);
+  const maxRaw = Math.max(...Object.values(raw), 1);
+  const norm = (v: number) => Math.round((v / maxRaw) * 10);
+
+  const archetype = ARCHETYPES[archetypeId];
+  const pf = archetype.primaryFlavours;
+
+  const sweetness = norm(raw.light ?? 0);
+  const bitterness = norm(raw.bitter ?? 0);
+  const acidity = norm(raw.dry ?? 0);
+  const body = norm(((raw.bold ?? 0) + (raw.complex ?? 0)) / 2);
+  const complexity = norm(raw.complex ?? 0);
+  const carbonation = norm(raw.carbonated ?? 0);
+
+  return {
+    vector: {
+      sweetness: Math.min(10, sweetness),
+      bitterness: Math.min(10, bitterness),
+      acidity: Math.min(10, acidity),
+      body: Math.min(10, body),
+      complexity: Math.min(10, complexity),
+      carbonation: Math.min(10, carbonation),
+      favoriteFlavorTags: pf,
+      avoidedFlavorTags: [],
+      preferredCategories: archetype.categories,
+    },
+    archetypeId,
+    archetypeName: archetype.name,
+    confidence: calculateConfidence(raw),
+  };
 }

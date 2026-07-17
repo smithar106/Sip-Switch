@@ -10,9 +10,9 @@ import { RADIUS } from '@/src/constants/theme';
 import { fetchActiveDrinks } from '@/src/services/drinks';
 import { isSupabaseConfigured } from '@/src/services/supabase';
 import { rankDrinksForFeed } from '@/src/utils/recommendationEngine';
-import { supabaseDrinksToDrinkProfiles, supabaseDrinkToDrinkProfile } from '@/src/utils/drinkAdapter';
+import { supabaseDrinksToDrinkProfiles } from '@/src/utils/drinkAdapter';
 import type { ArchetypeId, DrinkProfile, DrinkRating } from '@/src/types';
-import type { SupabaseDrink, UserTasteVector } from '@/src/types/supabase';
+import type { SupabaseDrink } from '@/src/types/supabase';
 
 const CATEGORY_GRADIENTS: Record<string, readonly [string, string]> = {
   na_beer: ['#C8A96E', '#8B7355'],
@@ -64,28 +64,13 @@ function buildFallbackDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
   return drinks;
 }
 
-function buildUserTasteVector(archetypeId: ArchetypeId | null): UserTasteVector {
-  const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
-  const pf = archetype.primaryFlavours;
-  return {
-    sweetness: pf.includes('light') ? 7 : 5,
-    bitterness: pf.includes('bitter') ? 8 : pf.includes('bold') ? 6 : 4,
-    acidity: pf.includes('dry') ? 7 : pf.includes('citrus') ? 8 : 5,
-    body: pf.includes('bold') ? 8 : pf.includes('complex') ? 7 : 5,
-    complexity: pf.includes('complex') ? 8 : 5,
-    carbonation: pf.includes('carbonated') ? 8 : 4,
-    favoriteFlavorTags: pf,
-    avoidedFlavorTags: [],
-    preferredCategories: archetype.categories,
-  };
-}
-
 export default function Feed() {
   const insets = useSafeAreaInsets();
   const posthog = usePostHog();
   const archetypeId = useSessionStore((s) => s.archetypeId);
   const addRating = useTasteStore((s) => s.addRating);
   const ratings = useTasteStore((s) => s.ratings);
+  const getUserTasteVector = useTasteStore((s) => s.getUserTasteVector);
   const getRatedDrinkIds = useTasteStore((s) => s.getRatedDrinkIds);
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
   const [supabaseDrinks, setSupabaseDrinks] = useState<SupabaseDrink[]>([]);
@@ -102,7 +87,7 @@ export default function Feed() {
     }
   }, []);
 
-  const userTaste = useMemo(() => buildUserTasteVector(archetypeId), [archetypeId]);
+  const userTaste = useMemo(() => getUserTasteVector(), [getUserTasteVector, ratings]);
 
   const drinks = useMemo(() => {
     if (supabaseDrinks.length > 0) {

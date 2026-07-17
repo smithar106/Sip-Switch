@@ -9,38 +9,22 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useLiveStore } from '@/src/stores/liveStore';
 import { MOMENTS } from '@/src/constants/moments';
-import { ARCHETYPES } from '@/src/constants/archetypes';
 import { getRecommendation } from '@/src/utils/recommend';
 import { fetchActiveDrinks } from '@/src/services/drinks';
 import { isSupabaseConfigured } from '@/src/services/supabase';
 import { scoreDrinks } from '@/src/utils/recommendationEngine';
 import type { LiveEntry } from '@/src/types/liveTypes';
 import type { ArchetypeId, DrinkRating } from '@/src/types';
-import type { SupabaseDrink, UserTasteVector } from '@/src/types/supabase';
+import type { SupabaseDrink } from '@/src/types/supabase';
 
 type Phase = 'pick' | 'result';
-
-function buildUserTasteVector(archetypeId: ArchetypeId | null): UserTasteVector {
-  const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
-  const pf = archetype.primaryFlavours;
-  return {
-    sweetness: pf.includes('light') ? 7 : 5,
-    bitterness: pf.includes('bitter') ? 8 : pf.includes('bold') ? 6 : 4,
-    acidity: pf.includes('dry') ? 7 : pf.includes('citrus') ? 8 : 5,
-    body: pf.includes('bold') ? 8 : pf.includes('complex') ? 7 : 5,
-    complexity: pf.includes('complex') ? 8 : 5,
-    carbonation: pf.includes('carbonated') ? 8 : 4,
-    favoriteFlavorTags: pf,
-    avoidedFlavorTags: [],
-    preferredCategories: archetype.categories,
-  };
-}
 
 export default function Live() {
   const insets = useSafeAreaInsets();
   const posthog = usePostHog();
   const archetypeId = useSessionStore((s) => s.archetypeId) as ArchetypeId | null;
   const addRating = useTasteStore((s) => s.addRating);
+  const getUserTasteVector = useTasteStore((s) => s.getUserTasteVector);
   const getRatedDrinkIds = useTasteStore((s) => s.getRatedDrinkIds);
   const { history, streak, addEntry, rateEntry } = useLiveStore();
   const [phase, setPhase] = useState<Phase>('pick');
@@ -51,7 +35,7 @@ export default function Live() {
   const [supabaseDrinks, setSupabaseDrinks] = useState<SupabaseDrink[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const userTaste = useMemo(() => buildUserTasteVector(archetypeId), [archetypeId]);
+  const userTaste = useMemo(() => getUserTasteVector(), [getUserTasteVector]);
 
   useEffect(() => {
     if (isSupabaseConfigured()) {
@@ -130,10 +114,12 @@ export default function Live() {
     };
     const profileRating = profileRatingMap[liveRating];
     if (profileRating && currentEntry.recommendedDrink) {
+      const drink = supabaseDrinks.find((d) => d.id === currentEntry.id);
       addRating({
         drinkId: currentEntry.id,
         rating: profileRating,
         timestamp: new Date().toISOString(),
+        flavourTags: drink?.flavor_tags ?? [],
       });
     }
 
