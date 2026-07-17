@@ -9,8 +9,7 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useLiveStore } from '@/src/stores/liveStore';
 import { MOMENTS } from '@/src/constants/moments';
-import { getRecommendation } from '@/src/utils/recommend';
-import { fetchActiveDrinks } from '@/src/services/drinks';
+import { fetchActiveDrinks, saveDrinkRating } from '@/src/services/drinks';
 import { isSupabaseConfigured } from '@/src/services/supabase';
 import { scoreDrinks } from '@/src/utils/recommendationEngine';
 import type { LiveEntry } from '@/src/types/liveTypes';
@@ -23,6 +22,7 @@ export default function Live() {
   const insets = useSafeAreaInsets();
   const posthog = usePostHog();
   const archetypeId = useSessionStore((s) => s.archetypeId) as ArchetypeId | null;
+  const deviceId = useSessionStore((s) => s.deviceId);
   const addRating = useTasteStore((s) => s.addRating);
   const getUserTasteVector = useTasteStore((s) => s.getUserTasteVector);
   const getRatedDrinkIds = useTasteStore((s) => s.getRatedDrinkIds);
@@ -52,32 +52,22 @@ export default function Live() {
     const moment = MOMENTS.find(m => m.id === momentId);
     if (!moment) return;
 
-    let drinkName: string;
-    let drinkBrand: string;
-    let reason: string;
+    let drinkName = 'No recommendations yet';
+    let drinkBrand = '';
+    let reason = 'Add more drinks to your catalog to get personalized Live picks.';
     let drinkId: string | null = null;
 
     if (supabaseDrinks.length > 0) {
       const ratedIds = getRatedDrinkIds();
       const scored = scoreDrinks(supabaseDrinks, userTaste, { occasion: momentId }, ratedIds);
       const top = scored[0];
-      if (top) {
+      if (top && top.score > 0) {
         const drink = supabaseDrinks.find((d) => d.id === top.drinkId);
         drinkName = drink?.name ?? top.drinkId;
         drinkBrand = drink?.brand ?? '';
         reason = top.reason;
         drinkId = top.drinkId;
-      } else {
-        const fallback = getRecommendation(momentId, archetypeId);
-        drinkName = fallback.drink;
-        drinkBrand = fallback.brand;
-        reason = fallback.reason;
       }
-    } else {
-      const rec = getRecommendation(momentId, archetypeId);
-      drinkName = rec.drink;
-      drinkBrand = rec.brand;
-      reason = rec.reason;
     }
 
     const entry: LiveEntry = {
@@ -106,7 +96,6 @@ export default function Live() {
     rateEntry(currentEntry.id, liveRating);
     posthog.capture('live_recommendation_rated', { rating: liveRating, moment_id: currentEntry.momentId, recommended_drink: currentEntry.recommendedDrink, archetype_id: archetypeId });
 
-    // Map Live rating to taste profile rating
     const profileRatingMap: Record<string, DrinkRating['rating']> = {
       loved: 'love',
       liked: 'like',
@@ -115,12 +104,16 @@ export default function Live() {
     const profileRating = profileRatingMap[liveRating];
     if (profileRating && currentEntry.recommendedDrink) {
       const drink = supabaseDrinks.find((d) => d.id === currentEntry.id);
+      const flavourTags = drink?.flavor_tags ?? [];
       addRating({
         drinkId: currentEntry.id,
         rating: profileRating,
         timestamp: new Date().toISOString(),
-        flavourTags: drink?.flavor_tags ?? [],
+        flavourTags,
       });
+      saveDrinkRating(deviceId, currentEntry.id, profileRating as 'love' | 'like' | 'skip', flavourTags).catch((err: unknown) =>
+        console.error('[live] saveDrinkRating error:', err)
+      );
     }
 
     setTimeout(() => {
@@ -130,37 +123,27 @@ export default function Live() {
       setShowCustomInput(false);
       setCustomMoment('');
     }, 600);
-  }, [currentEntry, rateEntry, addRating, archetypeId, posthog]);
+  }, [currentEntry, rateEntry, addRating, deviceId, archetypeId, posthog]);
 
   const handleCustomSubmit = useCallback(() => {
     if (!customMoment.trim()) return;
 
-    let drinkName: string;
-    let drinkBrand: string;
-    let reason: string;
+    let drinkName = 'No recommendations yet';
+    let drinkBrand = '';
+    let reason = 'Add more drinks to your catalog to get personalized Live picks.';
     let drinkId: string | null = null;
 
     if (supabaseDrinks.length > 0) {
       const ratedIds = getRatedDrinkIds();
       const scored = scoreDrinks(supabaseDrinks, userTaste, undefined, ratedIds);
       const top = scored[0];
-      if (top) {
+      if (top && top.score > 0) {
         const drink = supabaseDrinks.find((d) => d.id === top.drinkId);
         drinkName = drink?.name ?? top.drinkId;
         drinkBrand = drink?.brand ?? '';
         reason = top.reason;
         drinkId = top.drinkId;
-      } else {
-        const fallback = getRecommendation('casual_night', archetypeId);
-        drinkName = fallback.drink;
-        drinkBrand = fallback.brand;
-        reason = fallback.reason;
       }
-    } else {
-      const rec = getRecommendation('casual_night', archetypeId);
-      drinkName = rec.drink;
-      drinkBrand = rec.brand;
-      reason = rec.reason;
     }
 
     const entry: LiveEntry = {

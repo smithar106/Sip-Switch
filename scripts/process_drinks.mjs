@@ -51,17 +51,17 @@ const TASTE_QUALITATIVE = {
 };
 
 const CATEGORY_RULES = [
-  [/^Aperitivo|^Bitter Aperitif|^Amaro/i, 'Aperitif'],
+  [/^Aperitivo|^Aperitif Alternative|^Bitter Aperitif|^Amaro/i, 'Aperitif'],
   [/Negroni|^Canned Cocktail|^Espresso Cocktail|^Margarita|^RTD Mocktail|^Mule/i, 'RTD Mocktail'],
   [/Spritz|^Sparkling/i, 'Sparkling'],
   [/^Functional Beverage|^Adaptogenic Seltzer|^CBD Seltzer|^THC Seltzer/i, 'Functional Drink'],
-  [/^Botanical Soda|^Tonic/i, 'Mixer'],
+  [/^Botanical Soda|^Tonic Water|^Tonic$/i, 'Mixer'],
   [/^Kombucha/i, 'Kombucha'],
-  [/^Hop Water|^Hop/i, 'Hop Water'],
+  [/^Hop Water/i, 'Hop Water'],
   [/^Soda/i, 'Soda'],
-  [/^Beer|^IPA|^Lager|^Pilsner|^Stout|^Ale|^Pale Ale|^Wheat|^Porter|^Kölsch|^Gose|^Sour|^Hefeweizen|^Amber/i, 'Beer'],
-  [/^Wine|^Rosé|^Sauvignon Blanc|^Chardonnay|^Cabernet|^Merlot|^Pinot|^Zinfandel|^Malbec|^Sparkling Wine|^Champagne/i, 'Wine'],
-  [/^Spirit|^Gin Alternative|^Whiskey Alternative|^Whisky|^Tequila Alternative|^Rum Alternative|^Vodka Alternative|^Brandy/i, 'Spirit'],
+  [/Beer|IPA|Lager|Pilsner|Stout|Ale|Porter|Kölsch|Kolsch|Gose|Sour|Hefeweizen|Amber|Blonde|Radler|Witbier|Hazy|^Pale/i, 'Beer'],
+  [/^Wine|^Rosé|^Sauvignon Blanc|^Chardonnay|^Cabernet|^Merlot|^Pinot|^Zinfandel|^Malbec|^Riesling|^Sparkling Wine|^Champagne/i, 'Wine'],
+  [/^Spirit|^Gin Alternative|^Whiskey Alternative|^Whisky|^Tequila Alternative|^Rum Alternative|^Vodka Alternative|^Brandy|^Mezcal Alternative|^Bourbon Alternative|^Dark Spirit Alternative|^Coffee Liqueur Alternative|^Vermouth Alternative|^Spiced Rum|^Functional Spirit|^Adaptogenic|^Garden \d+|^Grove \d+|^Spice \d+/i, 'Spirit'],
 ];
 
 const FAMILY_RULES = [

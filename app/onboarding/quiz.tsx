@@ -9,6 +9,7 @@ import { useOnboardingStore } from '@/src/stores/onboardingStore';
 import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { calculateArchetype, onboardingToTasteVector } from '@/src/constants/archetypes';
+import { saveTasteProfile } from '@/src/services/drinks';
 
 interface Question {
   id: string;
@@ -77,8 +78,10 @@ export default function Quiz() {
   const insets = useSafeAreaInsets();
   const { answers, setAnswer, currentStep, nextStep, reset } = useOnboardingStore();
   const setArchetypeId = useSessionStore((s) => s.setArchetypeId);
+  const deviceId = useSessionStore((s) => s.deviceId);
   const updateArchetype = useTasteStore((s) => s.updateArchetype);
   const setTasteVector = useTasteStore((s) => s.setTasteVector);
+  const getUserTasteVector = useTasteStore((s) => s.getUserTasteVector);
   const posthog = usePostHog();
   const [selected, setSelected] = useState<string | null>(null);
   const fadeAnim = useRef(new Animated.Value(1)).current;
@@ -122,7 +125,24 @@ export default function Quiz() {
           setArchetypeId(archetypeId);
           updateArchetype(archetypeId);
           setTasteVector(vector, vector.favoriteFlavorTags, confidence);
-          // Persist onboarding answers for Supabase sync
+
+          const fullVector = getUserTasteVector();
+          saveTasteProfile(deviceId, {
+            archetype_id: archetypeId,
+            archetype_name: archetypeId,
+            confidence_score: confidence,
+            sweetness_preference: fullVector.sweetness,
+            bitterness_preference: fullVector.bitterness,
+            acidity_preference: fullVector.acidity,
+            body_preference: fullVector.body,
+            complexity_preference: fullVector.complexity,
+            carbonation_preference: fullVector.carbonation,
+            preferred_categories: fullVector.preferredCategories,
+            favorite_flavor_tags: fullVector.favoriteFlavorTags,
+            avoided_flavor_tags: [],
+            onboarding_answers: finalAnswers as Record<string, string>,
+          }).catch((err: unknown) => console.error('[quiz] saveTasteProfile error:', err));
+
           const onboardingData = {
             onboarding_answers: finalAnswers,
             confidence,
