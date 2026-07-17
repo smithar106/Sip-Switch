@@ -123,7 +123,7 @@ export function calculateArchetype(answers: OnboardingAnswers): ArchetypeId {
 
 // ── Confidence calculation ────────────────────────────────────────
 
-export function calculateConfidence(rawScores: Record<string, number>): number {
+function calculateConfidence(rawScores: Record<string, number>): number {
   const all = Object.entries(rawScores)
     .filter(([, v]) => v > 0)
     .sort((a, b) => b[1] - a[1]);
@@ -138,7 +138,7 @@ export function calculateConfidence(rawScores: Record<string, number>): number {
 
 // ── Raw dimension scores (all 10 flavor tags, 0-based raw) ────────
 
-export function computeDimensionScores(answers: OnboardingAnswers): Record<string, number> {
+function computeDimensionScores(answers: OnboardingAnswers): Record<string, number> {
   const scores: Record<string, number> = {
     bitter: 0, carbonated: 0, complex: 0, dry: 0, bold: 0, light: 0,
     herbal: 0, citrus: 0, dark_fruit: 0, clean: 0,
@@ -148,14 +148,6 @@ export function computeDimensionScores(answers: OnboardingAnswers): Record<strin
 }
 
 // ── Convert onboarding answers → full taste vector (0-10) ─────────
-
-const CATEGORY_ANSWER_MAP: Record<string, string[]> = {
-  'Aperitif': ['a', 'c'],
-  'Functional Drink': ['d'],
-  'Mixer': ['b', 'a'],
-  'RTD Mocktail': ['c'],
-  'Soda': ['d'],
-};
 
 export function onboardingToTasteVector(
   answers: OnboardingAnswers,

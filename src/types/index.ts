@@ -74,12 +74,6 @@ export interface DrinkRating {
   flavourTags?: string[];
 }
 
-export interface SwapEntry {
-  from: string;
-  to: string;
-  reason: string;
-}
-
 export interface OnboardingAnswers {
   drink?: string;
   moment?: string;
