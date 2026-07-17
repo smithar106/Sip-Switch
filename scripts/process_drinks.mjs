@@ -59,9 +59,9 @@ const CATEGORY_RULES = [
   [/^Kombucha/i, 'Kombucha'],
   [/^Hop Water|^Hop/i, 'Hop Water'],
   [/^Soda/i, 'Soda'],
-  [/^Beer|^IPA|^Lager|^Pilsner|^Stout|^Ale/i, 'Beer'],
-  [/^Wine|^Rosé|^Sauvignon Blanc|^Chardonnay|^Cabernet|^Sparkling Wine/i, 'Wine'],
-  [/^Spirit|^Gin Alternative|^Whiskey Alternative|^Tequila Alternative|^Rum Alternative/i, 'Spirit'],
+  [/^Beer|^IPA|^Lager|^Pilsner|^Stout|^Ale|^Pale Ale|^Wheat|^Porter|^Kölsch|^Gose|^Sour|^Hefeweizen|^Amber/i, 'Beer'],
+  [/^Wine|^Rosé|^Sauvignon Blanc|^Chardonnay|^Cabernet|^Merlot|^Pinot|^Zinfandel|^Malbec|^Sparkling Wine|^Champagne/i, 'Wine'],
+  [/^Spirit|^Gin Alternative|^Whiskey Alternative|^Whisky|^Tequila Alternative|^Rum Alternative|^Vodka Alternative|^Brandy/i, 'Spirit'],
 ];
 
 const FAMILY_RULES = [
