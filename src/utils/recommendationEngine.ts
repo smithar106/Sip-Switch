@@ -1,4 +1,9 @@
+// TODO: Second catalog import needed for NA Beer, NA Wine, NA Spirit
+// before broad production launch. The fallback logic (CATEGORY_FALLBACKS
+// in src/constants/categories.ts) broadens sparse categories automatically.
+
 import type { UserTasteVector, ScoredRecommendation, SupabaseDrink } from '../types/supabase';
+import { SPARSE_THRESHOLD, CATEGORY_FALLBACKS, FALLBACK_SCORE } from '../constants/categories';
 
 const WEIGHTS = {
   numeric: 0.45,
@@ -12,6 +17,37 @@ const AVOID_PENALTY = -0.30;
 const SKIP_PENALTY = -0.50;
 const LOVE_BOOST = 0.35;
 const LIKE_BOOST = 0.10;
+
+// ── Count drinks per category from the array (runtime, no hardcoding) ──
+
+function computeCategoryCounts(drinks: SupabaseDrink[]): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const d of drinks) {
+    counts[d.category] = (counts[d.category] || 0) + 1;
+  }
+  return counts;
+}
+
+// ── Expand preferred categories with fallbacks for sparse categories ──
+
+function expandPreferredCategories(
+  preferred: string[],
+  categoryCounts: Record<string, number>,
+): { exact: Set<string>; fallback: Set<string> } {
+  const exact = new Set<string>();
+  const fallback = new Set<string>();
+
+  for (const cat of preferred) {
+    exact.add(cat);
+    const count = categoryCounts[cat] ?? 0;
+    if (count < SPARSE_THRESHOLD) {
+      const fb = CATEGORY_FALLBACKS[cat];
+      if (fb) for (const f of fb) fallback.add(f);
+    }
+  }
+
+  return { exact, fallback };
+}
 
 // ── Extract numeric vectors ───────────────────────────────────────
 
@@ -62,6 +98,10 @@ export function scoreDrinks(
   ratedDrinkIds?: Map<string, 'love' | 'like' | 'skip'>,
 ): ScoredRecommendation[] {
   const uVec = userVector(userTaste);
+  const categoryCounts = computeCategoryCounts(drinks);
+  const { exact: exactCats, fallback: fallbackCats } = expandPreferredCategories(
+    userTaste.preferredCategories, categoryCounts,
+  );
 
   const scored = drinks.map((drink) => {
     // 1. Numeric taste similarity (45%)
@@ -73,10 +113,14 @@ export function scoreDrinks(
     const avoidOverlap = tagOverlap(userTaste.avoidedFlavorTags, drink.flavor_tags);
     const tagScore = favTagScore + (avoidOverlap * AVOID_PENALTY);
 
-    // 3. Category preference (15%)
+    // 3. Category preference (15%) — exact match or fallback
     let catScore = 0;
-    if (userTaste.preferredCategories.length > 0) {
-      catScore = userTaste.preferredCategories.includes(drink.category) ? 1 : 0;
+    if (exactCats.size > 0 || fallbackCats.size > 0) {
+      if (exactCats.has(drink.category)) {
+        catScore = 1;
+      } else if (fallbackCats.has(drink.category)) {
+        catScore = FALLBACK_SCORE;
+      }
     }
 
     // 4. Occasion match (10%)

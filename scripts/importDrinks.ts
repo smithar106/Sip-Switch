@@ -1,14 +1,19 @@
 /**
  * Sip Switch — Drink CSV Import Pipeline
  *
+ * Converts a raw pipe-delimited product CSV into Supabase-ready formats.
+ * Works with any catalog size — just point it at a new CSV and import the output.
+ *
  * Usage:
- *   npx tsx scripts/importDrinks.ts /path/to/na_rtd_products.csv
+ *   npx tsx scripts/importDrinks.ts /path/to/products.csv
  *
  * Output:
- *   - Validates and normalizes CSV
- *   - Prints JSON array for Supabase import
- *   - Saves import-ready JSON to scripts/import-ready.json
- *   - Prints validation report
+ *   scripts/import-ready.json   — normalized JSON array
+ *   scripts/import-ready.csv    — Supabase Table Editor-ready CSV (BOM + full schema)
+ *   Validation report printed to stdout
+ *
+ * Adding new products: run the same command on a new CSV, then import the
+ * generated import-ready.csv into Supabase Table Editor — no code changes needed.
  */
 
 import * as fs from 'fs';
@@ -28,31 +33,54 @@ const CATEGORY_MAP: Record<string, string> = {
   'adaptogenic seltzer': 'Functional Drink',
   'rtd mocktail': 'RTD Mocktail',
   'thc seltzer': 'Functional Drink',
-  'spritz': 'Aperitif',
+  'spritz': 'Sparkling',
   'bitter aperitif': 'Aperitif',
   'cbd seltzer': 'Functional Drink',
-  'botanical soda': 'Soda',
+  'botanical soda': 'Mixer',
   'margarita': 'RTD Mocktail',
   'aperitivo': 'Aperitif',
   'espresso cocktail': 'RTD Mocktail',
   'tonic': 'Mixer',
   'negroni': 'RTD Mocktail',
 };
+const CARBONATION_MAP: Record<string, number> = {
+  'Beer': 7, 'Hop Water': 8, 'Kombucha': 8, 'RTD Mocktail': 6,
+  'Sparkling': 9, 'Soda': 8, 'Wine': 2, 'Spirit': 0,
+  'Aperitif': 2, 'Functional Drink': 5, 'Mixer': 7,
+};
 
-// Infer carbonation from category
+const FAMILY_RULES: [RegExp, string][] = [
+  [/IPA/i, 'IPA'], [/Lager/i, 'Lager'], [/Pilsner/i, 'Pilsner'],
+  [/Stout/i, 'Stout'], [/Ale/i, 'Ale'],
+  [/Rosé|Rose/i, 'Rosé'],
+  [/Sauvignon\s*Blanc/i, 'Sauvignon Blanc'],
+  [/Sparkling\s*Wine/i, 'Sparkling Wine'],
+  [/Gin (Alternative|Alternative)/i, 'Gin Alternative'],
+  [/Whiskey|Whisky/i, 'Whiskey Alternative'],
+  [/Tequila|Agave/i, 'Tequila Alternative'],
+  [/Rum/i, 'Rum Alternative'],
+  [/Negroni/i, 'Negroni'], [/Spritz/i, 'Spritz'],
+  [/Margarita/i, 'Margarita'], [/Paloma/i, 'Paloma'],
+  [/Mule/i, 'Mule'], [/Mojito/i, 'Mojito'],
+  [/Kombucha/i, 'Kombucha'],
+  [/Hop\s*Water|Hop/i, 'Hop Water'],
+  [/Botanical\s*Soda|Botanical/i, 'Botanical Soda'],
+  [/Aperitivo|Aperitif|Amaro/i, 'Aperitif'],
+  [/Espresso|Coffee/i, 'Coffee Cocktail'],
+  [/Functional Beverage|Adaptogenic|Adaptogen/i, 'Adaptogenic'],
+  [/CBD|THC|Cannabis/i, 'Cannabis Beverage'],
+  [/Tonic/i, 'Tonic'],
+  [/Seltzer/i, 'Seltzer'],
+  [/Cider/i, 'Cider'],
+];
+
 function inferCarbonation(category: string): number {
-  const high = ['RTD Mocktail', 'Soda', 'Sparkling', 'Kombucha', 'Hop Water'];
-  const medium = ['Beer', 'Mixer'];
-  const low = ['Aperitif', 'Wine', 'Spirit', 'Functional Drink'];
-  if (high.includes(category)) return 7;
-  if (medium.includes(category)) return 5;
-  if (low.includes(category)) return 2;
-  return 5;
+  return CARBONATION_MAP[category] ?? 5;
 }
 
 function normalizeScore(raw: string, field: string): number | null {
   const trimmed = raw.trim().toLowerCase();
-  if (!trimmed || trimmed === 'none' || trimmed === 'none ' || trimmed === '-') return null;
+  if (!trimmed || trimmed === 'none' || trimmed === '-') return null;
   const cleaned = trimmed.replace(/-$/, '').trim();
   if (TEXT_SCORE_MAP[cleaned] !== undefined) return TEXT_SCORE_MAP[cleaned];
   if (BODY_MAP[cleaned] !== undefined && field === 'body_score') return BODY_MAP[cleaned];
@@ -70,9 +98,30 @@ function splitTags(raw: string): string[] {
     .filter(Boolean);
 }
 
+function toPgArray(tags: string[]): string | null {
+  if (tags.length === 0) return null;
+  return '{' + tags.map(t => `"${t.replace(/"/g, '\\"')}"`).join(',') + '}';
+}
+
 function normalizeCategory(raw: string): string {
   const key = raw.trim().toLowerCase();
   return CATEGORY_MAP[key] ?? 'RTD Mocktail';
+}
+
+function inferFamily(name: string, subcategory: string): string {
+  for (const [re, family] of FAMILY_RULES) {
+    if (re.test(name)) return family;
+    if (re.test(subcategory)) return family;
+  }
+  return subcategory;
+}
+
+function computeIntensity(scores: number[]): number {
+  const [
+    sweetness, bitterness, acidity, body, complexity, carbonation,
+  ] = scores;
+  const numerator = sweetness + bitterness + acidity + body * 1.2 + complexity * 1.2 + carbonation;
+  return Math.round(Math.max(0, Math.min(10, numerator / 6.4)));
 }
 
 function validateUrl(url: string): boolean {
@@ -84,6 +133,25 @@ function validateUrl(url: string): boolean {
     return false;
   }
 }
+
+function csvEscape(val: unknown): string {
+  if (val === null || val === undefined) return '';
+  const s = String(val);
+  if (s.includes(',') || s.includes('"') || s.includes('\n')) {
+    return '"' + s.replace(/"/g, '""') + '"';
+  }
+  return s;
+}
+
+// ── CSV columns for Supabase Table Editor import ──────────────────
+
+const CSV_HEADERS = [
+  'name','brand','category','subcategory','drink_family','description',
+  'image_url','product_url','price_range','availability_regions',
+  'sweetness_score','bitterness_score','acidity_score','body_score',
+  'complexity_score','carbonation_score','intensity_score',
+  'flavor_tags','occasion_tags','food_pairing_tags','is_active',
+];
 
 // ── Main ─────────────────────────────────────────────────────────
 
@@ -99,7 +167,8 @@ function importDrinks(csvPath: string) {
 
   const errors: string[] = [];
   const warnings: string[] = [];
-  const drinks: Record<string, any>[] = [];
+  const drinks: Record<string, unknown>[] = [];
+  const csvRows: string[] = [];
   const seen = new Set<string>();
   const catCount: Record<string, number> = {};
   const tagCount: Record<string, number> = {};
@@ -120,18 +189,19 @@ function importDrinks(csvPath: string) {
       bodyRaw, complexityRaw, occasionTagsRaw, foodPairingTagsRaw, availabilityRaw,
     ] = fields.map((f) => f.trim());
 
-    // Required fields
     if (!brand) { errors.push(`Row ${row}: Missing brand`); continue; }
     if (!name) { errors.push(`Row ${row}: Missing name`); continue; }
+
     const dupKey = productUrl ? `${brand}|${name}|${productUrl}` : `${brand}|${name}|row-${row}`;
-    if (seen.has(dupKey)) { errors.push(`Row ${row}: Exact duplicate "${name}" by "${brand}"`); continue; }
+    if (seen.has(dupKey)) {
+      errors.push(`Row ${row}: Exact duplicate "${name}" by "${brand}"`);
+      continue;
+    }
     seen.add(dupKey);
 
-    // Normalize category
     const category = normalizeCategory(categoryRaw);
     catCount[category] = (catCount[category] || 0) + 1;
 
-    // Normalize scores
     const sweetness = normalizeScore(sweetnessRaw, 'sweetness_score');
     const bitterness = normalizeScore(bitternessRaw, 'bitterness_score');
     const acidity = normalizeScore(acidityRaw, 'acidity_score');
@@ -139,38 +209,37 @@ function importDrinks(csvPath: string) {
     const complexity = normalizeScore(complexityRaw, 'complexity_score');
     const carbonation = inferCarbonation(category);
 
-    // Warn about missing scores (defaulted to 5)
     for (const [field, val] of Object.entries({ sweetness, bitterness, acidity, body, complexity })) {
       if (val === null) {
         warnings.push(`Row ${row}: ${field} missing, defaulted to 5`);
       }
     }
 
-    // Parse arrays
+    const s = [sweetness ?? 5, bitterness ?? 5, acidity ?? 5, body ?? 5, complexity ?? 5, carbonation];
+    const intensity = computeIntensity(s);
+
     const flavorTags = splitTags(flavorTagsRaw);
     const occasionTags = splitTags(occasionTagsRaw);
     const foodPairingTags = splitTags(foodPairingTagsRaw);
     const availabilityRegions = splitTags(availabilityRaw);
 
-    // Tag counts
     flavorTags.forEach((t) => { tagCount[t] = (tagCount[t] || 0) + 1; });
     occasionTags.forEach((t) => { occCount[t] = (occCount[t] || 0) + 1; });
 
-    // Validate URL
     if (productUrl && !validateUrl(productUrl)) {
       warnings.push(`Row ${row}: Invalid URL "${productUrl}"`);
     }
 
-    // Description
     if (!description) {
       warnings.push(`Row ${row}: Missing description`);
     }
 
-    drinks.push({
+    const drink = {
       name,
       brand,
       category,
-      subcategory: null,
+      subcategory: categoryRaw,
+      drink_family: inferFamily(name, categoryRaw),
       description: description || null,
       image_url: null,
       product_url: productUrl || null,
@@ -182,11 +251,25 @@ function importDrinks(csvPath: string) {
       body_score: body ?? 5,
       complexity_score: complexity ?? 5,
       carbonation_score: carbonation,
+      intensity_score: intensity,
       flavor_tags: flavorTags,
       occasion_tags: occasionTags,
       food_pairing_tags: foodPairingTags,
       is_active: true,
-    });
+    };
+
+    drinks.push(drink);
+
+    // Build CSV row (PostgreSQL array format for tag fields)
+    const rowMap: Record<string, unknown> = {
+      ...drink,
+      availability_regions: toPgArray(availabilityRegions),
+      flavor_tags: toPgArray(flavorTags),
+      occasion_tags: toPgArray(occasionTags),
+      food_pairing_tags: toPgArray(foodPairingTags),
+      is_active: 'true',
+    };
+    csvRows.push(CSV_HEADERS.map(h => csvEscape(rowMap[h])).join(','));
   }
 
   // ── Report ─────────────────────────────────────────────────────
@@ -233,9 +316,16 @@ function importDrinks(csvPath: string) {
 
   // ── Output ─────────────────────────────────────────────────────
 
-  const outPath = path.resolve(__dirname, 'import-ready.json');
-  fs.writeFileSync(outPath, JSON.stringify(drinks, null, 2));
-  console.log(`\n✅ Import-ready JSON written to ${outPath}`);
+  const outDir = path.resolve(__dirname);
+  const jsonPath = path.join(outDir, 'import-ready.json');
+  const csvOutPath = path.join(outDir, 'import-ready.csv');
+
+  fs.writeFileSync(jsonPath, JSON.stringify(drinks, null, 2));
+  fs.writeFileSync(csvOutPath, '\ufeff' + CSV_HEADERS.join(',') + '\n' + csvRows.join('\n') + '\n');
+
+  console.log(`\n✅ JSON: ${jsonPath}`);
+  console.log(`✅ CSV:  ${csvOutPath}`);
+  console.log('\nTo import: Supabase Dashboard → Table Editor → drinks → Import → select import-ready.csv');
 
   if (errors.length > 0) process.exit(1);
 }
