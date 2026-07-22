@@ -9,9 +9,9 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useLiveStore } from '@/src/stores/liveStore';
 import { MOMENTS } from '@/src/constants/moments';
-import { fetchActiveDrinks, saveDrinkRating } from '@/src/services/drinks';
-import { isSupabaseConfigured } from '@/src/services/supabase';
-import { scoreDrinks } from '@/src/utils/recommendationEngine';
+import { saveDrinkRating } from '@/src/services/drinks';
+import { getLiveRecommendation } from '@/src/services/recommendationService';
+import { subscribeToCatalog } from '@/src/repositories/drinkCatalog';
 import type { LiveEntry } from '@/src/types/liveTypes';
 import type { ArchetypeId, DrinkRating } from '@/src/types';
 import type { SupabaseDrink } from '@/src/types/supabase';
@@ -32,63 +32,47 @@ export default function Live() {
   const [customMoment, setCustomMoment] = useState('');
   const [currentEntry, setCurrentEntry] = useState<LiveEntry | null>(null);
   const [showCustomInput, setShowCustomInput] = useState(false);
-  const [supabaseDrinks, setSupabaseDrinks] = useState<SupabaseDrink[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loadingCatalog, setLoadingCatalog] = useState(true);
 
   const userTaste = useMemo(() => getUserTasteVector(), [getUserTasteVector]);
 
   useEffect(() => {
-    if (isSupabaseConfigured()) {
-      fetchActiveDrinks().then((drinks) => {
-        setSupabaseDrinks(drinks);
-        setLoading(false);
-      });
-    } else {
-      setLoading(false);
-    }
+    const unsub = subscribeToCatalog((state) => {
+      setLoadingCatalog(state.loading);
+    });
+    return unsub;
   }, []);
 
-  const handleMomentSelect = useCallback((momentId: string) => {
+  const handleMomentSelect = useCallback(async (momentId: string) => {
     const moment = MOMENTS.find(m => m.id === momentId);
     if (!moment) return;
 
-    let drinkName = 'No recommendations yet';
-    let drinkBrand = '';
-    let reason = 'Add more drinks to your catalog to get personalized Live picks.';
-    let drinkId: string | null = null;
-
-    if (supabaseDrinks.length > 0) {
-      const ratedIds = getRatedDrinkIds();
-      const scored = scoreDrinks(supabaseDrinks, userTaste, { occasion: momentId }, ratedIds);
-      const top = scored[0];
-      if (top && top.score > 0) {
-        const drink = supabaseDrinks.find((d) => d.id === top.drinkId);
-        drinkName = drink?.name ?? top.drinkId;
-        drinkBrand = drink?.brand ?? '';
-        reason = top.reason;
-        drinkId = top.drinkId;
-      }
-    }
+    const ratedIds = getRatedDrinkIds();
+    const result = await getLiveRecommendation(
+      userTaste,
+      { occasion: momentId },
+      ratedIds,
+    );
 
     const entry: LiveEntry = {
-      id: drinkId ?? `${momentId}-${Date.now()}`,
+      id: result.scored?.drinkId ?? `${momentId}-${Date.now()}`,
       momentId,
       momentLabel: moment.label,
       momentEmoji: moment.emoji,
-      recommendedDrink: drinkName,
-      recommendedBrand: drinkBrand,
-      reason,
+      recommendedDrink: result.drink?.name ?? 'No recommendations yet',
+      recommendedBrand: result.drink?.brand ?? '',
+      reason: result.scored?.reason ?? 'Add more drinks to your catalog to get personalized Live picks.',
       timestamp: new Date().toISOString(),
     };
 
     setSelectedMoment(momentId);
     setCurrentEntry(entry);
     addEntry(entry);
-    posthog.capture('live_moment_selected', { moment_id: momentId, moment_label: moment.label, recommended_drink: drinkName, archetype_id: archetypeId });
+    posthog.capture('live_moment_selected', { moment_id: momentId, moment_label: moment.label, recommended_drink: entry.recommendedDrink, archetype_id: archetypeId });
     setTimeout(() => {
       setPhase('result');
     }, 180);
-  }, [archetypeId, supabaseDrinks, userTaste, getRatedDrinkIds, addEntry, posthog]);
+  }, [archetypeId, userTaste, getRatedDrinkIds, addEntry, posthog]);
 
   const handleRate = useCallback((liveRating: 'loved' | 'liked' | 'skipped') => {
     if (!currentEntry) return;
@@ -102,16 +86,14 @@ export default function Live() {
       skipped: 'skip',
     };
     const profileRating = profileRatingMap[liveRating];
-    if (profileRating && currentEntry.recommendedDrink) {
-      const drink = supabaseDrinks.find((d) => d.id === currentEntry.id);
-      const flavourTags = drink?.flavor_tags ?? [];
+    if (profileRating) {
       addRating({
         drinkId: currentEntry.id,
         rating: profileRating,
         timestamp: new Date().toISOString(),
-        flavourTags,
+        flavourTags: [],
       });
-      saveDrinkRating(userId, currentEntry.id, profileRating as 'love' | 'like' | 'skip', flavourTags).catch((err: unknown) =>
+      saveDrinkRating(userId, currentEntry.id, profileRating as 'love' | 'like' | 'skip').catch((err: unknown) =>
         console.error('[live] saveDrinkRating error:', err)
       );
     }
@@ -123,44 +105,29 @@ export default function Live() {
       setShowCustomInput(false);
       setCustomMoment('');
     }, 600);
-  }, [currentEntry, rateEntry, addRating, deviceId, archetypeId, posthog]);
+  }, [currentEntry, rateEntry, addRating, userId, archetypeId, posthog]);
 
-  const handleCustomSubmit = useCallback(() => {
+  const handleCustomSubmit = useCallback(async () => {
     if (!customMoment.trim()) return;
 
-    let drinkName = 'No recommendations yet';
-    let drinkBrand = '';
-    let reason = 'Add more drinks to your catalog to get personalized Live picks.';
-    let drinkId: string | null = null;
-
-    if (supabaseDrinks.length > 0) {
-      const ratedIds = getRatedDrinkIds();
-      const scored = scoreDrinks(supabaseDrinks, userTaste, undefined, ratedIds);
-      const top = scored[0];
-      if (top && top.score > 0) {
-        const drink = supabaseDrinks.find((d) => d.id === top.drinkId);
-        drinkName = drink?.name ?? top.drinkId;
-        drinkBrand = drink?.brand ?? '';
-        reason = top.reason;
-        drinkId = top.drinkId;
-      }
-    }
+    const ratedIds = getRatedDrinkIds();
+    const result = await getLiveRecommendation(userTaste, {}, ratedIds);
 
     const entry: LiveEntry = {
-      id: drinkId ?? `custom-${Date.now()}`,
+      id: result.scored?.drinkId ?? `custom-${Date.now()}`,
       momentId: 'custom',
       momentLabel: customMoment.trim(),
       momentEmoji: '✨',
-      recommendedDrink: drinkName,
-      recommendedBrand: drinkBrand,
-      reason,
+      recommendedDrink: result.drink?.name ?? 'No recommendations yet',
+      recommendedBrand: result.drink?.brand ?? '',
+      reason: result.scored?.reason ?? 'Add more drinks to your catalog to get personalized Live picks.',
       timestamp: new Date().toISOString(),
     };
     setCurrentEntry(entry);
     addEntry(entry);
-    posthog.capture('live_custom_moment_submitted', { recommended_drink: drinkName, archetype_id: archetypeId });
+    posthog.capture('live_custom_moment_submitted', { recommended_drink: entry.recommendedDrink, archetype_id: archetypeId });
     setPhase('result');
-  }, [customMoment, archetypeId, supabaseDrinks, userTaste, getRatedDrinkIds, addEntry, posthog]);
+  }, [customMoment, archetypeId, userTaste, getRatedDrinkIds, addEntry, posthog]);
 
   return (
     <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
@@ -179,13 +146,13 @@ export default function Live() {
           )}
         </View>
 
-        {loading && (
+        {loadingCatalog && (
           <View style={styles.loadingWrap}>
             <ActivityIndicator color="#C8A96E" />
           </View>
         )}
 
-        {!loading && phase === 'pick' && (
+        {!loadingCatalog && phase === 'pick' && (
           <ScrollView style={styles.scroll} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
             <View style={styles.momentGrid}>
               {MOMENTS.map((moment) => (
@@ -254,7 +221,7 @@ export default function Live() {
           </ScrollView>
         )}
 
-        {!loading && phase === 'result' && currentEntry && (
+        {!loadingCatalog && phase === 'result' && currentEntry && (
           <ScrollView style={styles.scroll} contentContainerStyle={styles.resultContent} showsVerticalScrollIndicator={false}>
             <View style={styles.resultMoment}>
               <Text style={styles.resultMomentEmoji}>{currentEntry.momentEmoji}</Text>

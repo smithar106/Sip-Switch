@@ -7,12 +7,10 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { ARCHETYPES } from '@/src/constants/archetypes';
 import { RADIUS } from '@/src/constants/theme';
-import { fetchActiveDrinks, saveDrinkRating } from '@/src/services/drinks';
-import { isSupabaseConfigured } from '@/src/services/supabase';
-import { rankDrinksForFeed } from '@/src/utils/recommendationEngine';
-import { supabaseDrinksToDrinkProfiles } from '@/src/utils/drinkAdapter';
+import { saveDrinkRating } from '@/src/services/drinks';
+import { getFeedRecommendations } from '@/src/services/recommendationService';
+import { subscribeToCatalog } from '@/src/repositories/drinkCatalog';
 import type { ArchetypeId, DrinkProfile, DrinkRating } from '@/src/types';
-import type { SupabaseDrink } from '@/src/types/supabase';
 
 const CATEGORY_GRADIENTS: Record<string, readonly [string, string]> = {
   na_beer: ['#C8A96E', '#8B7355'],
@@ -34,36 +32,6 @@ const CATEGORY_EMOJIS: Record<string, string> = {
   na_cider:       '🍏',
 };
 
-function buildFallbackDrinks(archetypeId: ArchetypeId | null): DrinkProfile[] {
-  const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
-  const catMap: Record<string, string> = {
-    'Aperitif': 'na_aperitif', 'Herbal': 'na_kombucha', 'Tonic': 'na_kombucha',
-    'Shrub': 'na_adaptogen', 'Sparkling': 'na_sparkling', 'Soda': 'na_sparkling',
-    'Wine': 'na_wine', 'Spirit': 'na_spirits', 'Cocktail': 'na_cocktail_kit',
-    'Beer': 'na_beer', 'Cider': 'na_cider', 'Brew': 'na_adaptogen',
-    'Cold Brew': 'na_adaptogen', 'Adaptogen': 'na_adaptogen',
-    'Kombucha': 'na_kombucha', 'Kefir': 'na_cider',
-  };
-  const mapCat = (c: string): DrinkProfile['category'] => {
-    for (const [key, val] of Object.entries(catMap)) {
-      if (c.includes(key)) return val as DrinkProfile['category'];
-    }
-    return 'na_soda' as DrinkProfile['category'];
-  };
-  const categories = archetype.categories.map(mapCat);
-  const drinks: DrinkProfile[] = [];
-  archetype.examples.forEach((brand, i) => {
-    const category = categories[i] ?? categories[0];
-    drinks.push({
-      id: `${archetype.id}-${i}`, name: brand, brand, category,
-      imageUrl: '', description: `A perfect NA match for your ${archetype.id} taste profile.`,
-      flavourTags: [archetype.primaryFlavours[i % archetype.primaryFlavours.length]],
-      alcoholic: false, gemScore: 85,
-    });
-  });
-  return drinks;
-}
-
 export default function Feed() {
   const insets = useSafeAreaInsets();
   const posthog = usePostHog();
@@ -74,31 +42,29 @@ export default function Feed() {
   const getUserTasteVector = useTasteStore((s) => s.getUserTasteVector);
   const getRatedDrinkIds = useTasteStore((s) => s.getRatedDrinkIds);
   const archetype = archetypeId ? ARCHETYPES[archetypeId] : ARCHETYPES.complex;
-  const [supabaseDrinks, setSupabaseDrinks] = useState<SupabaseDrink[]>([]);
-  const [loadingSupabase, setLoadingSupabase] = useState(true);
+  const [drinks, setDrinks] = useState<DrinkProfile[]>([]);
+  const [loadingCatalog, setLoadingCatalog] = useState(true);
+  const [catalogError, setCatalogError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (isSupabaseConfigured()) {
-      fetchActiveDrinks().then((drinks) => {
-        setSupabaseDrinks(drinks);
-        setLoadingSupabase(false);
-      });
-    } else {
-      setLoadingSupabase(false);
-    }
+    const unsub = subscribeToCatalog((state) => {
+      setLoadingCatalog(state.loading);
+      setCatalogError(state.error);
+    });
+    return unsub;
   }, []);
 
   const userTaste = useMemo(() => getUserTasteVector(), [getUserTasteVector, ratings]);
 
-  const drinks = useMemo(() => {
-    if (supabaseDrinks.length > 0) {
-      const ratedIds = getRatedDrinkIds();
-      const ranked = rankDrinksForFeed(supabaseDrinks, userTaste, ratedIds);
-      const scoreMap = new Map(ranked.map((r) => [r.drinkId, { score: r.score, reason: r.reason }]));
-      return supabaseDrinksToDrinkProfiles(supabaseDrinks, scoreMap);
-    }
-    return buildFallbackDrinks(archetypeId);
-  }, [supabaseDrinks, archetypeId, userTaste, ratings]);
+  useEffect(() => {
+    if (!userTaste) return;
+    const ratedIds = getRatedDrinkIds();
+    getFeedRecommendations(userTaste, ratedIds).then((result) => {
+      setDrinks(result.drinks);
+      setLoadingCatalog(result.loading);
+      setCatalogError(result.error);
+    });
+  }, [userTaste, ratings]);
 
   const ratedDrinks = useMemo(() => {
     const map: Record<string, 'love' | 'skip'> = {};
@@ -117,7 +83,17 @@ export default function Feed() {
       console.error('[feed] saveDrinkRating error:', err)
     );
     posthog.capture('drink_rated', { drink_id: drinkId, rating, archetype_id: archetypeId, flavour_tags: flavourTags ?? null });
-  }, [addRating, deviceId, archetypeId, posthog]);
+  }, [addRating, userId, archetypeId, posthog]);
+
+  if (loadingCatalog && drinks.length === 0) {
+    return (
+      <View style={[styles.screen, { paddingTop: insets.top }]}>
+        <View style={styles.centerWrap}>
+          <Text style={styles.loadingText}>Loading your recommendations...</Text>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.screen, { paddingTop: insets.top }]}>
@@ -125,8 +101,12 @@ export default function Feed() {
         <Text style={styles.headline}>For You</Text>
         <Text style={styles.archetypeName}>{archetype.name}</Text>
 
-        {!loadingSupabase && supabaseDrinks.length === 0 && (
-          <Text style={styles.fallbackNote}>Drink data loading — showing taste preview</Text>
+        {catalogError && drinks.length === 0 && (
+          <Text style={styles.errorNote}>{catalogError}</Text>
+        )}
+
+        {catalogError && drinks.length > 0 && (
+          <Text style={styles.staleNote}>Using cached recommendations — {catalogError}</Text>
         )}
 
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillScroll} contentContainerStyle={styles.pillRow}>
@@ -196,7 +176,7 @@ export default function Feed() {
         ))}
 
         <View style={styles.loadingRow}>
-          <Text style={styles.loadingText}>{supabaseDrinks.length > 0 ? 'Rate drinks to refine your taste profile' : 'Rate drinks to refine your taste profile'}</Text>
+          <Text style={styles.loadingText}>Rate drinks to refine your taste profile</Text>
         </View>
       </ScrollView>
     </View>
@@ -207,9 +187,11 @@ const styles = StyleSheet.create({
   screen:        { flex: 1, backgroundColor: '#0A0A0A' },
   scroll:        { flex: 1 },
   wrap:          { paddingHorizontal: 20, paddingBottom: 40 },
+  centerWrap:    { flex: 1, alignItems: 'center', justifyContent: 'center' },
   headline:      { color: '#FFF', fontSize: 28, fontWeight: '800', marginTop: 12 },
   archetypeName: { color: '#C8A96E', fontSize: 15, fontWeight: '600', marginTop: 4, marginBottom: 16 },
-  fallbackNote:  { color: '#888888', fontSize: 12, textAlign: 'center', marginBottom: 12 },
+  errorNote:     { color: '#FF6B6B', fontSize: 13, textAlign: 'center', marginBottom: 12, padding: 8, backgroundColor: 'rgba(255,107,107,0.08)', borderRadius: 8 },
+  staleNote:     { color: '#C8A96E', fontSize: 11, textAlign: 'center', marginBottom: 8, fontStyle: 'italic' },
   pillScroll:    { marginBottom: 8 },
   pillRow:       { gap: 8, flexDirection: 'row' },
   pill:          { backgroundColor: 'rgba(200,169,110,0.1)', borderRadius: 999, paddingHorizontal: 14, paddingVertical: 6, borderWidth: 1, borderColor: 'rgba(200,169,110,0.2)' },
