@@ -15,7 +15,10 @@ export interface SyncMutation {
   attemptCount: number;
   lastError?: string;
   status: MutationStatus;
+  version?: number;
 }
+
+export const QUEUE_VERSION = 2;
 
 export function generateMutationId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 11)}`;

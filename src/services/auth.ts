@@ -29,7 +29,7 @@ export type IdentityState =
 let authInitialized = false;
 let currentIdentity: IdentityState | null = null;
 let authInitPromise: Promise<IdentityState | null> | null = null;
-let isSyncQueuePaused: boolean = false;
+let syncQueuePaused: boolean = false;
 
 export function getUserId(): string | null {
   if (currentIdentity?.mode === 'authenticated') return currentIdentity.userId;
@@ -54,19 +54,19 @@ export function isAuthenticated(): boolean {
 }
 
 export function isSyncQueuePaused(): boolean {
-  return isSyncQueuePaused;
+  return syncQueuePaused;
 }
 
 export async function pauseSyncQueue(): Promise<void> {
-  if (!isSyncQueuePaused) {
-    isSyncQueuePaused = true;
+  if (!syncQueuePaused) {
+    syncQueuePaused = true;
     console.log('[auth] Sync queue paused - no authenticated user');
   }
 }
 
 export async function resumeSyncQueue(): Promise<void> {
-  if (isSyncQueuePaused) {
-    isSyncQueuePaused = false;
+  if (syncQueuePaused) {
+    syncQueuePaused = false;
     console.log('[auth] Sync queue resumed');
   }
 }
