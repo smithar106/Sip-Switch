@@ -6,21 +6,13 @@ import { entityKeyForRating, entityKeyForTasteProfile } from './mutationTypes';
 // ── Drinks ────────────────────────────────────────────────────────
 
 export async function fetchActiveDrinks(): Promise<SupabaseDrink[]> {
-  if (!isSupabaseConfigured()) return [];
-  try {
-    const { data, error } = await supabase!
-      .from('drinks')
-      .select('*')
-      .eq('is_active', true);
-    if (error) {
-      console.error('[drinks] fetchActiveDrinks failed:', error.message);
-      return [];
-    }
-    return data ?? [];
-  } catch (err) {
-    console.error('[drinks] fetchActiveDrinks error:', err);
-    return [];
-  }
+  if (!isSupabaseConfigured()) throw new Error('Supabase not configured');
+  const { data, error } = await supabase!
+    .from('drinks')
+    .select('id, name, brand, category, subcategory, description, image_url, product_url, price_range, availability_regions, sweetness_score, bitterness_score, acidity_score, body_score, complexity_score, carbonation_score, flavor_tags, occasion_tags, food_pairing_tags, is_active, created_at, updated_at, normalized_name, drink_family, intensity_score')
+    .eq('is_active', true);
+  if (error) throw new Error(`fetchActiveDrinks failed: ${error.message}`);
+  return data ?? [];
 }
 
 export async function fetchDrinksByCategory(category: string): Promise<SupabaseDrink[]> {

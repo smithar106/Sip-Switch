@@ -14,10 +14,12 @@ import { configureRevenueCat, getCustomerInfo } from '@/src/services/revenueCat'
 import { initializeAuth, onAuthStateChange, refreshSession } from '@/src/services/auth';
 import { processSyncQueue } from '@/src/services/syncQueue';
 import { migrateLegacyDeviceId } from '@/src/utils/legacyMigration';
+import { initErrorReporting, captureError } from '@/src/services/errorReporting';
 
 const posthogApiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '';
 const posthogHost = process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
 const posthogEnabled = posthogApiKey.length > 0 && posthogApiKey !== '<SIP_POSTHOG_KEY_HERE>';
+const sentryDsn = process.env.EXPO_PUBLIC_SENTRY_DSN ?? '';
 
 export default function RootLayout() {
   const loadSession = useSessionStore((s) => s.loadFromStorage);
@@ -37,6 +39,8 @@ export default function RootLayout() {
 
     const init = async () => {
       try {
+        initErrorReporting(sentryDsn);
+
         // Step 1: Initialize auth first (blocking for user-owned operations)
         const identity = await initializeAuth();
         
@@ -87,7 +91,7 @@ export default function RootLayout() {
           setIsPremium(true);
         }
       } catch (err) {
-        console.error('[root] init error:', err);
+        captureError(err, { severity: 'error', context: { phase: 'app_init' } });
         // Ensure stores still load even if auth fails
         await Promise.all([
           loadSession(),
