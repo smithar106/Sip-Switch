@@ -6,6 +6,7 @@ import {
   shouldRetry,
 } from './mutationTypes';
 import { isSupabaseConfigured, supabase } from './supabase';
+import { isAuthenticated } from './auth';
 
 const QUEUE_KEY = '@ss_sync_queue';
 const PROCESSING_KEY = '@ss_sync_processing';
@@ -173,6 +174,10 @@ export async function processSyncQueue(): Promise<{
 }> {
   if (isProcessing) return { processed: 0, failed: 0 };
   if (!isSupabaseConfigured()) return { processed: 0, failed: 0 };
+  if (!isAuthenticated()) {
+    console.log('[syncQueue] Paused — no authenticated user');
+    return { processed: 0, failed: 0 };
+  }
 
   isProcessing = true;
 

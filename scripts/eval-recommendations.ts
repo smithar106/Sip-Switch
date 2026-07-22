@@ -241,6 +241,39 @@ function verifySkipSimulation() {
     top.drinkId !== 'bitter-ipa' && top.drinkId !== 'herbal-spirit',
     `Top drink: ${top.drinkId} (score: ${top.score})`,
   );
+
+  const skipPenaltyScore = scored.find((s) => s.drinkId === 'bitter-ipa')?.score ?? 100;
+  check(
+    'skipPenalty: skipped drink score below 70',
+    skipPenaltyScore < 70,
+    `Skipped drink score: ${skipPenaltyScore}`,
+    70,
+    skipPenaltyScore,
+  );
+}
+
+function verifyLoveRateSimulation() {
+  const catalog = buildTestCatalog();
+  const user = SYNTHETIC_USERS.newUser;
+  const rated = new Map<string, 'love' | 'like' | 'skip'>([
+    ['bitter-ipa', 'love'],
+    ['hoppy-water', 'love'],
+  ]);
+  const scored = rankDrinksForFeed(catalog, user, rated);
+  const top3 = scored.slice(0, 3).map((s) => s.drinkId);
+
+  const bitterDrinksInTop = top3.filter((id) => {
+    const d = catalog.find((c) => c.id === id);
+    return d && ((d.bitterness_score ?? 0) >= 6 || (d.complexity_score ?? 0) >= 6);
+  }).length;
+
+  check(
+    'loveRate: loved bitter drinks boost similar drinks in top 3',
+    bitterDrinksInTop >= 1,
+    `Bitter/complex in top 3: ${bitterDrinksInTop}`,
+    1,
+    bitterDrinksInTop,
+  );
 }
 
 function verifyDeterministic() {
@@ -278,6 +311,15 @@ function verifyConvergence() {
     top3.some((id) => catalog.find((d) => d.id === id)?.category === 'Beer'),
     `Top 3: ${top3.join(', ')}`,
   );
+
+  const topScore = scored[0]?.score ?? 0;
+  check(
+    'convergence: top score after feedback meets threshold',
+    topScore >= 70,
+    `Top score: ${topScore}`,
+    70,
+    topScore,
+  );
 }
 
 function verifyCategoryAdaptation() {
@@ -296,6 +338,18 @@ function verifyCategoryAdaptation() {
     }),
     `Top 5: ${top5.join(', ')}`,
   );
+
+  const relevantCount = top5.filter((id) => {
+    const d = catalog.find((c) => c.id === id);
+    return d?.category === 'Spirit' || d?.category === 'Aperitif';
+  }).length;
+  check(
+    'categoryAdaptation: at least 2 of top 5 are preferred category',
+    relevantCount >= 2,
+    `Relevant in top 5: ${relevantCount}`,
+    2,
+    relevantCount,
+  );
 }
 
 function verifyConfidenceCalibration() {
@@ -306,6 +360,17 @@ function verifyConfidenceCalibration() {
     'confidence: low-confidence dimensions produce weights near 0.3',
     dimConf.every((w) => w >= 0.3 && w <= 0.5),
     `Weights: ${dimConf.map((w) => w.toFixed(2)).join(', ')}`,
+    0.3,
+    Math.min(...dimConf),
+  );
+
+  const highConf = computeDimensionWeights({ sweetness: 0.9, bitterness: 0.9, acidity: 0.9, body: 0.9, complexity: 0.9, carbonation: 0.9 });
+  check(
+    'confidence: high-confidence dimensions produce weights near 1.0',
+    highConf.every((w) => w >= 0.8),
+    `Weights: ${highConf.map((w) => w.toFixed(2)).join(', ')}`,
+    0.8,
+    Math.min(...highConf),
   );
 }
 
@@ -321,6 +386,15 @@ function verifyExplorationPreserved() {
     types.includes('explore'),
     `Types: ${types.slice(0, 5).join(', ')}`,
   );
+
+  const exploreCount = types.filter((t) => t === 'explore').length;
+  check(
+    'exploration: exactly 1 explore in top 5 (constrained)',
+    exploreCount === 1,
+    `Explore count: ${exploreCount}`,
+    1,
+    exploreCount,
+  );
 }
 
 // ── Run all evaluations ───────────────────────────────────────────
@@ -329,6 +403,7 @@ const ALL_TESTS = [
   verifyTopKRanking,
   verifyRankSeparation,
   verifySkipSimulation,
+  verifyLoveRateSimulation,
   verifyDeterministic,
   verifyConvergence,
   verifyCategoryAdaptation,

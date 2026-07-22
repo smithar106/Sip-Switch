@@ -34,3 +34,19 @@ export function isSupabaseConfigured(): boolean {
 export function getSupabaseClient() {
   return supabase;
 }
+
+export function subscribeToAuthState(
+  callback: (event: 'SIGNED_IN' | 'SIGNED_OUT' | 'USER_UPDATED' | 'TOKEN_REFRESHED', session: Session | null) => void
+) {
+  if (!supabase) return {
+    unsubscribe: () => {},
+  };
+
+  const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    callback(event as any, session);
+  });
+
+  return {
+    unsubscribe: () => subscription.unsubscribe(),
+  };
+}

@@ -1,6 +1,6 @@
 import { supabase, isSupabaseConfigured } from './supabase';
-import { enqueueMutation, processSyncQueue } from './syncQueue';
-import { entityKeyForRating } from './mutationTypes';
+import { processSyncQueue } from './syncQueue';
+import { isAuthenticated } from './auth';
 import type { ScoredRecommendation } from '../types/supabase';
 
 const ENGINE_VERSION = '1.0.0';
@@ -28,31 +28,34 @@ export async function recordRecommendationSession(
   session: SessionRecord,
 ): Promise<string | null> {
   if (!isSupabaseConfigured() || !session.userId) return null;
+  if (!isAuthenticated()) return null;
 
   const sessionId = crypto.randomUUID?.() ?? `${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 11)}`;
 
-  const payload = {
-    id: sessionId,
-    user_id: session.userId,
-    context: session.context ?? null,
-    surface: session.surface,
-    engine_version: ENGINE_VERSION,
-    model_version: MODEL_VERSION,
-    items: session.items,
-    created_at: new Date().toISOString(),
-  };
+  try {
+    const { error } = await supabase!
+      .from('recommendation_sessions')
+      .insert({
+        id: sessionId,
+        user_id: session.userId,
+        context: session.context ?? null,
+        surface: session.surface,
+        engine_version: ENGINE_VERSION,
+        model_version: MODEL_VERSION,
+        items: session.items,
+        created_at: new Date().toISOString(),
+      });
 
-  await enqueueMutation(
-    session.userId,
-    'upsert_taste_profile', // Use existing queue to send the session data too
-    `rec_session:${sessionId}`,
-    payload,
-  );
+    if (error) {
+      console.error('[recSession] insert error:', error.message);
+      return null;
+    }
 
-  // Fire-and-forget background sync
-  processSyncQueue().catch(() => {});
-
-  return sessionId;
+    return sessionId;
+  } catch (err) {
+    console.error('[recSession] exception:', err);
+    return null;
+  }
 }
 
 export function buildSessionItems(
