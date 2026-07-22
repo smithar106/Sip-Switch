@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { ArchetypeId } from '../types';
-import { getUserId, isAuthReady, waitForAuth } from '../services/auth';
+import { getUserId, getLocalId, isAuthReady, waitForAuth, isAuthenticated } from '../services/auth';
 
 const VALID_ARCHETYPES: Set<string> = new Set([
   'bitter', 'carbonated', 'complex', 'dry', 'bold', 'light',
@@ -13,16 +13,21 @@ interface SessionState {
   archetypeId: ArchetypeId | null;
   trialStartDate: string | null;
   userId: string | null;
+  localId: string | null;
   authReady: boolean;
   _hydrated: boolean;
+  isAuthenticated: boolean;
   setIsPremium: (v: boolean) => void;
   setHasOnboarded: (v: boolean) => void;
   setArchetypeId: (id: ArchetypeId) => void;
   setTrialStartDate: (d: string) => void;
   setUserId: (id: string | null) => void;
+  setLocalId: (id: string | null) => void;
   setAuthReady: (v: boolean) => void;
+  setIsAuthenticated: (v: boolean) => void;
   loadFromStorage: () => Promise<void>;
-  loadFromAuth: () => Promise<string | null>;
+  loadFromAuth: () => Promise<void>;
+  migrateLocalToRemote: (remoteUserId: string) => Promise<void>;
 }
 
 function safeSet(key: string, value: string) {
@@ -35,8 +40,10 @@ export const useSessionStore = create<SessionState>((set) => ({
   archetypeId: null,
   trialStartDate: null,
   userId: null,
+  localId: null,
   authReady: false,
   _hydrated: false,
+  isAuthenticated: false,
 
   setIsPremium: (v) => {
     set({ isPremium: v });
@@ -54,16 +61,19 @@ export const useSessionStore = create<SessionState>((set) => ({
     set({ trialStartDate: d });
     safeSet('@ss_trial_start', d);
   },
-  setUserId: (id) => set({ userId: id }),
+  setUserId: (id) => set({ userId: id, isAuthenticated: Boolean(id) }),
+  setLocalId: (id) => set({ localId: id, isAuthenticated: false }),
   setAuthReady: (v) => set({ authReady: v }),
+  setIsAuthenticated: (v) => set({ isAuthenticated: v }),
 
   loadFromStorage: async () => {
     try {
-      const [premium, onboarded, archetype, trial] = await Promise.all([
+      const [premium, onboarded, archetype, trial, localId] = await Promise.all([
         AsyncStorage.getItem('@ss_premium'),
         AsyncStorage.getItem('@ss_onboarded'),
         AsyncStorage.getItem('@ss_archetype'),
         AsyncStorage.getItem('@ss_trial_start'),
+        AsyncStorage.getItem('@ss_local_id'),
       ]);
       const validArchetype = archetype && VALID_ARCHETYPES.has(archetype)
         ? (archetype as ArchetypeId)
@@ -73,7 +83,9 @@ export const useSessionStore = create<SessionState>((set) => ({
         hasOnboarded: onboarded ? JSON.parse(onboarded) : false,
         archetypeId: validArchetype,
         trialStartDate: trial,
+        localId: localId || null,
         _hydrated: true,
+        isAuthenticated: false,
       });
     } catch (err) {
       console.error('[sessionStore] load error:', err);
@@ -81,8 +93,40 @@ export const useSessionStore = create<SessionState>((set) => ({
   },
 
   loadFromAuth: async () => {
-    const uid = await waitForAuth();
-    set({ userId: uid, authReady: true });
-    return uid;
+    const state = await waitForAuth();
+    if (state?.mode === 'authenticated') {
+      set({
+        userId: state.userId,
+        localId: null,
+        authReady: true,
+        isAuthenticated: true,
+      });
+    } else if (state?.mode === 'local_only') {
+      set({
+        userId: null,
+        localId: state.localId,
+        authReady: true,
+        isAuthenticated: false,
+      });
+    } else if (state?.mode === 'auth_failed') {
+      set({
+        userId: null,
+        localId: null,
+        authReady: true,
+        isAuthenticated: false,
+      });
+    }
+  },
+
+  migrateLocalToRemote: async (remoteUserId: string) => {
+    const localId = getLocalId();
+    if (localId) {
+      await AsyncStorage.removeItem('@ss_local_id');
+      set({ 
+        localId: null, 
+        userId: remoteUserId, 
+        isAuthenticated: true 
+      });
+    }
   },
 }));

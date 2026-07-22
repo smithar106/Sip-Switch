@@ -25,8 +25,11 @@ export default function RootLayout() {
   const loadLive = useLiveStore((s) => s.loadFromStorage);
   const setIsPremium = useSessionStore((s) => s.setIsPremium);
   const setUserId = useSessionStore((s) => s.setUserId);
+  const setLocalId = useSessionStore((s) => s.setLocalId);
   const setAuthReady = useSessionStore((s) => s.setAuthReady);
+  const setIsAuthenticated = useSessionStore((s) => s.setIsAuthenticated);
   const userId = useSessionStore((s) => s.userId);
+  const localId = useSessionStore((s) => s.localId);
   const appStateRef = useRef<AppStateStatus>(AppState.currentState);
 
   useEffect(() => {
@@ -35,13 +38,27 @@ export default function RootLayout() {
     const init = async () => {
       try {
         // Step 1: Initialize auth first (blocking for user-owned operations)
-        const uid = await initializeAuth();
-        setUserId(uid);
+        const identity = await initializeAuth();
+        
+        if (identity?.mode === 'authenticated') {
+          setUserId(identity.userId);
+          setLocalId(null);
+          setIsAuthenticated(true);
+        } else if (identity?.mode === 'local_only') {
+          setUserId(null);
+          setLocalId(identity.localId);
+          setIsAuthenticated(false);
+        } else if (identity?.mode === 'auth_failed') {
+          setUserId(null);
+          setLocalId(null);
+          setIsAuthenticated(false);
+        }
+        
         setAuthReady(true);
 
         // Step 2: Migrate legacy device ID if present
-        if (uid) {
-          await migrateLegacyDeviceId(uid);
+        if (identity?.mode === 'authenticated') {
+          await migrateLegacyDeviceId(identity.userId);
         }
 
         // Step 3: Load local stores (parallel, independent of auth)
@@ -51,8 +68,8 @@ export default function RootLayout() {
           loadLive(),
         ]);
 
-        // Step 4: Process pending sync queue
-        if (uid) {
+        // Step 4: Process pending sync queue (only if authenticated)
+        if (identity?.mode === 'authenticated') {
           processSyncQueue().catch((err) =>
             console.error('[root] sync queue processing error:', err)
           );
@@ -84,10 +101,26 @@ export default function RootLayout() {
     init();
 
     // Step 6: Listen for auth state changes
-    unsubAuth = onAuthStateChange((newUid) => {
-      setUserId(newUid);
-      if (newUid && newUid !== userId) {
-        processSyncQueue().catch(() => {});
+    unsubAuth = onAuthStateChange((newIdentity) => {
+      if (newIdentity?.mode === 'authenticated') {
+        setUserId(newIdentity.userId);
+        setLocalId(null);
+        setIsAuthenticated(true);
+        if (newIdentity.userId !== userId) {
+          processSyncQueue().catch(() => {});
+        }
+      } else if (newIdentity?.mode === 'local_only') {
+        setUserId(null);
+        setLocalId(newIdentity.localId);
+        setIsAuthenticated(false);
+      } else if (newIdentity?.mode === 'auth_failed') {
+        setUserId(null);
+        setLocalId(null);
+        setIsAuthenticated(false);
+      } else {
+        setUserId(null);
+        setLocalId(null);
+        setIsAuthenticated(false);
       }
     });
 
