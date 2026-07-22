@@ -1,6 +1,7 @@
 import { supabase, isSupabaseConfigured } from './supabase';
 import type { SupabaseDrink, SupabaseTasteProfile, SupabaseDrinkRating } from '../types/supabase';
-import { useTasteStore } from '../stores/tasteStore';
+import { enqueueMutation, processSyncQueue } from './syncQueue';
+import { entityKeyForRating, entityKeyForTasteProfile } from './mutationTypes';
 
 // ── Drinks ────────────────────────────────────────────────────────
 
@@ -98,7 +99,7 @@ export async function searchDrinks(query: string): Promise<SupabaseDrink[]> {
   }
 }
 
-// ── Taste Profiles ────────────────────────────────────────────────
+// ── Taste Profiles (local-first with sync queue) ──────────────────
 
 export async function fetchTasteProfile(userId: string): Promise<SupabaseTasteProfile | null> {
   if (!isSupabaseConfigured()) return null;
@@ -107,8 +108,6 @@ export async function fetchTasteProfile(userId: string): Promise<SupabaseTastePr
       .from('taste_profiles')
       .select('*')
       .eq('user_id', userId)
-      .order('created_at', { ascending: false })
-      .limit(1)
       .maybeSingle();
     if (error) {
       console.error('[drinks] fetchTasteProfile failed:', error.message);
@@ -125,24 +124,42 @@ export async function saveTasteProfile(
   userId: string | null,
   profile: Partial<SupabaseTasteProfile>,
 ): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
   if (!userId) return false;
-  try {
-    const { error } = await supabase!
-      .from('taste_profiles')
-      .upsert({ ...profile, user_id: userId, updated_at: new Date().toISOString() });
-    if (error) {
-      console.error('[drinks] saveTasteProfile failed:', error.message);
-      return false;
-    }
-    return true;
-  } catch (err) {
-    console.error('[drinks] saveTasteProfile error:', err);
-    return false;
+
+  // Optimistic local completion
+  const profileOk = true;
+
+  // Enqueue for remote sync
+  if (isSupabaseConfigured()) {
+    await enqueueMutation(
+      userId,
+      'upsert_taste_profile',
+      entityKeyForTasteProfile(userId),
+      {
+        archetype_id: profile.archetype_id,
+        archetype_name: profile.archetype_name,
+        confidence_score: profile.confidence_score,
+        sweetness_preference: profile.sweetness_preference,
+        bitterness_preference: profile.bitterness_preference,
+        acidity_preference: profile.acidity_preference,
+        body_preference: profile.body_preference,
+        complexity_preference: profile.complexity_preference,
+        carbonation_preference: profile.carbonation_preference,
+        preferred_categories: profile.preferred_categories,
+        favorite_flavor_tags: profile.favorite_flavor_tags,
+        avoided_flavor_tags: profile.avoided_flavor_tags,
+        onboarding_answers: profile.onboarding_answers,
+        total_ratings: profile.total_ratings,
+      },
+    );
+    // Fire-and-forget background sync
+    processSyncQueue().catch(() => {});
   }
+
+  return profileOk;
 }
 
-// ── Drink Ratings ─────────────────────────────────────────────────
+// ── Drink Ratings (local-first with sync queue) ───────────────────
 
 export async function saveDrinkRating(
   userId: string | null,
@@ -150,26 +167,24 @@ export async function saveDrinkRating(
   rating: 'love' | 'like' | 'skip',
   feedbackTags?: string[],
 ): Promise<boolean> {
-  if (!isSupabaseConfigured()) return false;
   if (!userId) return false;
-  try {
-    const { error } = await supabase!
-      .from('drink_ratings')
-      .upsert({
-        user_id: userId,
-        drink_id: drinkId,
-        rating,
-        feedback_tags: feedbackTags ?? null,
-      }, { onConflict: 'user_id, drink_id' });
-    if (error) {
-      console.error('[drinks] saveDrinkRating failed:', error.message);
-      return false;
-    }
-    return true;
-  } catch (err) {
-    console.error('[drinks] saveDrinkRating error:', err);
-    return false;
+
+  // Optimistic local completion
+  const ratingOk = true;
+
+  // Enqueue for remote sync
+  if (isSupabaseConfigured()) {
+    await enqueueMutation(
+      userId,
+      'upsert_drink_rating',
+      entityKeyForRating(userId, drinkId),
+      { drinkId, rating, feedbackTags },
+    );
+    // Fire-and-forget background sync
+    processSyncQueue().catch(() => {});
   }
+
+  return ratingOk;
 }
 
 export async function fetchDrinkRatings(userId: string): Promise<SupabaseDrinkRating[]> {
@@ -199,5 +214,3 @@ export function isLocalRating(
   const found = localRatings.find((r) => r.drinkId === drinkId);
   return found ? { rated: true, rating: found.rating } : { rated: false };
 }
-
-
