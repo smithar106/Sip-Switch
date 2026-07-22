@@ -264,7 +264,7 @@ function verifyLoveRateSimulation() {
 
   const bitterDrinksInTop = top3.filter((id) => {
     const d = catalog.find((c) => c.id === id);
-    return d && (d.bitterness_score >= 6 || d.complexity_score >= 6);
+    return d && ((d.bitterness_score ?? 0) >= 6 || (d.complexity_score ?? 0) >= 6);
   }).length;
 
   check(
