@@ -1,7 +1,3 @@
-// TODO: Second catalog import needed for NA Beer, NA Wine, NA Spirit
-// before broad production launch. The fallback logic (CATEGORY_FALLBACKS
-// in src/constants/categories.ts) broadens sparse categories automatically.
-
 import type { UserTasteVector, ScoredRecommendation, SupabaseDrink } from '../types/supabase';
 import { SPARSE_THRESHOLD, CATEGORY_FALLBACKS, FALLBACK_SCORE } from '../constants/categories';
 
@@ -17,6 +13,13 @@ const AVOID_PENALTY = -0.30;
 const SKIP_PENALTY = -0.50;
 const LOVE_BOOST = 0.35;
 const LIKE_BOOST = 0.10;
+
+export type RecommendationType = 'exploit' | 'explore';
+
+export interface ScoredRecommendationWithMeta extends ScoredRecommendation {
+  recommendationType: RecommendationType;
+  rawScore: number;
+}
 
 // ── Count drinks per category from the array (runtime, no hardcoding) ──
 
@@ -69,16 +72,26 @@ function userVector(u: UserTasteVector): number[] {
   ];
 }
 
-// ── Distance-based similarity ─────────────────────────────────────
+// ── Distance-based similarity with confidence weighting ───────────
 
-function tasteSimilarity(user: number[], drink: number[]): number {
-  let distSq = 0;
+function tasteSimilarity(
+  user: number[],
+  drink: number[],
+  dimensionWeights?: number[],
+): number {
+  let totalWeight = 0;
+  let weightedDistSq = 0;
+
   for (let i = 0; i < user.length; i++) {
     const diff = user[i] - drink[i];
-    distSq += diff * diff;
+    const w = dimensionWeights?.[i] ?? 1;
+    weightedDistSq += diff * diff * w;
+    totalWeight += w;
   }
-  const maxDist = 10 * Math.sqrt(6);
-  return 1 - (Math.sqrt(distSq) / maxDist);
+
+  const effectiveWeight = totalWeight > 0 ? totalWeight / user.length : 1;
+  const maxDist = 10 * Math.sqrt(user.length);
+  return 1 - (Math.sqrt(weightedDistSq / effectiveWeight) / maxDist);
 }
 
 // ── Tag overlap ratio ─────────────────────────────────────────────
@@ -89,6 +102,96 @@ function tagOverlap(userTags: string[], drinkTags: string[] | null): number {
   return matches / Math.max(userTags.length, drinkTags.length);
 }
 
+// ── Confidence-based dimension weights ────────────────────────────
+
+export function computeDimensionWeights(
+  dimensionConfidence?: Record<string, number>,
+): number[] {
+  if (!dimensionConfidence) return [1, 1, 1, 1, 1, 1];
+
+  const dims = ['sweetness', 'bitterness', 'acidity', 'body', 'complexity', 'carbonation'];
+  const weights = dims.map((d) => {
+    const conf = dimensionConfidence[d] ?? 0.5;
+    // Clamp to [0.3, 1.0] so no dimension is completely ignored or dominant
+    return Math.max(0.3, Math.min(1.0, conf));
+  });
+
+  return weights;
+}
+
+// ── Controlled exploration ────────────────────────────────────────
+
+export interface ExplorationConfig {
+  enabled: boolean;
+  explorationSlotIndex: number; // which position in the top-N to replace
+  lowConfidenceThreshold: number; // dimension confidence below this triggers exploration
+}
+
+const DEFAULT_EXPLORATION: ExplorationConfig = {
+  enabled: true,
+  explorationSlotIndex: 2, // replace the 3rd recommendation
+  lowConfidenceThreshold: 0.5,
+};
+
+export function selectExplorationCandidate(
+  drinks: SupabaseDrink[],
+  userTaste: UserTasteVector,
+  scored: ScoredRecommendation[],
+  dimensionConfidence?: Record<string, number>,
+  config: ExplorationConfig = DEFAULT_EXPLORATION,
+): SupabaseDrink | null {
+  if (!config.enabled || drinks.length < 4) return null;
+
+  // Find dimensions with low confidence
+  if (!dimensionConfidence) return null;
+
+  const lowConfDims = Object.entries(dimensionConfidence)
+    .filter(([, conf]) => conf < config.lowConfidenceThreshold)
+    .map(([dim]) => dim);
+
+  if (lowConfDims.length === 0) return null;
+
+  // Build set of already recommended and rated drink IDs
+  const alreadyUsed = new Set(scored.slice(0, config.explorationSlotIndex + 1).map((s) => s.drinkId));
+  const preferredCats = new Set(userTaste.preferredCategories);
+
+  // Find a drink that:
+  // 1. Is not already in the top recommendations
+  // 2. Is in a category not fully covered by the top picks
+  // 3. Has flavor tags related to low-confidence dimensions
+  // 4. Has not been rated (skip would be in ratedDrinkIds, but we don't have that here)
+  const topCats = new Set(
+    scored.slice(0, 3).map((s) => drinks.find((d) => d.id === s.drinkId)?.category),
+  );
+
+  for (const drink of drinks) {
+    if (alreadyUsed.has(drink.id)) continue;
+    if (topCats.has(drink.category)) continue;
+    if (!preferredCats.has(drink.category) && preferredCats.size > 0) continue;
+
+    // Check if drink's flavor tags relate to low-confidence dimensions
+    const dimTagMap: Record<string, string[]> = {
+      sweetness: ['sweet', 'light'],
+      bitterness: ['bitter', 'bold'],
+      acidity: ['dry', 'citrus'],
+      body: ['bold', 'rich'],
+      complexity: ['complex', 'herbal'],
+      carbonation: ['carbonated', 'sparkling'],
+    };
+
+    const hasRelevantTag = lowConfDims.some((dim) => {
+      const tags = dimTagMap[dim] ?? [];
+      return tags.some((t) => drink.flavor_tags?.includes(t));
+    });
+
+    if (!hasRelevantTag) continue;
+
+    return drink;
+  }
+
+  return null;
+}
+
 // ── Main scoring function ─────────────────────────────────────────
 
 export function scoreDrinks(
@@ -96,17 +199,20 @@ export function scoreDrinks(
   userTaste: UserTasteVector,
   context?: { occasion?: string; category?: string },
   ratedDrinkIds?: Map<string, 'love' | 'like' | 'skip'>,
-): ScoredRecommendation[] {
+  dimensionConfidence?: Record<string, number>,
+  explorationConfig?: ExplorationConfig,
+): ScoredRecommendationWithMeta[] {
   const uVec = userVector(userTaste);
+  const dimWeights = computeDimensionWeights(dimensionConfidence);
   const categoryCounts = computeCategoryCounts(drinks);
   const { exact: exactCats, fallback: fallbackCats } = expandPreferredCategories(
     userTaste.preferredCategories, categoryCounts,
   );
 
   const scored = drinks.map((drink) => {
-    // 1. Numeric taste similarity (45%)
+    // 1. Confidence-weighted numeric taste similarity (45%)
     const dVec = drinkVector(drink);
-    const numericScore = tasteSimilarity(uVec, dVec);
+    const numericScore = tasteSimilarity(uVec, dVec, dimWeights);
 
     // 2. Flavor tag match (20%)
     const favTagScore = tagOverlap(userTaste.favoriteFlavorTags, drink.flavor_tags);
@@ -154,13 +260,41 @@ export function scoreDrinks(
   const maxScore = Math.max(...scores, 1);
   const range = maxScore - minScore || 1;
 
-  return scored
+  const sorted = scored
     .sort((a, b) => b.score - a.score)
     .map((s) => ({
       drinkId: s.drinkId,
       score: Math.round(((s.score - minScore) / range) * 100),
+      rawScore: s.score,
+      recommendationType: 'exploit' as RecommendationType,
       reason: buildReason(s.drink, userTaste, context),
     }));
+
+  // Controlled exploration: if enabled, replace one slot with an exploration candidate
+  if (explorationConfig?.enabled && dimensionConfidence) {
+    const candidate = selectExplorationCandidate(drinks, userTaste, sorted, dimensionConfidence, explorationConfig);
+    if (candidate) {
+      const slotIndex = Math.min(explorationConfig.explorationSlotIndex, sorted.length - 1);
+      const candidateDrink = drinks.find((d) => d.id === candidate.id);
+      if (candidateDrink && slotIndex > 0) {
+        const dVec = drinkVector(candidateDrink);
+        const numericScore = tasteSimilarity(uVec, dVec, dimWeights);
+        const rawScore = numericScore * WEIGHTS.numeric;
+
+        sorted.splice(slotIndex, 0, {
+          drinkId: candidate.id,
+          score: Math.round(((rawScore - minScore) / range) * 100),
+          rawScore,
+          recommendationType: 'explore',
+          reason: `Exploring ${candidateDrink.category.toLowerCase()} — trying something new based on your evolving taste.`,
+        });
+        // Remove the last item to maintain list length
+        sorted.pop();
+      }
+    }
+  }
+
+  return sorted;
 }
 
 // ── Reason generation ─────────────────────────────────────────────
@@ -192,6 +326,7 @@ export function rankDrinksForFeed(
   drinks: SupabaseDrink[],
   userTaste: UserTasteVector,
   ratedDrinkIds?: Map<string, 'love' | 'like' | 'skip'>,
-): ScoredRecommendation[] {
-  return scoreDrinks(drinks, userTaste, undefined, ratedDrinkIds);
+  dimensionConfidence?: Record<string, number>,
+): ScoredRecommendationWithMeta[] {
+  return scoreDrinks(drinks, userTaste, undefined, ratedDrinkIds, dimensionConfidence);
 }

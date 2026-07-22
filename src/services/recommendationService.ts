@@ -1,8 +1,9 @@
-import { scoreDrinks, rankDrinksForFeed } from '../utils/recommendationEngine';
+import { scoreDrinks, rankDrinksForFeed, type ExplorationConfig } from '../utils/recommendationEngine';
 import { getActiveCatalog, getCatalogState } from '../repositories/drinkCatalog';
 import type { SupabaseDrink, UserTasteVector, ScoredRecommendation } from '../types/supabase';
 import type { DrinkProfile } from '../types';
 import { supabaseDrinksToDrinkProfiles } from '../utils/drinkAdapter';
+import { useTasteStore } from '../stores/tasteStore';
 
 export interface RecommendationContext {
   occasion?: string;
@@ -23,6 +24,29 @@ const EMPTY_RESULT: RecommendationResult = {
   loading: false,
   error: null,
   catalogSize: 0,
+};
+
+function getDimensionConfidence(): Record<string, number> | undefined {
+  try {
+    const model = useTasteStore.getState().model;
+    if (!model) return undefined;
+
+    const dims: Record<string, number> = {};
+    for (const [dim, evidence] of Object.entries(model.dimensionConfidence)) {
+      const conf = 1 - Math.exp(-evidence.weightedEvidence / 3);
+      const consistency = evidence.variance > 0 ? Math.max(0.5, 1 - evidence.variance / 10) : 1;
+      dims[dim] = Math.max(0.3, Math.min(1.0, conf * consistency));
+    }
+    return dims;
+  } catch {
+    return undefined;
+  }
+}
+
+const EXPLORATION_CONFIG: ExplorationConfig = {
+  enabled: true,
+  explorationSlotIndex: 2,
+  lowConfidenceThreshold: 0.5,
 };
 
 // ── Feed recommendations ──────────────────────────────────────────
@@ -50,7 +74,8 @@ export async function getFeedRecommendations(
     };
   }
 
-  const scored = rankDrinksForFeed(catalog, userTaste, ratedDrinkIds);
+  const dimConfidence = getDimensionConfidence();
+  const scored = rankDrinksForFeed(catalog, userTaste, ratedDrinkIds, dimConfidence);
   const scoreMap = new Map(scored.map((r) => [r.drinkId, { score: r.score, reason: r.reason }]));
   const drinks = supabaseDrinksToDrinkProfiles(catalog, scoreMap);
 
@@ -87,7 +112,8 @@ export async function getLiveRecommendation(
     };
   }
 
-  const scored = scoreDrinks(catalog, userTaste, context, ratedDrinkIds);
+  const dimConfidence = getDimensionConfidence();
+  const scored = scoreDrinks(catalog, userTaste, context, ratedDrinkIds, dimConfidence, EXPLORATION_CONFIG);
   const top = scored[0];
 
   if (!top || top.score <= 0) {
@@ -108,4 +134,22 @@ export async function getLiveRecommendation(
     loading: false,
     error: null,
   };
+}
+
+// ── Confidence helpers for UI ─────────────────────────────────────
+
+export function getConfidenceLabel(overallConfidence: number): {
+  label: string;
+  showLabel: boolean;
+} {
+  if (overallConfidence < 30) {
+    return { label: 'Still learning your taste', showLabel: true };
+  }
+  if (overallConfidence < 60) {
+    return { label: 'Getting to know you', showLabel: true };
+  }
+  if (overallConfidence < 85) {
+    return { label: 'Understanding your preferences', showLabel: true };
+  }
+  return { label: '', showLabel: false };
 }

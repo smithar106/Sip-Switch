@@ -6,6 +6,7 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useOnboardingStore } from '@/src/stores/onboardingStore';
 import { ARCHETYPES } from '@/src/constants/archetypes';
+import { getConfidenceLabel } from '@/src/services/recommendationService';
 
 export default function Profile() {
   const insets = useSafeAreaInsets();
@@ -73,8 +74,13 @@ export default function Profile() {
         )}
 
         <Text style={styles.ratingCount}>
-          {profile.totalRatings} drinks rated · {confidence}% profile confidence
+          {profile.totalRatings} drinks rated
         </Text>
+        {getConfidenceLabel(confidence).showLabel && (
+          <Text style={styles.confidenceLabel}>
+            {getConfidenceLabel(confidence).label}
+          </Text>
+        )}
 
         <View style={styles.divider} />
 
@@ -141,7 +147,8 @@ const styles = StyleSheet.create({
   flavorRow:        { flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', gap: 6, marginTop: 12 },
   flavorLabel:      { color: '#888888', fontSize: 12, fontWeight: '600' },
   flavorTag:        { color: '#C8A96E', fontSize: 11, fontWeight: '600', backgroundColor: 'rgba(200,169,110,0.1)', borderRadius: 8, paddingHorizontal: 10, paddingVertical: 4, borderWidth: 1, borderColor: 'rgba(200,169,110,0.2)' },
-  ratingCount:      { color: '#888888', fontSize: 12, marginTop: 12, marginBottom: 4 },
+  ratingCount:      { color: '#888888', fontSize: 12, marginTop: 12, marginBottom: 2 },
+  confidenceLabel:  { color: '#C8A96E', fontSize: 12, fontStyle: 'italic', marginBottom: 4 },
   subStatus:       { color: '#CCCCCC', fontSize: 15, fontWeight: '600', marginBottom: 10 },
   subBtn:          { backgroundColor: '#C8A96E', borderRadius: 16, paddingVertical: 16, alignItems: 'center' },
   subBtnText:      { color: '#0A0A0A', fontSize: 16, fontWeight: '800' },
