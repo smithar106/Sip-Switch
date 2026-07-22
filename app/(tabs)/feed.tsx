@@ -68,7 +68,7 @@ export default function Feed() {
   const insets = useSafeAreaInsets();
   const posthog = usePostHog();
   const archetypeId = useSessionStore((s) => s.archetypeId);
-  const deviceId = useSessionStore((s) => s.deviceId);
+  const userId = useSessionStore((s) => s.userId);
   const addRating = useTasteStore((s) => s.addRating);
   const ratings = useTasteStore((s) => s.ratings);
   const getUserTasteVector = useTasteStore((s) => s.getUserTasteVector);
@@ -113,7 +113,7 @@ export default function Feed() {
   const handleRate = useCallback((drinkId: string, rating: 'love' | 'skip', flavourTags?: DrinkRating['flavourTags']) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     addRating({ drinkId, rating, timestamp: new Date().toISOString(), flavourTags });
-    saveDrinkRating(deviceId, drinkId, rating, flavourTags).catch((err: unknown) =>
+    saveDrinkRating(userId, drinkId, rating, flavourTags).catch((err: unknown) =>
       console.error('[feed] saveDrinkRating error:', err)
     );
     posthog.capture('drink_rated', { drink_id: drinkId, rating, archetype_id: archetypeId, flavour_tags: flavourTags ?? null });

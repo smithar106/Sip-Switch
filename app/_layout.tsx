@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { AppState, type AppStateStatus } from 'react-native';
 import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -10,6 +11,9 @@ import { useSessionStore } from '@/src/stores/sessionStore';
 import { useTasteStore } from '@/src/stores/tasteStore';
 import { useLiveStore } from '@/src/stores/liveStore';
 import { configureRevenueCat, getCustomerInfo } from '@/src/services/revenueCat';
+import { initializeAuth, onAuthStateChange, refreshSession } from '@/src/services/auth';
+import { processSyncQueue } from '@/src/services/syncQueue';
+import { migrateLegacyDeviceId } from '@/src/utils/legacyMigration';
 
 const posthogApiKey = process.env.EXPO_PUBLIC_POSTHOG_KEY ?? '';
 const posthogHost = process.env.EXPO_PUBLIC_POSTHOG_HOST ?? 'https://us.i.posthog.com';
@@ -20,22 +24,86 @@ export default function RootLayout() {
   const loadTaste = useTasteStore((s) => s.loadFromStorage);
   const loadLive = useLiveStore((s) => s.loadFromStorage);
   const setIsPremium = useSessionStore((s) => s.setIsPremium);
+  const setUserId = useSessionStore((s) => s.setUserId);
+  const setAuthReady = useSessionStore((s) => s.setAuthReady);
+  const userId = useSessionStore((s) => s.userId);
+  const appStateRef = useRef<AppStateStatus>(AppState.currentState);
 
   useEffect(() => {
-    loadSession();
-    loadTaste();
-    loadLive();
-    if (!__DEV__) {
-      configureRevenueCat();
-      getCustomerInfo().then((info) => {
-        if (info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0) {
+    let unsubAuth: (() => void) | undefined;
+
+    const init = async () => {
+      try {
+        // Step 1: Initialize auth first (blocking for user-owned operations)
+        const uid = await initializeAuth();
+        setUserId(uid);
+        setAuthReady(true);
+
+        // Step 2: Migrate legacy device ID if present
+        if (uid) {
+          await migrateLegacyDeviceId(uid);
+        }
+
+        // Step 3: Load local stores (parallel, independent of auth)
+        await Promise.all([
+          loadSession(),
+          loadTaste(),
+          loadLive(),
+        ]);
+
+        // Step 4: Process pending sync queue
+        if (uid) {
+          processSyncQueue().catch((err) =>
+            console.error('[root] sync queue processing error:', err)
+          );
+        }
+
+        // Step 5: Configure RevenueCat (non-blocking)
+        if (!__DEV__) {
+          configureRevenueCat();
+          getCustomerInfo().then((info) => {
+            if (info?.entitlements?.active && Object.keys(info.entitlements.active).length > 0) {
+              setIsPremium(true);
+            }
+          });
+        } else {
           setIsPremium(true);
         }
-      });
-    } else {
-      setIsPremium(true);
-    }
-  }, [loadSession, loadTaste, loadLive, setIsPremium]);
+      } catch (err) {
+        console.error('[root] init error:', err);
+        // Ensure stores still load even if auth fails
+        await Promise.all([
+          loadSession(),
+          loadTaste(),
+          loadLive(),
+        ]);
+        setAuthReady(true);
+      }
+    };
+
+    init();
+
+    // Step 6: Listen for auth state changes
+    unsubAuth = onAuthStateChange((newUid) => {
+      setUserId(newUid);
+      if (newUid && newUid !== userId) {
+        processSyncQueue().catch(() => {});
+      }
+    });
+
+    // Step 7: Handle app foreground for session refresh
+    const sub = AppState.addEventListener('change', (nextState) => {
+      if (appStateRef.current.match(/inactive|background/) && nextState === 'active') {
+        refreshSession().catch(() => {});
+      }
+      appStateRef.current = nextState;
+    });
+
+    return () => {
+      unsubAuth?.();
+      sub.remove();
+    };
+  }, [loadSession, loadTaste, loadLive, setIsPremium, setUserId, setAuthReady, userId]);
 
   useEffect(() => {
     const handleUrl = async (url: string | null) => {
@@ -77,13 +145,13 @@ export default function RootLayout() {
           <Stack.Screen name="index" />
           <Stack.Screen name="onboarding" />
           <Stack.Screen name="(tabs)" />
-          <Stack.Screen 
-            name="paywall" 
-            options={{ 
+          <Stack.Screen
+            name="paywall"
+            options={{
               presentation: 'fullScreenModal',
               animation: 'slide_from_bottom',
               gestureEnabled: false,
-            }} 
+            }}
           />
         </Stack>
         </PostHogProvider>

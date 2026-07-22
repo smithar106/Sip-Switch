@@ -22,7 +22,7 @@ export default function Live() {
   const insets = useSafeAreaInsets();
   const posthog = usePostHog();
   const archetypeId = useSessionStore((s) => s.archetypeId) as ArchetypeId | null;
-  const deviceId = useSessionStore((s) => s.deviceId);
+  const userId = useSessionStore((s) => s.userId);
   const addRating = useTasteStore((s) => s.addRating);
   const getUserTasteVector = useTasteStore((s) => s.getUserTasteVector);
   const getRatedDrinkIds = useTasteStore((s) => s.getRatedDrinkIds);
@@ -111,7 +111,7 @@ export default function Live() {
         timestamp: new Date().toISOString(),
         flavourTags,
       });
-      saveDrinkRating(deviceId, currentEntry.id, profileRating as 'love' | 'like' | 'skip', flavourTags).catch((err: unknown) =>
+      saveDrinkRating(userId, currentEntry.id, profileRating as 'love' | 'like' | 'skip', flavourTags).catch((err: unknown) =>
         console.error('[live] saveDrinkRating error:', err)
       );
     }

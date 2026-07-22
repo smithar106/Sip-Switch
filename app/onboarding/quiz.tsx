@@ -78,7 +78,7 @@ export default function Quiz() {
   const insets = useSafeAreaInsets();
   const { answers, setAnswer, currentStep, nextStep, reset } = useOnboardingStore();
   const setArchetypeId = useSessionStore((s) => s.setArchetypeId);
-  const deviceId = useSessionStore((s) => s.deviceId);
+  const userId = useSessionStore((s) => s.userId);
   const updateArchetype = useTasteStore((s) => s.updateArchetype);
   const setTasteVector = useTasteStore((s) => s.setTasteVector);
   const getUserTasteVector = useTasteStore((s) => s.getUserTasteVector);
@@ -127,7 +127,7 @@ export default function Quiz() {
           setTasteVector(vector, vector.favoriteFlavorTags, confidence);
 
           const fullVector = getUserTasteVector();
-          saveTasteProfile(deviceId, {
+          saveTasteProfile(userId, {
             archetype_id: archetypeId,
             archetype_name: archetypeId,
             confidence_score: confidence,
