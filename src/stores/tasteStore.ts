@@ -12,6 +12,7 @@ import {
   CURRENT_MODEL_VERSION,
   createDefaultModel,
   emptyDimensionEvidence,
+  emptyCategoryEvidence,
   DEFAULT_VECTOR,
 } from './tasteModelTypes';
 import { updateCategoryAffinity, getPreferredCategories } from './categoryAffinity';
@@ -94,8 +95,8 @@ interface TasteState {
 function deriveUserTasteVector(
   model: UserTasteModel,
   profile: TasteProfile,
-  favoriteFlavorTags: FlavourTag[],
-  avoidedFlavorTags: FlavourTag[],
+  favoriteFlavorTags: string[],
+  avoidedFlavorTags: string[],
   categoryAffinities: Record<string, CategoryEvidence>,
 ): UserTasteVector {
   const allKnownCategories = Object.keys(categoryAffinities);
@@ -265,7 +266,7 @@ export const useTasteStore = create<TasteState>((set, get) => ({
     const model = { ...get().model };
     const vector = { ...model.vector, ...v };
     model.vector = vector;
-    model.favoriteFlavorTags = tags ?? model.favoriteFlavorTags;
+    model.favoriteFlavorTags = (tags ?? model.favoriteFlavorTags) as FlavourTag[];
     model.updatedAt = new Date().toISOString();
     if (confidence !== undefined) {
       set({ confidence, model });

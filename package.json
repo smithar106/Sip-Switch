@@ -9,7 +9,8 @@
     "build:ios": "eas build --platform ios --profile production",
     "typecheck": "tsc --noEmit",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "eval:recommendations": "npx tsx scripts/eval-recommendations.ts"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.0",

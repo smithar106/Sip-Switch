@@ -14,7 +14,7 @@ export default function Profile() {
   const isPremium = useSessionStore((s) => s.isPremium);
   const archetypeId = useSessionStore((s) => s.archetypeId);
   const profile = useTasteStore((s) => s.profile);
-  const vector = useTasteStore((s) => s.vector);
+  const vector = useTasteStore((s) => s.model.vector);
   const confidence = useTasteStore((s) => s.confidence);
   const favoriteFlavorTags = useTasteStore((s) => s.favoriteFlavorTags);
   const resetOnboarding = useOnboardingStore((s) => s.reset);
