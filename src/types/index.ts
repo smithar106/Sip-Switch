@@ -72,6 +72,7 @@ export interface DrinkRating {
   rating: 'love' | 'like' | 'skip' | 'save';
   timestamp: string;
   flavourTags?: string[];
+  category?: string;
 }
 
 export interface OnboardingAnswers {

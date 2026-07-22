@@ -76,9 +76,9 @@ export default function Feed() {
     return map;
   }, [ratings]);
 
-  const handleRate = useCallback((drinkId: string, rating: 'love' | 'skip', flavourTags?: DrinkRating['flavourTags']) => {
+  const handleRate = useCallback((drinkId: string, rating: 'love' | 'skip', flavourTags?: DrinkRating['flavourTags'], category?: string) => {
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-    addRating({ drinkId, rating, timestamp: new Date().toISOString(), flavourTags });
+    addRating({ drinkId, rating, timestamp: new Date().toISOString(), flavourTags, category });
     saveDrinkRating(userId, drinkId, rating, flavourTags).catch((err: unknown) =>
       console.error('[feed] saveDrinkRating error:', err)
     );
@@ -156,7 +156,7 @@ export default function Feed() {
               <View style={styles.actionRow}>
                 <TouchableOpacity
                   style={[styles.loveBtn, ratedDrinks[drink.id] === 'love' && styles.loveBtnActive]}
-                  onPress={() => handleRate(drink.id, 'love', drink.flavourTags)}
+                  onPress={() => handleRate(drink.id, 'love', drink.flavourTags, drink.category)}
                 >
                   <Text style={styles.loveBtnText}>
                     {ratedDrinks[drink.id] === 'love' ? '♥ Saved' : '♥ This is me'}
@@ -164,7 +164,7 @@ export default function Feed() {
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[styles.skipBtn, ratedDrinks[drink.id] === 'skip' && styles.skipBtnActive]}
-                  onPress={() => handleRate(drink.id, 'skip', drink.flavourTags)}
+                  onPress={() => handleRate(drink.id, 'skip', drink.flavourTags, drink.category)}
                 >
                   <Text style={[styles.skipBtnText, ratedDrinks[drink.id] === 'skip' && styles.skipBtnTextActive]}>
                     {ratedDrinks[drink.id] === 'skip' ? '✕ Skipped' : '✕ Not for me'}

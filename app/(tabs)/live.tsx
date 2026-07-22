@@ -92,6 +92,7 @@ export default function Live() {
         rating: profileRating,
         timestamp: new Date().toISOString(),
         flavourTags: [],
+        category: currentEntry.momentId === 'custom' ? undefined : currentEntry.momentId,
       });
       saveDrinkRating(userId, currentEntry.id, profileRating as 'love' | 'like' | 'skip').catch((err: unknown) =>
         console.error('[live] saveDrinkRating error:', err)
